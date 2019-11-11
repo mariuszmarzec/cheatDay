@@ -3,6 +3,7 @@ package com.marzec.cheatday.view
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
+import androidx.annotation.StringRes
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.extensions.style
@@ -45,6 +46,11 @@ class CounterView @JvmOverloads constructor(
         drawValue()
         increaseButton.setVisible(mode == CountMode.INCREASE, true)
         decreaseButton.setVisible(mode == CountMode.DECREASE, true)
+    }
+
+    @Attr(R.styleable.CounterView_cv_title)
+    fun setTitle(@StringRes resId: Int) {
+        titleTextView.setText(resId)
     }
 
     @Attr(R.styleable.CounterView_value)

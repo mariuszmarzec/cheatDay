@@ -14,6 +14,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:cv_title="@string/home_counter_title_cheat_day"
         app:value="2"
         app:max="4"
         app:mode="INCREASE"

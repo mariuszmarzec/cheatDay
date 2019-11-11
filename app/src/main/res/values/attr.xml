@@ -3,6 +3,7 @@
 
     <declare-styleable name="CounterView">
         <attr name="mode" format="string" />
+        <attr name="cv_title" format="reference" />
         <attr name="value" format="integer" />
         <attr name="max" format="integer" />
     </declare-styleable>
