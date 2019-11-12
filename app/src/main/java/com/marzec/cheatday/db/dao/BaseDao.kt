@@ -8,11 +8,20 @@ import io.reactivex.Completable
 interface BaseDao<T> {
 
     @Insert
-    fun insert(ob: T): Completable
+    fun insert(ob: T)
 
     @Delete
-    fun remove(ob: T): Completable
+    fun remove(ob: T)
 
     @Update
-    fun update(ob: T): Completable
+    fun update(ob: T)
+
+    @Insert
+    fun insertCompletable(ob: T): Completable
+
+    @Delete
+    fun removeCompletable(ob: T): Completable
+
+    @Update
+    fun updateCompletable(ob: T): Completable
 }

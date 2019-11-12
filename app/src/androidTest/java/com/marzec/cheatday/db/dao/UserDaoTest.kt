@@ -2,7 +2,6 @@ package com.marzec.cheatday.db.dao
 
 import android.content.Context
 import androidx.room.EmptyResultSetException
-import androidx.room.Room
 import androidx.room.Room.*
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -27,14 +26,14 @@ class UserDaoTest {
 
     @Test
     fun getUser() {
-        userDao.insert(UserEntity("uuid", "email")).test()
+        userDao.insertCompletable(UserEntity("uuid", "email")).test()
         userDao.getUser("email").test().assertValue(UserEntity("uuid", "email"))
     }
 
     @Test
     fun deleteUser() {
-        userDao.insert(UserEntity("uuid", "email")).test()
-        userDao.remove(UserEntity("uuid", "email")).test()
+        userDao.insertCompletable(UserEntity("uuid", "email")).test()
+        userDao.removeCompletable(UserEntity("uuid", "email")).test()
         userDao.getUser("email").test().assertError {
             it is EmptyResultSetException
         }
@@ -42,8 +41,8 @@ class UserDaoTest {
 
     @Test
     fun updateUser() {
-        userDao.insert(UserEntity("uuid", "email")).test()
-        userDao.update(UserEntity("uuid", "email2")).test()
+        userDao.insertCompletable(UserEntity("uuid", "email")).test()
+        userDao.updateCompletable(UserEntity("uuid", "email2")).test()
         userDao.getUser("email2").test().assertValue(UserEntity("uuid", "email2"))
     }
 }

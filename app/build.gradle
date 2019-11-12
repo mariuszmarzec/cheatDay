@@ -74,6 +74,7 @@ dependencies {
 
     androidTestImplementation "androidx.test.ext:junit:$android_test_runner_version"
     androidTestImplementation "androidx.test:rules:$android_test_version"
+    androidTestImplementation "androidx.arch.core:core-testing:$arch_testing_version"
     androidTestImplementation "junit:junit:4.12"
     androidTestImplementation "androidx.room:room-testing:$room_version"
 }

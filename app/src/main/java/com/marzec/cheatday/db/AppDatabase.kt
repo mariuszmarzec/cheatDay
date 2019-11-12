@@ -9,19 +9,24 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
+import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
+import com.marzec.cheatday.db.model.DayEntity
 import com.marzec.cheatday.db.model.UserEntity
 import java.util.*
 
 @Database(
     entities = [
-        UserEntity::class
+        UserEntity::class,
+        DayEntity::class
     ],
     version = 1
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getUserDao(): UserDao
+
+    abstract fun getDayDao(): DayDao
 
     companion object {
 
