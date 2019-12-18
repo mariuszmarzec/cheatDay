@@ -21,8 +21,14 @@ android {
                         "room.incremental"     : "true",
                         "room.expandProjection": "true"]
             }
+
         }
     }
+
+    sourceSets {
+        androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    }
+
     buildTypes {
         release {
             minifyEnabled false
