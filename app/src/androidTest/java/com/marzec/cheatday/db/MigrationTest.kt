@@ -4,6 +4,7 @@ import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.marzec.cheatday.db.migrations.MIGRATION_1_TO_2
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,5 +26,11 @@ class MigrationTest {
     fun testMigration() {
         testHelper.createDatabase(dbName, 1)
         testHelper.runMigrationsAndValidate(dbName, 1, true)
+    }
+
+    @Test
+    fun testMigration_from_1_to_2() {
+        testHelper.createDatabase(dbName, 1)
+        testHelper.runMigrationsAndValidate(dbName, 2, true, MIGRATION_1_TO_2)
     }
 }
