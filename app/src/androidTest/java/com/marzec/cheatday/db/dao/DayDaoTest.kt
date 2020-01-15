@@ -7,8 +7,8 @@ import androidx.room.Room.inMemoryDatabaseBuilder
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.marzec.cheatday.db.AppDatabase
-import com.marzec.cheatday.db.model.DayEntity
-import com.marzec.cheatday.db.model.UserEntity
+import com.marzec.cheatday.db.model.db.DayEntity
+import com.marzec.cheatday.db.model.db.UserEntity
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule

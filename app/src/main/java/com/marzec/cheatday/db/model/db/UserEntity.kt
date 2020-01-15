@@ -1,4 +1,4 @@
-package com.marzec.cheatday.db.model
+package com.marzec.cheatday.db.model.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

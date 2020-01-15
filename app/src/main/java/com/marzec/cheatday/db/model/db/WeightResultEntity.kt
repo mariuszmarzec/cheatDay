@@ -1,10 +1,10 @@
-package com.marzec.cheatday.db.model
+package com.marzec.cheatday.db.model.db
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
 
 @Entity(
-    tableName = DayEntity.NAME,
+    tableName = WeightResultEntity.NAME,
     foreignKeys = [
         ForeignKey(
             entity = UserEntity::class,
@@ -12,19 +12,18 @@ import androidx.room.ForeignKey.CASCADE
             childColumns = [DayEntity.COLUMN_USER_ID],
             onDelete = CASCADE
         )
-    ],
-    indices = [Index(value = [DayEntity.COLUMN_TYPE, DayEntity.COLUMN_USER_ID], unique = true)]
+    ]
 )
-data class DayEntity(
+data class WeightResultEntity(
     @PrimaryKey(autoGenerate = true) val id: Long,
-    @ColumnInfo(name = COLUMN_TYPE) val type: String,
-    @ColumnInfo(name = COLUMN_COUNT) val count: Long,
+    @ColumnInfo(name = COLUMN_VALUE) val value: Float,
+    @ColumnInfo(name = COLUMN_DATE) val date: Long,
     @ColumnInfo(name = COLUMN_USER_ID) val userId: String
 ) {
     companion object {
-        const val NAME = "days"
-        const val COLUMN_TYPE = "type"
-        const val COLUMN_COUNT = "count"
+        const val NAME = "weights"
+        const val COLUMN_VALUE = "value"
+        const val COLUMN_DATE = "date"
         const val COLUMN_USER_ID = "user_id"
     }
 }

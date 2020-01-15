@@ -2,7 +2,7 @@ package com.marzec.cheatday.db.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.marzec.cheatday.db.model.WeightResultEntity
+import com.marzec.cheatday.db.model.db.WeightResultEntity
 
 val MIGRATION_1_TO_2 = Migration1to2()
 

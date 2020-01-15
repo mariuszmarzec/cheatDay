@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Ignore
 import androidx.room.Query
 import androidx.room.Transaction
-import com.marzec.cheatday.db.model.DayEntity
+import com.marzec.cheatday.db.model.db.DayEntity
 import io.reactivex.Completable
 import io.reactivex.Observable
 

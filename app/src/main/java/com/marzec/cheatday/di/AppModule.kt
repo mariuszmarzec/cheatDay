@@ -10,12 +10,17 @@ import com.marzec.cheatday.db.dao.UserDao
 import dagger.Provides
 import javax.inject.Singleton
 import androidx.preference.PreferenceManager
+import com.marzec.cheatday.repository.TargetWeightRepository
+import com.marzec.cheatday.repository.TargetWeightRepositoryImpl
 
 
 @Module
 interface AppModule {
     @Binds
     fun bindContext(application: App): Context
+
+    @Binds
+    fun bindTargetWeightRepository(repository: TargetWeightRepositoryImpl): TargetWeightRepository
 
     @Module
     companion object {

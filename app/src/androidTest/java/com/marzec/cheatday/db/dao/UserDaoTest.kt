@@ -6,7 +6,7 @@ import androidx.room.Room.*
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.marzec.cheatday.db.AppDatabase
-import com.marzec.cheatday.db.model.UserEntity
+import com.marzec.cheatday.db.model.db.UserEntity
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,7 +27,12 @@ class UserDaoTest {
     @Test
     fun getUser() {
         userDao.insertCompletable(UserEntity("uuid", "email")).test()
-        userDao.getUser("email").test().assertValue(UserEntity("uuid", "email"))
+        userDao.getUser("email").test().assertValue(
+            UserEntity(
+                "uuid",
+                "email"
+            )
+        )
     }
 
     @Test
@@ -43,6 +48,11 @@ class UserDaoTest {
     fun updateUser() {
         userDao.insertCompletable(UserEntity("uuid", "email")).test()
         userDao.updateCompletable(UserEntity("uuid", "email2")).test()
-        userDao.getUser("email2").test().assertValue(UserEntity("uuid", "email2"))
+        userDao.getUser("email2").test().assertValue(
+            UserEntity(
+                "uuid",
+                "email2"
+            )
+        )
     }
 }

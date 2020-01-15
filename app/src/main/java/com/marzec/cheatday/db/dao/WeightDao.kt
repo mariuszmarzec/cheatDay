@@ -2,7 +2,7 @@ package com.marzec.cheatday.db.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.marzec.cheatday.db.model.WeightResultEntity
+import com.marzec.cheatday.db.model.db.WeightResultEntity
 import io.reactivex.Observable
 
 @Dao

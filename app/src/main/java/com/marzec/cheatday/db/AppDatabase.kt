@@ -8,16 +8,15 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.sqlite.db.SupportSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import com.marzec.cheatday.db.converters.DateTimeConverter
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.db.migrations.MIGRATION_1_TO_2
-import com.marzec.cheatday.db.model.DayEntity
-import com.marzec.cheatday.db.model.UserEntity
-import com.marzec.cheatday.db.model.WeightResultEntity
+import com.marzec.cheatday.db.model.db.DayEntity
+import com.marzec.cheatday.db.model.db.UserEntity
+import com.marzec.cheatday.db.model.db.WeightResultEntity
 import java.util.*
 
 @Database(

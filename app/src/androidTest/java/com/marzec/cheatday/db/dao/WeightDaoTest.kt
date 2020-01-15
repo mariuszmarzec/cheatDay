@@ -6,8 +6,8 @@ import androidx.room.Room.inMemoryDatabaseBuilder
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.marzec.cheatday.db.AppDatabase
-import com.marzec.cheatday.db.model.UserEntity
-import com.marzec.cheatday.db.model.WeightResultEntity
+import com.marzec.cheatday.db.model.db.UserEntity
+import com.marzec.cheatday.db.model.db.WeightResultEntity
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -39,24 +39,30 @@ class WeightDaoTest {
 
     @Test
     fun getAllWeights() {
-        weightDao.insert(WeightResultEntity(
-            0,
-            1f,
-            1,
-            userEntity.uuid
-        ))
-        weightDao.insert(WeightResultEntity(
-            0,
-            1f,
-            0,
-            userEntity.uuid
-        ))
-        weightDao.insert(WeightResultEntity(
-            0,
-            1f,
-            0,
-            otherUser.uuid
-        ))
+        weightDao.insert(
+            WeightResultEntity(
+                0,
+                1f,
+                1,
+                userEntity.uuid
+            )
+        )
+        weightDao.insert(
+            WeightResultEntity(
+                0,
+                1f,
+                0,
+                userEntity.uuid
+            )
+        )
+        weightDao.insert(
+            WeightResultEntity(
+                0,
+                1f,
+                0,
+                otherUser.uuid
+            )
+        )
         weightDao.getWeights(userEntity.uuid)
             .test()
             .assertValue(listOf(
