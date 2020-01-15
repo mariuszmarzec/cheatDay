@@ -10,8 +10,9 @@ import com.marzec.cheatday.db.dao.UserDao
 import dagger.Provides
 import javax.inject.Singleton
 import androidx.preference.PreferenceManager
-import com.marzec.cheatday.repository.TargetWeightRepository
-import com.marzec.cheatday.repository.TargetWeightRepositoryImpl
+import com.marzec.cheatday.db.dao.DayDao
+import com.marzec.cheatday.db.dao.WeightDao
+import com.marzec.cheatday.repository.*
 
 
 @Module
@@ -21,6 +22,12 @@ interface AppModule {
 
     @Binds
     fun bindTargetWeightRepository(repository: TargetWeightRepositoryImpl): TargetWeightRepository
+
+    @Binds
+    fun bindWeightResultRepository(repository: WeightResultRepositoryImpl): WeightResultRepository
+
+    @Binds
+    fun bindUserRepository(repository: UserRepositoryImpl): UserRepository
 
     @Module
     companion object {
@@ -32,6 +39,14 @@ interface AppModule {
         @Provides
         @Singleton
         fun provideUserDao(database: AppDatabase): UserDao = database.getUserDao()
+
+        @Provides
+        @Singleton
+        fun provideWeightDao(database: AppDatabase): WeightDao = database.getWeightDao()
+
+        @Provides
+        @Singleton
+        fun provideDayDao(database: AppDatabase): DayDao = database.getDayDao()
 
         @Provides
         @Singleton

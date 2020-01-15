@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(TestSchedulersRule::class)
 internal class UserRepositoryImplTest {
+
     val userDao: UserDao = mock()
 
     lateinit var repository: UserRepository
