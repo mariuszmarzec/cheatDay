@@ -2,6 +2,7 @@ package com.marzec.cheatday.db.model.db
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
+import com.marzec.cheatday.db.model.domain.Day
 
 @Entity(
     tableName = DayEntity.NAME,
@@ -27,4 +28,8 @@ data class DayEntity(
         const val COLUMN_COUNT = "count"
         const val COLUMN_USER_ID = "user_id"
     }
+}
+
+fun DayEntity.toDomain(): Day {
+    return Day(this.id, enumValueOf(this.type), this.count)
 }
