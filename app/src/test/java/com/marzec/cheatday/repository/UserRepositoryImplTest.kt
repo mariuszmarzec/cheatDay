@@ -3,7 +3,7 @@ package com.marzec.cheatday.repository
 import com.marzec.cheatday.TestSchedulersRule
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
-import com.marzec.cheatday.db.model.domain.User
+import com.marzec.cheatday.domain.User
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever

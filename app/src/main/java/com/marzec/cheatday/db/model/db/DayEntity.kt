@@ -2,7 +2,7 @@ package com.marzec.cheatday.db.model.db
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
-import com.marzec.cheatday.db.model.domain.Day
+import com.marzec.cheatday.domain.Day
 
 @Entity(
     tableName = DayEntity.NAME,

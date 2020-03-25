@@ -9,6 +9,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
+import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.db.converters.DateTimeConverter
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
@@ -50,7 +51,7 @@ abstract class AppDatabase : RoomDatabase() {
                     MIGRATION_1_TO_2
                 ).addCallback(object : RoomDatabase.Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
-                        val email = "mariusz.marzec00@gmail.com"
+                        val email = Constants.DEFAULT_USER
                         val searchQuery = SupportSQLiteQueryBuilder.builder(UserEntity.NAME)
                             .selection("email = ?", arrayOf(email))
                             .create()

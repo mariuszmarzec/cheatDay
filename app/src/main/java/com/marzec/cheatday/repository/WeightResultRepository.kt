@@ -2,9 +2,9 @@ package com.marzec.cheatday.repository
 
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.db.model.db.WeightResultEntity
-import com.marzec.cheatday.db.model.domain.WeightResult
-import com.marzec.cheatday.db.model.domain.toDb
-import com.marzec.cheatday.db.model.domain.toDomain
+import com.marzec.cheatday.domain.WeightResult
+import com.marzec.cheatday.domain.toDb
+import com.marzec.cheatday.domain.toDomain
 import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject

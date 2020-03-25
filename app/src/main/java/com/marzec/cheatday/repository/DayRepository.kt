@@ -3,9 +3,9 @@ package com.marzec.cheatday.repository
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.model.db.DayEntity
 import com.marzec.cheatday.db.model.db.toDomain
-import com.marzec.cheatday.db.model.domain.DaysGroup
-import com.marzec.cheatday.db.model.domain.Day
-import com.marzec.cheatday.db.model.domain.toDb
+import com.marzec.cheatday.domain.DaysGroup
+import com.marzec.cheatday.domain.Day
+import com.marzec.cheatday.domain.toDb
 import com.marzec.cheatday.extensions.onIo
 import io.reactivex.Completable
 import io.reactivex.Observable
