@@ -21,7 +21,14 @@ android {
                         "room.incremental"     : "true",
                         "room.expandProjection": "true"]
             }
+        }
 
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        kotlinOptions {
+            jvmTarget = '1.8'
         }
     }
 
@@ -54,6 +61,7 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "net.danlew:android.joda:$joda_version"
     implementation "android.arch.lifecycle:viewmodel:$viewmodel_version"
+    implementation "android.arch.lifecycle:reactivestreams:$reactivestreams_version"
     implementation "androidx.lifecycle:lifecycle-livedata:$livedata_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"

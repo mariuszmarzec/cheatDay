@@ -1,5 +1,6 @@
 package com.marzec.cheatday.repository
 
+import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.model.db.DayEntity
 import com.marzec.cheatday.db.model.db.toDomain
@@ -29,15 +30,15 @@ class DayRepositoryImpl @Inject constructor(
 
     private fun createDaysIfNeeded(userId: String): Completable {
         return Completable.fromAction {
-            createDayIfNeeded(userId, Day.Type.CHEAT.name)
-            createDayIfNeeded(userId, Day.Type.WORKOUT.name)
-            createDayIfNeeded(userId, Day.Type.DIET.name)
+            createDayIfNeeded(userId, Constants.MAX_CHEAT_DAYS.toLong(), Day.Type.CHEAT.name)
+            createDayIfNeeded(userId, Constants.MAX_WORKOUT_DAYS.toLong(), Day.Type.WORKOUT.name)
+            createDayIfNeeded(userId, Constants.MAX_DIET_DAYS.toLong(), Day.Type.DIET.name)
         }
     }
 
-    private fun createDayIfNeeded(userId: String, type: String) {
+    private fun createDayIfNeeded(userId: String, max: Long, type: String) {
         if (dayDao.getDay(userId, type) == null) {
-            dayDao.createOrUpdate(DayEntity(0, type, 0, userId))
+            dayDao.createOrUpdate(DayEntity(0, type, 0, max, userId))
         }
     }
 

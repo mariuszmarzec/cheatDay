@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a506ecfa90a675af26d261b41842994b",
+    "identityHash": "5db76ddb29da436b1c29d422a1f0cb85",
     "entities": [
       {
         "tableName": "users",
@@ -32,7 +32,7 @@
       },
       {
         "tableName": "days",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT NOT NULL, `count` INTEGER NOT NULL, `user_id` TEXT NOT NULL, FOREIGN KEY(`user_id`) REFERENCES `users`(`uuid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT NOT NULL, `count` INTEGER NOT NULL, `max` INTEGER NOT NULL, `user_id` TEXT NOT NULL, FOREIGN KEY(`user_id`) REFERENCES `users`(`uuid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -49,6 +49,12 @@
           {
             "fieldPath": "count",
             "columnName": "count",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "max",
+            "columnName": "max",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -94,7 +100,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a506ecfa90a675af26d261b41842994b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5db76ddb29da436b1c29d422a1f0cb85')"
     ]
   }
 }

@@ -7,10 +7,12 @@ object DayStub {
     fun create(
         id: Long = 0,
         type: Day.Type = Day.Type.CHEAT,
-        count: Long = 0
+        count: Long = 0,
+        max: Long = Long.MAX_VALUE
     ) = Day(
         id = id,
         type = type,
-        count = count
+        count = count,
+        max = max
     )
 }

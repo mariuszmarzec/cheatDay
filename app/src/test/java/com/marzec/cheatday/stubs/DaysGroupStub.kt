@@ -11,7 +11,7 @@ object DaysGroupStub {
         diet: Day = DayStub.create()
     ) = DaysGroup(
         cheat = cheat,
-        workOut = workOut,
+        workout = workOut,
         diet = diet
     )
 }

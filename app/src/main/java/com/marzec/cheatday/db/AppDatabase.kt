@@ -50,7 +50,8 @@ abstract class AppDatabase : RoomDatabase() {
                 ).addMigrations(
                     MIGRATION_1_TO_2
                 ).addCallback(object : RoomDatabase.Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
+                    override fun onOpen(db: SupportSQLiteDatabase) {
+                        super.onOpen(db)
                         val email = Constants.DEFAULT_USER
                         val searchQuery = SupportSQLiteQueryBuilder.builder(UserEntity.NAME)
                             .selection("email = ?", arrayOf(email))

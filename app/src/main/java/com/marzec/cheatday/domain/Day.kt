@@ -5,7 +5,8 @@ import com.marzec.cheatday.db.model.db.DayEntity
 data class Day(
     val id: Long,
     val type: Type,
-    val count: Long
+    val count: Long,
+    val max: Long
 ) {
     enum class Type {
         CHEAT,
@@ -16,15 +17,16 @@ data class Day(
 
 data class DaysGroup(
     val cheat: Day,
-    val workOut: Day,
+    val workout: Day,
     val diet: Day
 )
 
 fun Day.toDb(userId: String): DayEntity {
     return DayEntity(
-        this.id,
-        this.type.name,
-        this.count,
-        userId
+        id = this.id,
+        type = this.type.name,
+        count = this.count,
+        max = this.max,
+        userId = userId
     )
 }

@@ -20,36 +20,32 @@ interface AppModule {
     @Binds
     fun bindContext(application: App): Context
 
-    @Binds
-    fun bindTargetWeightRepository(repository: TargetWeightRepositoryImpl): TargetWeightRepository
-
-    @Binds
-    fun bindWeightResultRepository(repository: WeightResultRepositoryImpl): WeightResultRepository
-
-    @Binds
-    fun bindUserRepository(repository: UserRepositoryImpl): UserRepository
-
     @Module
     companion object {
 
         @Provides
         @Singleton
+        @JvmStatic
         fun provideAppDatabase(context: Context): AppDatabase = AppDatabase.getInstance(context)
 
         @Provides
         @Singleton
+        @JvmStatic
         fun provideUserDao(database: AppDatabase): UserDao = database.getUserDao()
 
         @Provides
         @Singleton
+        @JvmStatic
         fun provideWeightDao(database: AppDatabase): WeightDao = database.getWeightDao()
 
         @Provides
         @Singleton
+        @JvmStatic
         fun provideDayDao(database: AppDatabase): DayDao = database.getDayDao()
 
         @Provides
         @Singleton
+        @JvmStatic
         fun provideSharedPreferences(context: Context): RxSharedPreferences {
             val preferences = PreferenceManager.getDefaultSharedPreferences(context)
             return RxSharedPreferences.create(preferences)

@@ -1,6 +1,7 @@
 package com.marzec.cheatday.repository
 
 import com.marzec.cheatday.TestSchedulersRule
+import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.model.db.DayEntity
 import com.marzec.cheatday.domain.Day
@@ -39,9 +40,9 @@ internal class DayRepositoryImplTest {
 
         assertEquals(
             listOf(
-                DayEntity(0, "CHEAT", 0, "userId"),
-                DayEntity(0, "WORKOUT", 0, "userId"),
-                DayEntity(0, "DIET", 0, "userId")
+                DayEntity(0, "CHEAT", 0, Int.MAX_VALUE.toLong(), "userId"),
+                DayEntity(0, "WORKOUT", 0, Constants.MAX_WORKOUT_DAYS.toLong(), "userId"),
+                DayEntity(0, "DIET", 0, Constants.MAX_DIET_DAYS.toLong(), "userId")
             ),
             captor.allValues
         )
@@ -52,7 +53,7 @@ internal class DayRepositoryImplTest {
         val subjectCheat = BehaviorSubject.create<DayEntity>()
         val subjectWorkout = BehaviorSubject.create<DayEntity>()
         val subjectDiet = BehaviorSubject.create<DayEntity>()
-        whenever(dayDao.getDay(any(), any())).thenReturn(DayEntity(0, "CHEAT", 0, "userId"))
+        whenever(dayDao.getDay(any(), any())).thenReturn(DayEntity(0, "CHEAT", 0, 0, "userId"))
         whenever(dayDao.getDayObservable(any(), eq(Day.Type.CHEAT.name))).thenReturn(subjectCheat)
         whenever(dayDao.getDayObservable(any(), eq(Day.Type.WORKOUT.name))).thenReturn(subjectWorkout)
         whenever(dayDao.getDayObservable(any(), eq(Day.Type.DIET.name))).thenReturn(subjectDiet)
@@ -60,34 +61,34 @@ internal class DayRepositoryImplTest {
         val testObserver = repository.getDaysByUser("userId")
             .test()
 
-        subjectCheat.onNext(DayEntity(0, "CHEAT", 0, "userId"))
-        subjectWorkout.onNext(DayEntity(0, "WORKOUT", 0, "userId"))
-        subjectDiet.onNext(DayEntity(0, "DIET", 0, "userId"))
+        subjectCheat.onNext(DayEntity(0, "CHEAT", 0, 0, "userId"))
+        subjectWorkout.onNext(DayEntity(0, "WORKOUT", 0, 0, "userId"))
+        subjectDiet.onNext(DayEntity(0, "DIET", 0, 0, "userId"))
 
         testObserver.assertValueAt(
             0,
             DaysGroup(
-                Day(0, Day.Type.CHEAT, 0),
-                Day(0, Day.Type.WORKOUT, 0),
-                Day(0, Day.Type.DIET, 0)
+                Day(0, Day.Type.CHEAT, 0, 0),
+                Day(0, Day.Type.WORKOUT, 0, 0),
+                Day(0, Day.Type.DIET, 0, 0)
             )
         )
 
-        subjectWorkout.onNext(DayEntity(0, "WORKOUT", 1, "userId"))
+        subjectWorkout.onNext(DayEntity(0, "WORKOUT", 1, 0, "userId"))
 
         testObserver.assertValueAt(
             1,
             DaysGroup(
-                Day(0, Day.Type.CHEAT, 0),
-                Day(0, Day.Type.WORKOUT, 1),
-                Day(0, Day.Type.DIET, 0)
+                Day(0, Day.Type.CHEAT, 0, 0),
+                Day(0, Day.Type.WORKOUT, 1, 0),
+                Day(0, Day.Type.DIET, 0, 0)
             )
         )
     }
 
     @Test
     fun update() {
-        repository.update("userId", Day(0, Day.Type.CHEAT, 1)).test().assertComplete()
-        verify(dayDao).createOrUpdateCompletable(DayEntity(0, "CHEAT", 1, "userId"))
+        repository.update("userId", Day(0, Day.Type.CHEAT, 1, 0)).test().assertComplete()
+        verify(dayDao).createOrUpdateCompletable(DayEntity(0, "CHEAT", 1, 0, "userId"))
     }
 }

@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".feature.home.MainActivity">
+    android:layout_height="match_parent">
 
-    <com.marzec.cheatday.view.CounterView
-        android:id="@+id/valueCounter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:cv_title="@string/home_counter_title_cheat_day"
-        app:value="2"
-        app:max="4"
-        app:mode="INCREASE"
+    <fragment
+        android:name="com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragment"
+        android:id="@+id/daysCounterFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/fragment_days_counter"
         />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

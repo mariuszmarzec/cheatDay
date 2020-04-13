@@ -30,6 +30,7 @@ class DayDaoTest {
         1,
         "type",
         10,
+        3,
         "uuid"
     )
 
@@ -49,6 +50,7 @@ class DayDaoTest {
                 1,
                 "type",
                 10,
+                3,
                 "uuid"
             )
         ).test().assertComplete()
@@ -61,6 +63,7 @@ class DayDaoTest {
                 1,
                 "type",
                 10,
+                3,
                 "uuid"
             )
         ).test().assertComplete()
@@ -69,6 +72,7 @@ class DayDaoTest {
                 1,
                 "type",
                 10,
+                3,
                 "uuid"
             )
         ).test().assertError { it is SQLiteConstraintException }
@@ -81,6 +85,7 @@ class DayDaoTest {
                 1,
                 "type",
                 10,
+                3,
                 "uuid"
             )
         )
@@ -89,6 +94,7 @@ class DayDaoTest {
                 1,
                 "type",
                 10,
+                3,
                 "uuid"
             ), dayDao.getDay(userEntity.uuid, "type")
         )
@@ -98,6 +104,7 @@ class DayDaoTest {
                 1,
                 "type",
                 10,
+                3,
                 "uuid"
             )
         )

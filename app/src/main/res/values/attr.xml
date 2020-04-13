@@ -2,10 +2,11 @@
 <resources>
 
     <declare-styleable name="CounterView">
-        <attr name="mode" format="string" />
+        <attr name="cv_mode" format="string" />
         <attr name="cv_title" format="reference" />
-        <attr name="value" format="integer" />
-        <attr name="max" format="integer" />
+        <attr name="cv_value" format="integer" />
+        <attr name="cv_max" format="integer" />
+        <attr name="cv_title_text_size" format="dimension" />
     </declare-styleable>
 
 </resources>

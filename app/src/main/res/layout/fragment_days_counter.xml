@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="@dimen/default_padding"
+    android:layout_marginEnd="@dimen/default_padding"
+    android:layout_marginBottom="@dimen/large_padding"
+    android:layout_marginTop="@dimen/large_padding"
+    tools:context=".feature.home.MainActivity">
+
+    <com.marzec.cheatday.view.CounterView
+        android:id="@+id/cheatCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cv_title="@string/home_counter_title_cheat_day"
+        app:layout_constraintBottom_toTopOf="@+id/dietCounter"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:cv_mode="DECREASE"
+        app:cv_value="0"
+        />
+
+    <com.marzec.cheatday.view.CounterView
+        android:id="@+id/dietCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cv_title="@string/home_counter_title_diet_day"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/workoutCounter"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cheatCounter"
+        app:cv_title_text_size="@dimen/counter_title_text_small_size"
+        app:cv_max="5"
+        app:cv_mode="INCREASE"
+        app:cv_value="0"
+        />
+
+    <com.marzec.cheatday.view.CounterView
+        android:id="@+id/workoutCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cv_title="@string/home_counter_title_workout_day"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dietCounter"
+        app:layout_constraintTop_toTopOf="@id/dietCounter"
+        app:cv_title_text_size="@dimen/counter_title_text_small_size"
+        app:cv_max="3"
+        app:cv_mode="INCREASE"
+        app:cv_value="0"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
