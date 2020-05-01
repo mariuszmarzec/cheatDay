@@ -1,6 +1,6 @@
 package com.marzec.cheatday.common
 
-import android.content.Context
+import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -9,9 +9,9 @@ import dagger.android.support.AndroidSupportInjection
 
 abstract class BaseFragment(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
 
-    override fun onAttach(context: Context) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
-        super.onAttach(context)
+        super.onCreate(savedInstanceState)
     }
 
     fun <T> LiveData<T>.observeNonNull(observer: (T) -> Unit) {
