@@ -3,4 +3,7 @@
     <string name="home_counter_title_cheat_day">CHEAT DAYS</string>
     <string name="home_counter_title_diet_day">DIET DAYS</string>
     <string name="home_counter_title_workout_day">WORKOUT DAYS</string>
+    <string name="channel_name">Common</string>
+    <string name="channel_description">Notifications from application</string>
+    <string name="notification_every_day_sum_up">Sum up your day</string>
 </resources>

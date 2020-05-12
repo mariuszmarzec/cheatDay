@@ -1,24 +1,30 @@
 package com.marzec.cheatday.di
 
 import android.content.Context
+import androidx.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import dagger.Binds
-import dagger.Module
 import com.marzec.cheatday.App
 import com.marzec.cheatday.db.AppDatabase
+import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
+import com.marzec.cheatday.db.dao.WeightDao
+import com.marzec.cheatday.notifications.NotificationHelper
+import com.marzec.cheatday.notifications.NotificationHelperImpl
+import dagger.Binds
+import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
-import androidx.preference.PreferenceManager
-import com.marzec.cheatday.db.dao.DayDao
-import com.marzec.cheatday.db.dao.WeightDao
-import com.marzec.cheatday.repository.*
 
 
 @Module
 interface AppModule {
+
     @Binds
     fun bindContext(application: App): Context
+
+    @Binds
+    @Singleton
+    fun bindNotificationHelper(notificationHelper: NotificationHelperImpl): NotificationHelper
 
     @Module
     companion object {
