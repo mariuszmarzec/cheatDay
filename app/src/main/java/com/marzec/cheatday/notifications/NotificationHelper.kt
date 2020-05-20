@@ -78,7 +78,7 @@ class NotificationHelperImpl @Inject constructor(
             context,
             Constants.ALARM_ID_NOTIFICATION_EVERY_DAY,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_CANCEL_CURRENT
         )
 
         context.getSystemService<AlarmManager>()
