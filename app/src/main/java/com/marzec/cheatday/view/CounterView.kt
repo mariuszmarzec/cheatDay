@@ -12,7 +12,9 @@ import com.airbnb.paris.extensions.style
 import com.marzec.cheatday.R
 import com.marzec.cheatday.domain.Day
 import com.marzec.cheatday.extensions.enumValueOfOrDefault
+import com.marzec.cheatday.extensions.gone
 import com.marzec.cheatday.extensions.setVisible
+import com.marzec.cheatday.extensions.visible
 import kotlinx.android.synthetic.main.view_counter.view.*
 
 @Styleable("CounterView")
@@ -29,18 +31,18 @@ class CounterView @JvmOverloads constructor(
     private var titleTextSize = context.resources.getDimensionPixelSize(R.dimen.counter_title_text_size)
     private var mode = CountMode.DECREASE
 
-    var onDecreaseButtonClickListener: ((Int) -> Unit)? = null
-    var onIncreaseButtonClickListener: ((Int, Int) -> Unit)? = null
+    var onDecreaseButtonClickListener: (() -> Unit)? = null
+    var onIncreaseButtonClickListener: (() -> Unit)? = null
 
     init {
         inflate(getContext(), R.layout.view_counter, this)
         style(attrs)
 
         increaseButton.setOnClickListener {
-            onIncreaseButtonClickListener?.invoke(value, max)
+            onIncreaseButtonClickListener?.invoke()
         }
         decreaseButton.setOnClickListener {
-            onDecreaseButtonClickListener?.invoke(value)
+            onDecreaseButtonClickListener?.invoke()
         }
     }
 
@@ -78,6 +80,15 @@ class CounterView @JvmOverloads constructor(
     fun setDay(day: Day) {
         setValue(day.count.toInt())
         setMax(day.max.toInt())
+        visible()
+    }
+
+    fun setDayOrHide(day: Day?) {
+        if (day != null) {
+            setDay(day)
+        } else {
+            gone()
+        }
     }
 
     private fun drawValue() {

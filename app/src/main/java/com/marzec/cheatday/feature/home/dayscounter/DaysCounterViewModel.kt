@@ -1,8 +1,10 @@
 package com.marzec.cheatday.feature.home.dayscounter
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.marzec.cheatday.common.BaseViewModel
 import com.marzec.cheatday.domain.DaysGroup
+import com.marzec.cheatday.extensions.map
 import com.marzec.cheatday.extensions.toLiveData
 import com.marzec.cheatday.interactor.DaysInteractor
 import javax.inject.Inject
@@ -14,6 +16,12 @@ class DaysCounterViewModel @Inject constructor(
     val days: LiveData<DaysGroup> by lazy {
         daysInteractor.getDays().toLiveData()
     }
+
+    val cheatDays = days.map { it.cheat }
+
+    val workoutDays = days.map { it.workout }
+
+    val dietDays = days.map { it.diet }
 
     fun onCheatDecreaseClick() {
         days.value?.cheat?.let { day ->

@@ -1,9 +1,12 @@
 package com.marzec.cheatday.feature.home.dayscounter
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
+import com.marzec.cheatday.databinding.FragmentDaysCounterBinding
 import kotlinx.android.synthetic.main.fragment_days_counter.*
 import javax.inject.Inject
 
@@ -12,24 +15,28 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
     @Inject
     lateinit var viewModel: DaysCounterViewModel
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val binding = FragmentDaysCounterBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.days.observeNonNull { days ->
-            with(days) {
-                dietCounter.setDay(diet)
-                workoutCounter.setDay(workout)
-                cheatCounter.setDay(cheat)
-            }
-        }
-
-        cheatCounter.onDecreaseButtonClickListener = { _ ->
+        cheatCounter.onDecreaseButtonClickListener = {
             viewModel.onCheatDecreaseClick()
         }
-        dietCounter.onIncreaseButtonClickListener = { _, _ ->
+        dietCounter.onIncreaseButtonClickListener = {
             viewModel.onDietIncreaseClick()
         }
-        workoutCounter.onIncreaseButtonClickListener = { _, _ ->
+        workoutCounter.onIncreaseButtonClickListener = {
             viewModel.onWorkoutIncreaseClick()
         }
     }

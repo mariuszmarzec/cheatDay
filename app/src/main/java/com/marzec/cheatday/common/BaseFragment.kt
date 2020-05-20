@@ -7,7 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import dagger.android.support.AndroidSupportInjection
 
-abstract class BaseFragment(@LayoutRes contentLayoutId: Int) : Fragment(contentLayoutId) {
+abstract class BaseFragment : Fragment {
+
+    constructor() : super()
+
+    constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidSupportInjection.inject(this)
