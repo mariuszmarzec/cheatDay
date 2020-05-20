@@ -7,28 +7,30 @@ import com.marzec.cheatday.domain.toDb
 import com.marzec.cheatday.domain.toDomain
 import io.reactivex.Completable
 import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class WeightResultRepositoryImpl @Inject constructor(
     private val weightDao: WeightDao
 ) : WeightResultRepository {
-    override fun getWeights(userId: String): Observable<List<WeightResult>> =
+    override fun getWeights(userId: String): Flow<List<WeightResult>> =
         weightDao.getWeights(userId).map { it.map(WeightResultEntity::toDomain) }
 
-    override fun putWeight(userId: String, weightResult: WeightResult): Completable {
-        return weightDao.insertCompletable(weightResult.toDb(userId))
+    override suspend fun putWeight(userId: String, weightResult: WeightResult) {
+        weightDao.insertSuspend(weightResult.toDb(userId))
     }
 
-    override fun editWeight(userId: String, weightResult: WeightResult): Completable {
-        return weightDao.updateCompletable(weightResult.toDb(userId))
+    override suspend fun editWeight(userId: String, weightResult: WeightResult) {
+        weightDao.updateSuspend(weightResult.toDb(userId))
     }
 }
 
 interface WeightResultRepository {
 
-    fun getWeights(userId: String): Observable<List<WeightResult>>
+    fun getWeights(userId: String): Flow<List<WeightResult>>
 
-    fun putWeight(userId: String, weightResult: WeightResult): Completable
+    suspend fun putWeight(userId: String, weightResult: WeightResult)
 
-    fun editWeight(userId: String, weightResult: WeightResult): Completable
+    suspend fun editWeight(userId: String, weightResult: WeightResult)
 }

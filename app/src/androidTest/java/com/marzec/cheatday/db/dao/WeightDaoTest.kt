@@ -8,13 +8,23 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.db.model.db.WeightResultEntity
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.*
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
+@ExperimentalCoroutinesApi
 class WeightDaoTest {
+
+    private val testDispatcher = TestCoroutineDispatcher()
+    private val testScope = CoroutineScope(testDispatcher)
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -29,7 +39,10 @@ class WeightDaoTest {
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        db = inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        db = inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .setTransactionExecutor(testDispatcher.asExecutor())
+            .setQueryExecutor(testDispatcher.asExecutor())
+            .build()
         userDao = db.getUserDao()
         weightDao = db.getWeightDao()
         userDao.insertCompletable(userEntity).test()
@@ -38,7 +51,7 @@ class WeightDaoTest {
     }
 
     @Test
-    fun getAllWeights() {
+    fun getAllWeights() = runBlockingTest {
         weightDao.insert(
             WeightResultEntity(
                 0,
@@ -63,9 +76,10 @@ class WeightDaoTest {
                 otherUser.uuid
             )
         )
-        weightDao.getWeights(userEntity.uuid)
-            .test()
-            .assertValue(listOf(
+        val actualItems = weightDao.getWeights(userEntity.uuid)
+            .toList()
+        Assert.assertEquals(
+            listOf(
                 WeightResultEntity(
                     1,
                     1f,
@@ -78,6 +92,8 @@ class WeightDaoTest {
                     0,
                     userEntity.uuid
                 )
-            ))
+            ),
+            actualItems
+        )
     }
 }

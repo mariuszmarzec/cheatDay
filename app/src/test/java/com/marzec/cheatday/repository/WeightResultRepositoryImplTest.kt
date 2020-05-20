@@ -1,6 +1,5 @@
 package com.marzec.cheatday.repository
 
-import com.marzec.cheatday.TestSchedulersRule
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 import com.marzec.cheatday.domain.WeightResult
@@ -9,14 +8,16 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
-import io.reactivex.Observable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.joda.time.DateTime
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestSchedulersRule::class)
+@ExperimentalCoroutinesApi
 internal class WeightResultRepositoryImplTest {
 
     val weightDao: WeightDao = mock()
@@ -25,34 +26,29 @@ internal class WeightResultRepositoryImplTest {
 
     @BeforeEach
     fun setUp() {
-        whenever(weightDao.getWeights(any())).thenReturn(Observable.just(listOf(stubWeightResultEntity())))
-        whenever(weightDao.insertCompletable(any())).thenReturn(Completable.complete())
-        whenever(weightDao.updateCompletable(any())).thenReturn(Completable.complete())
+        whenever(weightDao.getWeights(any())).thenReturn(flowOf(listOf(stubWeightResultEntity())))
         repository = WeightResultRepositoryImpl(weightDao)
     }
 
     @Test
-    fun getWeights() {
-        repository.getWeights("user_id")
-            .test()
-            .assertValue(listOf(stubWeightResultEntity().toDomain()))
+    fun getWeights() = runBlockingTest {
+        assertEquals(
+            listOf(stubWeightResultEntity().toDomain()),
+            repository.getWeights("user_id").first()
+        )
         verify(weightDao).getWeights("user_id")
     }
 
     @Test
-    fun editWeight() {
+    fun editWeight() = runBlockingTest {
         repository.editWeight("user_id", stubWeightResult(userId = "user_id"))
-            .test()
-            .assertComplete()
-        verify(weightDao).updateCompletable(stubWeightResultEntity(userId = "user_id"))
+        verify(weightDao).updateSuspend(stubWeightResultEntity(userId = "user_id"))
     }
 
     @Test
-    fun putWeight() {
+    fun putWeight() = runBlockingTest {
         repository.putWeight("user_id", stubWeightResult(userId = "user_id"))
-            .test()
-            .assertComplete()
-        verify(weightDao).insertCompletable(stubWeightResultEntity(userId = "user_id"))
+        verify(weightDao).insertSuspend(stubWeightResultEntity(userId = "user_id"))
     }
 
     private fun stubWeightResultEntity(
@@ -61,11 +57,11 @@ internal class WeightResultRepositoryImplTest {
         date: Long = 0,
         userId: String = ""
     ) = WeightResultEntity(
-            id,
-            value,
-            date,
-            userId
-        )
+        id,
+        value,
+        date,
+        userId
+    )
 
     private fun stubWeightResult(
         id: Long = 0,
@@ -73,8 +69,8 @@ internal class WeightResultRepositoryImplTest {
         date: DateTime = DateTime(0),
         userId: String = ""
     ) = WeightResult(
-            id,
-            value,
-            date
-        )
+        id,
+        value,
+        date
+    )
 }

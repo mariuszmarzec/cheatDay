@@ -9,8 +9,8 @@ import dagger.multibindings.IntoMap
 @Module
 interface WeightsFragmentModule {
 
-//    @Binds
-//    @IntoMap
-//    @ViewModelKey(WeightsViewModel::class)
-//    fun bindDaysCounter(viewModel: WeightsViewModel): ViewModel
+    @Binds
+    @IntoMap
+    @ViewModelKey(WeightsViewModel::class)
+    fun bindDaysCounter(viewModel: WeightsViewModel): ViewModel
 }
