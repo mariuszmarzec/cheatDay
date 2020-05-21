@@ -5,8 +5,8 @@ import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.domain.Day
 import com.marzec.cheatday.domain.DaysGroup
 import com.marzec.cheatday.interactor.DaysInteractor
-import com.marzec.cheatday.stubs.DayStub
-import com.marzec.cheatday.stubs.DaysGroupStub
+import com.marzec.cheatday.stubs.stubDay
+import com.marzec.cheatday.stubs.stubDaysGroup
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -38,58 +38,58 @@ class DaysCounterViewModelTest {
 
         verify(daysInteractor).getDays()
 
-        subject.onNext(DaysGroupStub.create())
-        subject.onNext(DaysGroupStub.create(DayStub.create(count = 1L)))
+        subject.onNext(stubDaysGroup())
+        subject.onNext(stubDaysGroup(stubDay(count = 1L)))
 
-        verify(observer).onChanged(DaysGroupStub.create())
-        verify(observer).onChanged(DaysGroupStub.create(DayStub.create(count = 1L)))
+        verify(observer).onChanged(stubDaysGroup())
+        verify(observer).onChanged(stubDaysGroup(stubDay(count = 1L)))
     }
 
     @Test
     fun onCheatDecreaseClick() {
         whenever(daysInteractor.updateDay(any())) doReturn Completable.complete()
         whenever(daysInteractor.getDays()) doReturn Observable.just(
-            DaysGroupStub.create(
-                DayStub.create(type = Day.Type.CHEAT),
-                DayStub.create(type = Day.Type.WORKOUT),
-                DayStub.create(type = Day.Type.DIET)
+            stubDaysGroup(
+                stubDay(type = Day.Type.CHEAT),
+                stubDay(type = Day.Type.WORKOUT),
+                stubDay(type = Day.Type.DIET)
             )
         )
         viewModel.days.observeForever(mock())
 
         viewModel.onCheatDecreaseClick()
-        daysInteractor.updateDay(DayStub.create(type = Day.Type.CHEAT, count = -1))
+        daysInteractor.updateDay(stubDay(type = Day.Type.CHEAT, count = -1))
     }
 
     @Test
     fun onDietIncreaseClick() {
         whenever(daysInteractor.updateDay(any())) doReturn Completable.complete()
         whenever(daysInteractor.getDays()) doReturn Observable.just(
-            DaysGroupStub.create(
-                DayStub.create(type = Day.Type.CHEAT),
-                DayStub.create(type = Day.Type.WORKOUT),
-                DayStub.create(type = Day.Type.DIET)
+            stubDaysGroup(
+                stubDay(type = Day.Type.CHEAT),
+                stubDay(type = Day.Type.WORKOUT),
+                stubDay(type = Day.Type.DIET)
             )
         )
         viewModel.days.observeForever(mock())
 
         viewModel.onDietIncreaseClick()
-        daysInteractor.updateDay(DayStub.create(type = Day.Type.WORKOUT, count = -1))
+        daysInteractor.updateDay(stubDay(type = Day.Type.WORKOUT, count = -1))
     }
 
     @Test
     fun onWorkoutIncreaseClick() {
         whenever(daysInteractor.updateDay(any())) doReturn Completable.complete()
         whenever(daysInteractor.getDays()) doReturn Observable.just(
-            DaysGroupStub.create(
-                DayStub.create(type = Day.Type.CHEAT),
-                DayStub.create(type = Day.Type.WORKOUT),
-                DayStub.create(type = Day.Type.DIET)
+            stubDaysGroup(
+                stubDay(type = Day.Type.CHEAT),
+                stubDay(type = Day.Type.WORKOUT),
+                stubDay(type = Day.Type.DIET)
             )
         )
         viewModel.days.observeForever(mock())
 
         viewModel.onWorkoutIncreaseClick()
-        daysInteractor.updateDay(DayStub.create(type = Day.Type.DIET, count = -1))
+        daysInteractor.updateDay(stubDay(type = Day.Type.DIET, count = -1))
     }
 }

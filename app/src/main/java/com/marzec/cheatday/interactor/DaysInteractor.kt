@@ -42,17 +42,10 @@ class DaysInteractorImpl @Inject constructor(
         maxCount: Long
     ): Completable {
         return if (day.count > 0 && day.count.rem(maxCount) == 0L) {
-            updateCheatDays()
+            incrementCheatDays(daysCount = 1)
         } else {
             Completable.complete()
         }.andThen(daysRepository.update(userId, day))
-    }
-
-    private fun updateCheatDays(): Completable {
-        return getDays().firstOrError().map { it.cheat.copy(count = it.cheat.count.inc()) }
-            .flatMapCompletable { cheatDays ->
-                updateDay(cheatDays)
-            }
     }
 
     override fun getMaxDietDays(): Single<Int> {
@@ -61,6 +54,13 @@ class DaysInteractorImpl @Inject constructor(
 
     override fun getMaxWorkoutDays(): Single<Int> {
         return Single.just(Constants.MAX_WORKOUT_DAYS)
+    }
+
+    override fun incrementCheatDays(daysCount: Int): Completable {
+        return getDays().firstOrError().map { it.cheat.copy(count = it.cheat.count + daysCount) }
+            .flatMapCompletable { cheatDays ->
+                updateDay(cheatDays)
+            }
     }
 
 }
@@ -74,4 +74,6 @@ interface DaysInteractor {
     fun getMaxDietDays(): Single<Int>
 
     fun getMaxWorkoutDays(): Single<Int>
+
+    fun incrementCheatDays(daysCount: Int): Completable
 }

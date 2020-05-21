@@ -26,22 +26,43 @@ internal class WeightResultRepositoryImplTest {
 
     @BeforeEach
     fun setUp() {
-        whenever(weightDao.getWeights(any())).thenReturn(flowOf(listOf(stubWeightResultEntity())))
+        whenever(weightDao.observeMinWeight(any())).thenReturn(flowOf())
+        whenever(weightDao.observeWeights(any())).thenReturn(flowOf(listOf(stubWeightResultEntity())))
         repository = WeightResultRepositoryImpl(weightDao)
     }
 
     @Test
-    fun getWeights() = runBlockingTest {
+    fun observeWeight() = runBlockingTest {
         assertEquals(
             listOf(stubWeightResultEntity().toDomain()),
-            repository.getWeights("user_id").first()
+            repository.observeWeights("user_id").first()
         )
-        verify(weightDao).getWeights("user_id")
+        verify(weightDao).observeWeights("user_id")
+    }
+
+    @Test
+    fun observeMinWeight() = runBlockingTest {
+        whenever(weightDao.observeMinWeight(any())).thenReturn(flowOf(stubWeightResultEntity()))
+        assertEquals(
+            stubWeightResultEntity().toDomain(),
+            repository.observeMinWeight("user_id").first()
+        )
+        verify(weightDao).observeMinWeight("user_id")
+    }
+
+    @Test
+    fun observeLastWeight() = runBlockingTest {
+        whenever(weightDao.observeLastWeight(any())).thenReturn(flowOf(stubWeightResultEntity()))
+        assertEquals(
+            stubWeightResultEntity().toDomain(),
+            repository.observeLastWeight("user_id").first()
+        )
+        verify(weightDao).observeLastWeight("user_id")
     }
 
     @Test
     fun editWeight() = runBlockingTest {
-        repository.editWeight("user_id", stubWeightResult(userId = "user_id"))
+        repository.updateWeight("user_id", stubWeightResult(userId = "user_id"))
         verify(weightDao).updateSuspend(stubWeightResultEntity(userId = "user_id"))
     }
 

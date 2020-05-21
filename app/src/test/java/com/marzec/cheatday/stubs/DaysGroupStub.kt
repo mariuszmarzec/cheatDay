@@ -3,15 +3,12 @@ package com.marzec.cheatday.stubs
 import com.marzec.cheatday.domain.Day
 import com.marzec.cheatday.domain.DaysGroup
 
-object DaysGroupStub {
-
-    fun create(
-        cheat: Day = DayStub.create(),
-        workOut: Day = DayStub.create(),
-        diet: Day = DayStub.create()
-    ) = DaysGroup(
-        cheat = cheat,
-        workout = workOut,
-        diet = diet
-    )
-}
+fun stubDaysGroup(
+    cheat: Day = stubDay(),
+    workOut: Day = stubDay(),
+    diet: Day = stubDay()
+) = DaysGroup(
+    cheat = cheat,
+    workout = workOut,
+    diet = diet
+)

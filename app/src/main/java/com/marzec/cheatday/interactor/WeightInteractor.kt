@@ -1,19 +1,79 @@
 package com.marzec.cheatday.interactor
 
+import com.marzec.cheatday.domain.WeightResult
+import com.marzec.cheatday.extensions.incIf
 import com.marzec.cheatday.repository.TargetWeightRepository
+import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.repository.WeightResultRepository
+import io.reactivex.BackpressureStrategy
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.reactive.asFlow
 import javax.inject.Inject
 
 interface WeightInteractor {
 
+    fun observeTargetWeight(): Float
+
+    fun setTargetWeight(weight: Float)
+
+    fun observeWeights(): Flow<List<WeightResult>>
+
+    suspend fun addWeight(weight: WeightResult)
+
+    suspend fun updateWeight(weight: WeightResult)
 }
 
+@ExperimentalCoroutinesApi
 class WeightInteractorImpl @Inject constructor(
+    private val userRepository: UserRepository,
     private val targetRepository: TargetWeightRepository,
-    private val weightResultRepository: WeightResultRepository
+    private val weightResultRepository: WeightResultRepository,
+    private val daysInteractor: DaysInteractor
 ) : WeightInteractor {
 
-    fun observeTargetWeight() = targetRepository.observeTargetWeight()
+    override fun observeTargetWeight(): Float = targetRepository
+        .observeTargetWeight()
+        .blockingFirst()
 
-    fun updateTargetWeight(weight: Float) = targetRepository.setTargetWeight(weight)
+    override fun setTargetWeight(weight: Float) = targetRepository.setTargetWeight(weight)
+
+    override fun observeWeights(): Flow<List<WeightResult>> {
+        return userRepository.getCurrentUserFlow().flatMapLatest { user ->
+            weightResultRepository.observeWeights(user.uuid)
+        }
+    }
+
+    override suspend fun addWeight(weight: WeightResult) {
+        val userId = userRepository.getCurrentUserSuspend().uuid
+        val lastWeight = weightResultRepository.observeLastWeight(userId).firstOrNull()
+
+        lastWeight?.value?.let {  old ->
+
+            val min = weightResultRepository.observeMinWeight(userId).first().value
+            val target = targetRepository.observeTargetWeight().toFlowable(BackpressureStrategy.BUFFER).asFlow().first()
+            val new = weight.value
+
+            val newCheatDays = if (new > old && new > target) {
+                -1 - (new.toInt() - old.toInt())
+            } else if (new < old) {
+                1 + (old.toInt() - new.toInt())
+            } else {
+                0
+            }.incIf { min > new }
+
+            if (newCheatDays != 0) {
+                daysInteractor.incrementCheatDays(newCheatDays).blockingAwait()
+            }
+        }
+
+        weightResultRepository.putWeight(userId, weight)
+    }
+
+    override suspend fun updateWeight(weight: WeightResult) {
+        weightResultRepository.updateWeight(userRepository.getCurrentUserSuspend().uuid, weight)
+    }
 }

@@ -15,8 +15,6 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.TestWatcher
-import org.junit.runner.Description
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
@@ -76,7 +74,7 @@ class WeightDaoTest {
                 otherUser.uuid
             )
         )
-        val actualItems = weightDao.getWeights(userEntity.uuid)
+        val actualItems = weightDao.observeWeights(userEntity.uuid)
             .toList()
         Assert.assertEquals(
             listOf(
