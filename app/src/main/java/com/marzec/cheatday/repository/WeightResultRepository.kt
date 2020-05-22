@@ -18,8 +18,8 @@ class WeightResultRepositoryImpl @Inject constructor(
     override fun observeMinWeight(userId: String): Flow<WeightResult?> =
         weightDao.observeMinWeight(userId).map { it?.toDomain() }
 
-    override fun observeLastWeight(userId: String): Flow<WeightResult> =
-        weightDao.observeLastWeight(userId).map { it.toDomain() }
+    override fun observeLastWeight(userId: String): Flow<WeightResult?> =
+        weightDao.observeLastWeight(userId).map { it?.toDomain() }
 
     override suspend fun putWeight(userId: String, weightResult: WeightResult) =
         weightDao.insertSuspend(weightResult.toDb(userId))
@@ -38,7 +38,7 @@ interface WeightResultRepository {
 
     fun observeMinWeight(userId: String): Flow<WeightResult?>
 
-    fun observeLastWeight(userId: String): Flow<WeightResult>
+    fun observeLastWeight(userId: String): Flow<WeightResult?>
 
     suspend fun putWeight(userId: String, weightResult: WeightResult)
 

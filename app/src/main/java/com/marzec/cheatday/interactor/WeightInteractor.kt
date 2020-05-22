@@ -58,9 +58,9 @@ class WeightInteractorImpl @Inject constructor(
 
     override suspend fun addWeight(weight: WeightResult) {
         val userId = userRepository.getCurrentUserSuspend().uuid
-        val lastWeight = weightResultRepository.observeLastWeight(userId).firstOrNull()
+        val lastWeight = weightResultRepository.observeLastWeight(userId).first()
 
-        lastWeight?.value?.let {  old ->
+        lastWeight?.value?.let { old ->
 
             val min = weightResultRepository.observeMinWeight(userId).first()!!.value
             val target = targetRepository.observeTargetWeight().toFlowable(BackpressureStrategy.BUFFER).asFlow().first()
