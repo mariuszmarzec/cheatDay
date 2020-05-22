@@ -1,6 +1,8 @@
 package com.marzec.cheatday.feature.home
 
 import com.marzec.cheatday.di.FragmentScope
+import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultFragment
+import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultModule
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragment
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragmentModule
 import com.marzec.cheatday.feature.home.weights.WeightsFragment
@@ -18,4 +20,8 @@ abstract class MainActivityModule {
     @ContributesAndroidInjector(modules = [WeightsFragmentModule::class])
     @FragmentScope
     abstract fun bindWeightsFragment(): WeightsFragment
+
+    @ContributesAndroidInjector(modules = [AddNewWeightResultModule::class])
+    @FragmentScope
+    abstract fun bindAddNewWeightResultFragment(): AddNewWeightResultFragment
 }

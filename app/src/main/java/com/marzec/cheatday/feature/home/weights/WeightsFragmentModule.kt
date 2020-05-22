@@ -13,4 +13,7 @@ interface WeightsFragmentModule {
     @IntoMap
     @ViewModelKey(WeightsViewModel::class)
     fun bindDaysCounter(viewModel: WeightsViewModel): ViewModel
+
+    @Binds
+    fun bindWeightsMapper(mapper: WeightsMapperImpl): WeightsMapper
 }

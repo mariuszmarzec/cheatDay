@@ -12,8 +12,11 @@ interface WeightDao : BaseDao<WeightResultEntity> {
     fun observeWeights(userId: String): Flow<List<WeightResultEntity>>
 
     @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE user_id = :userId AND value == (SELECT MIN(value) FROM ${WeightResultEntity.NAME} WHERE user_id = :userId) ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
-    fun observeMinWeight(userId: String): Flow<WeightResultEntity>
+    fun observeMinWeight(userId: String): Flow<WeightResultEntity?>
 
     @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE user_id = :userId ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
     fun observeLastWeight(userId: String): Flow<WeightResultEntity>
+
+    @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE id = :id")
+    fun getWeightSuspend(id: Long): WeightResultEntity
 }

@@ -16,7 +16,9 @@ import javax.inject.Inject
 
 interface WeightInteractor {
 
-    fun observeTargetWeight(): Float
+    fun observeTargetWeight(): Flow<Float>
+
+    fun observeMinWeight(): Flow<WeightResult?>
 
     fun setTargetWeight(weight: Float)
 
@@ -25,6 +27,8 @@ interface WeightInteractor {
     suspend fun addWeight(weight: WeightResult)
 
     suspend fun updateWeight(weight: WeightResult)
+
+    suspend fun getWeight(id: Long): WeightResult?
 }
 
 @ExperimentalCoroutinesApi
@@ -35,9 +39,14 @@ class WeightInteractorImpl @Inject constructor(
     private val daysInteractor: DaysInteractor
 ) : WeightInteractor {
 
-    override fun observeTargetWeight(): Float = targetRepository
-        .observeTargetWeight()
-        .blockingFirst()
+    override fun observeTargetWeight() = targetRepository
+        .observeTargetWeight().toFlowable(BackpressureStrategy.BUFFER).asFlow()
+
+    override fun observeMinWeight(): Flow<WeightResult?> {
+        return userRepository.getCurrentUserFlow().flatMapLatest { user ->
+            weightResultRepository.observeMinWeight(user.uuid)
+        }
+    }
 
     override fun setTargetWeight(weight: Float) = targetRepository.setTargetWeight(weight)
 
@@ -53,7 +62,7 @@ class WeightInteractorImpl @Inject constructor(
 
         lastWeight?.value?.let {  old ->
 
-            val min = weightResultRepository.observeMinWeight(userId).first().value
+            val min = weightResultRepository.observeMinWeight(userId).first()!!.value
             val target = targetRepository.observeTargetWeight().toFlowable(BackpressureStrategy.BUFFER).asFlow().first()
             val new = weight.value
 
@@ -75,5 +84,9 @@ class WeightInteractorImpl @Inject constructor(
 
     override suspend fun updateWeight(weight: WeightResult) {
         weightResultRepository.updateWeight(userRepository.getCurrentUserSuspend().uuid, weight)
+    }
+
+    override suspend fun getWeight(id: Long): WeightResult? {
+        return weightResultRepository.getWeight(id)
     }
 }

@@ -72,6 +72,8 @@ android {
 }
 
 kapt {
+    correctErrorTypes = true
+
     arguments {
         arg('dagger.experimentalDaggerErrorMessages', 'enabled')
     }
@@ -99,7 +101,10 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
-//    implementation "androidx.room:room-coroutines:2.1.0-alpha04"
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$ktx_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$ktx_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$ktx_version"
 
     implementation "com.google.android.material:material:$material_version"
 
@@ -108,7 +113,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
     implementation "com.airbnb.android:paris:$paris_version"
-
+    implementation "com.airbnb.android:epoxy:$epoxy_version"
+    kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
+    
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"

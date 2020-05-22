@@ -38,7 +38,7 @@ class MainActivity : BaseActivity() {
         val fragment: Fragment =
             supportFragmentManager.findFragmentByTag(tag) ?: F::class.java.newInstance()
         supportFragmentManager.beginTransaction()
-            .replace(R.id.daysCounterFragment, fragment, tag)
+            .replace(R.id.fragmentContainer, fragment, tag)
             .commit()
     }
 }

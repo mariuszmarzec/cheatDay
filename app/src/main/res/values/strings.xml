@@ -8,4 +8,11 @@
     <string name="notification_every_day_sum_up">Sum up your day</string>
     <string name="menu_home">Home</string>
     <string name="menu_weight">Weight</string>
+    <string name="weight_row_date_label">Date:</string>
+    <string name="unit_kg_short">kg</string>
+    <string name="weights_min_label">MIN WEIGHT:</string>
+    <string name="weights_target_label">TARGET WEIGHT:</string>
+    <string name="common_add">Add</string>
+    <string name="weight_hint">Weight</string>
+    <string name="date_hint">Date</string>
 </resources>
