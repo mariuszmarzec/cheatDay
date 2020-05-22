@@ -7,6 +7,7 @@ import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultFragment
 import com.marzec.cheatday.view.labeledRowView
 import com.marzec.cheatday.view.model.LabeledRowItem
 import kotlinx.android.synthetic.main.fragment_weights.*
+import kotlinx.coroutines.InternalCoroutinesApi
 import javax.inject.Inject
 
 class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
@@ -14,6 +15,7 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
     @Inject
     lateinit var viewModel: WeightsViewModel
 
+    @InternalCoroutinesApi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

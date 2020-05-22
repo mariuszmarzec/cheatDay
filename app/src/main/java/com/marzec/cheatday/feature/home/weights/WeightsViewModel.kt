@@ -1,7 +1,6 @@
 package com.marzec.cheatday.feature.home.weights
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataScope
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.marzec.cheatday.common.BaseViewModel
@@ -11,8 +10,7 @@ import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.view.model.ListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class WeightsViewModel @Inject constructor(
@@ -27,9 +25,12 @@ class WeightsViewModel @Inject constructor(
 
     val goToAddResultScreen = SingleLiveEvent<Unit>()
 
+    @InternalCoroutinesApi
     val list: LiveData<List<ListItem>> = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
         minAndTargetFlow.combine(weightInteractor.observeWeights()) { (min, target), weights ->
-            emit(mapper.mapWeights(min, target, weights))
+            Triple(min, target, weights)
+        }.collect { (min, target, weights) ->
+            this@liveData.emit(mapper.mapWeights(min, target, weights))
         }
     }
 
