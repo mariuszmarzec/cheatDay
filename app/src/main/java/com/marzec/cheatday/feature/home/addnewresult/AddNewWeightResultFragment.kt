@@ -47,19 +47,22 @@ class AddNewWeightResultFragment : BaseFragment(R.layout.fragment_add_new_weight
             }
         }
 
-        dateEditText.setOnClickListener {
-            val now = DateTime.now()
+        viewModel.showDatePickerEvent.observeNonNull { date ->
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
                 DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                    viewModel.setDate(DateTime(year, monthOfYear, dayOfMonth, 0, 0))
+                    viewModel.setDate(DateTime(year, monthOfYear + 1, dayOfMonth, 0, 0))
                 },
-                now.year,
-                now.monthOfYear,
-                now.dayOfMonth
+                date.year,
+                date.monthOfYear - 1,
+                date.dayOfMonth
             )
 
             datePickerDialog.show()
+        }
+
+        dateEditText.setOnClickListener {
+            viewModel.onDatePickerClick()
         }
 
         button.setOnClickListener { viewModel.save() }

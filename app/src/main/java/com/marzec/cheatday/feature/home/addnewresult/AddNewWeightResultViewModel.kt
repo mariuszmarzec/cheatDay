@@ -28,6 +28,8 @@ class AddNewWeightResultViewModel @Inject constructor(
 
     val date: LiveData<String> = dateInternal.map { it.toString(Constants.DATE_PICKER_PATTERN) }
 
+    val showDatePickerEvent = SingleLiveEvent<DateTime>()
+
     val error = SingleLiveEvent<Unit>()
 
     val saveSuccess = SingleLiveEvent<Unit>()
@@ -53,6 +55,12 @@ class AddNewWeightResultViewModel @Inject constructor(
 
     fun setDate(date: DateTime) {
         dateInternal.value = date
+    }
+
+    fun onDatePickerClick() {
+        dateInternal.value?.let { date ->
+            showDatePickerEvent.value = date
+        }
     }
 
     fun save() {
