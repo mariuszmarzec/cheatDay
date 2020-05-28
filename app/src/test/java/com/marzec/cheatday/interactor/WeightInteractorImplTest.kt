@@ -12,8 +12,10 @@ import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.test.runBlockingTest
+import org.joda.time.DateTimeUtils
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @ExperimentalCoroutinesApi
@@ -41,10 +43,10 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun observeTargetWeight() {
+    fun observeTargetWeight() = runBlockingTest {
         Assertions.assertEquals(
             0f,
-            interactor.observeTargetWeight()
+            interactor.observeTargetWeight().first()
         )
         verify(targetRepository).observeTargetWeight()
     }
@@ -58,10 +60,14 @@ class WeightInteractorTest {
     @Test
     fun observeWeights() = runBlockingTest {
         whenever(userRepository.getCurrentUserFlow()).thenReturn(flowOf(User("user_id", "mail")))
-        whenever(weightResultRepository.observeWeights("user_id")).thenReturn(flowOf(listOf(
-            stubWeightResult(),
-            stubWeightResult()
-        )))
+        whenever(weightResultRepository.observeWeights("user_id")).thenReturn(
+            flowOf(
+                listOf(
+                    stubWeightResult(),
+                    stubWeightResult()
+                )
+            )
+        )
 
         assertEquals(
             listOf(
@@ -92,93 +98,176 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun `if new weight is greater than older and target weight, then decrease cheat day, and additionally decrease cheat day with diff from integers values of weights`() = runBlockingTest {
+    fun `if added weight is not of today, then don't change cheat days count`() = runBlockingTest {
         whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
-        whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 93.4f)))
-        whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 91f)))
-        whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
 
         interactor.addWeight(
-            stubWeightResult(value = 95.5f))
+            stubWeightResult(value = 90.5f)
+        )
 
-        verify(daysInteractor).incrementCheatDays(-3)
-    }
-
-    @Test
-    fun `if new weight is greater than older with diff smaller than 1 kg than and then target weight, then decrease cheat day`() = runBlockingTest {
-        whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
-        whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 93.4f)))
-        whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
-        whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 91f)))
-
-        interactor.addWeight(
-            stubWeightResult(value = 93.6f))
-
-        verify(daysInteractor).incrementCheatDays(-1)
-    }
-
-    @Test
-    fun `if new weight is greater than older, but not than target weight, then don't change cheat days count`() = runBlockingTest {
-        whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
-        whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 93.4f)))
-        whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(100f))
-        whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 91f)))
-
-        interactor.addWeight(
-            stubWeightResult(value = 95.5f))
-
+        verify(weightResultRepository).putWeight("user_id", stubWeightResult(value = 90.5f))
+        verifyNoMoreInteractions(weightResultRepository)
         verify(daysInteractor, never()).incrementCheatDays(any())
     }
 
-    @Test
-    fun `if new weight is smaller than older, then increase cheat day, and additionally increase cheat day with diff from integers values of weights`() = runBlockingTest {
-        whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
-        whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 93.4f)))
-        whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
-        whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 91f)))
+    @Nested
+    inner class Added_today_weight {
 
-        interactor.addWeight(
-            stubWeightResult(value = 91.5f))
+        @BeforeEach
+        fun setUp() {
+            DateTimeUtils.setCurrentMillisFixed(0)
+        }
 
-        verify(daysInteractor).incrementCheatDays(3)
-    }
+        @Test
+        fun `if new weight is greater than older and target weight, then decrease cheat day, and additionally decrease cheat day with diff from integers values of weights`() =
+            runBlockingTest {
+                whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
+                whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 93.4f)
+                    )
+                )
+                whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 91f)
+                    )
+                )
+                whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
 
-    @Test
-    fun `if new weight is smaller than older with diff smaller than 1 kg, then increase cheat day`() = runBlockingTest {
-        whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
-        whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 93.4f)))
-        whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
-        whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 80.0f)))
+                interactor.addWeight(
+                    stubWeightResult(value = 95.5f)
+                )
 
-        interactor.addWeight(
-            stubWeightResult(value = 93.3f))
+                verify(daysInteractor).incrementCheatDays(-3)
+            }
 
-        verify(daysInteractor).incrementCheatDays(1)
-    }
+        @Test
+        fun `if new weight is greater than older with diff smaller than 1 kg than and then target weight, then decrease cheat day`() =
+            runBlockingTest {
+                whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
+                whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 93.4f)
+                    )
+                )
+                whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
+                whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 91f)
+                    )
+                )
 
-    @Test
-    fun `if new weight is smaller than min weight, then increase cheat day with one extra day`() = runBlockingTest {
-        whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
-        whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 91.1f)))
-        whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
-        whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(flowOf(stubWeightResult(value = 91f)))
+                interactor.addWeight(
+                    stubWeightResult(value = 93.6f)
+                )
 
-        interactor.addWeight(
-            stubWeightResult(value = 90.5f))
+                verify(daysInteractor).incrementCheatDays(-1)
+            }
 
-        verify(daysInteractor).incrementCheatDays(3)
-    }
+        @Test
+        fun `if new weight is greater than older, but not than target weight, then don't change cheat days count`() =
+            runBlockingTest {
+                whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
+                whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 93.4f)
+                    )
+                )
+                whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(100f))
+                whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 91f)
+                    )
+                )
 
-    @Test
-    fun `if old value not available, then don't cheat days count`() = runBlockingTest {
-        whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
-        whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(flowOf())
-        whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
-        whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(flowOf())
+                interactor.addWeight(
+                    stubWeightResult(value = 95.5f)
+                )
 
-        interactor.addWeight(
-            stubWeightResult(value = 90.5f))
+                verify(daysInteractor, never()).incrementCheatDays(any())
+            }
 
-        verify(daysInteractor, never()).incrementCheatDays(any())
+        @Test
+        fun `if new weight is smaller than older, then increase cheat day, and additionally increase cheat day with diff from integers values of weights`() =
+            runBlockingTest {
+                whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
+                whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 93.4f)
+                    )
+                )
+                whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
+                whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 91f)
+                    )
+                )
+
+                interactor.addWeight(
+                    stubWeightResult(value = 91.5f)
+                )
+
+                verify(daysInteractor).incrementCheatDays(3)
+            }
+
+        @Test
+        fun `if new weight is smaller than older with diff smaller than 1 kg, then increase cheat day`() =
+            runBlockingTest {
+                whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
+                whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 93.4f)
+                    )
+                )
+                whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
+                whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 80.0f)
+                    )
+                )
+
+                interactor.addWeight(
+                    stubWeightResult(value = 93.3f)
+                )
+
+                verify(daysInteractor).incrementCheatDays(1)
+            }
+
+        @Test
+        fun `if new weight is smaller than min weight, then increase cheat day with one extra day`() =
+            runBlockingTest {
+                whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
+                whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 91.1f)
+                    )
+                )
+                whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
+                whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(
+                    flowOf(
+                        stubWeightResult(value = 91f)
+                    )
+                )
+
+                interactor.addWeight(
+                    stubWeightResult(value = 90.5f)
+                )
+
+                verify(daysInteractor).incrementCheatDays(3)
+            }
+
+        @Test
+        fun `if old value not available, then don't cheat days count`() = runBlockingTest {
+            whenever(userRepository.getCurrentUserSuspend()).thenReturn(User("user_id", "mail"))
+            whenever(weightResultRepository.observeLastWeight("user_id")).thenReturn(flowOf(null))
+            whenever(targetRepository.observeTargetWeight()).thenReturn(Observable.just(90f))
+            whenever(weightResultRepository.observeMinWeight("user_id")).thenReturn(flowOf(null))
+
+            interactor.addWeight(
+                stubWeightResult(value = 90.5f)
+            )
+
+            verify(daysInteractor, never()).incrementCheatDays(any())
+        }
     }
 }

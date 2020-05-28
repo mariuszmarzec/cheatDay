@@ -9,9 +9,9 @@ import io.reactivex.BackpressureStrategy
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.reactive.asFlow
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 interface WeightInteractor {
@@ -58,28 +58,38 @@ class WeightInteractorImpl @Inject constructor(
 
     override suspend fun addWeight(weight: WeightResult) {
         val userId = userRepository.getCurrentUserSuspend().uuid
-        val lastWeight = weightResultRepository.observeLastWeight(userId).first()
 
-        lastWeight?.value?.let { old ->
-
-            val min = weightResultRepository.observeMinWeight(userId).first()!!.value
-            val target = targetRepository.observeTargetWeight().toFlowable(BackpressureStrategy.BUFFER).asFlow().first()
-            val new = weight.value
-
-            val newCheatDays = if (new > old && new > target) {
-                -1 - (new.toInt() - old.toInt())
-            } else if (new < old) {
-                1 + (old.toInt() - new.toInt())
-            } else {
-                0
-            }.incIf { min > new }
-
-            if (newCheatDays != 0) {
-                daysInteractor.incrementCheatDays(newCheatDays).blockingAwait()
+        if (weight.date.withTimeAtStartOfDay() == DateTime.now().withTimeAtStartOfDay()) {
+            weightResultRepository.observeLastWeight(userId).first()?.value?.let { old ->
+                incrementCheatDaysIfNeeded(userId, weight, old)
             }
         }
 
         weightResultRepository.putWeight(userId, weight)
+    }
+
+    private suspend fun incrementCheatDaysIfNeeded(
+        userId: String,
+        weight: WeightResult,
+        old: Float
+    ) {
+        val min = weightResultRepository.observeMinWeight(userId).first()!!.value
+        val target =
+            targetRepository.observeTargetWeight().toFlowable(BackpressureStrategy.BUFFER)
+                .asFlow().first()
+        val new = weight.value
+
+        val newCheatDays = if (new > old && new > target) {
+            -1 - (new.toInt() - old.toInt())
+        } else if (new < old) {
+            1 + (old.toInt() - new.toInt())
+        } else {
+            0
+        }.incIf { min > new }
+
+        if (newCheatDays != 0) {
+            daysInteractor.incrementCheatDays(newCheatDays).blockingAwait()
+        }
     }
 
     override suspend fun updateWeight(weight: WeightResult) {
