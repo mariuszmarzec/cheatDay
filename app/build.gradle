@@ -12,7 +12,7 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.marzec.cheatday.MockTestRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -114,7 +114,6 @@ dependencies {
 
     implementation "com.airbnb.android:paris:$paris_version"
     implementation "com.airbnb.android:epoxy:$epoxy_version"
-    kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
     
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
@@ -123,11 +122,12 @@ dependencies {
     implementation "androidx.preference:preference-ktx:$preferences_ktx_version"
     implementation "com.f2prateek.rx.preferences2:rx-preferences:$rx_preferences_version"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+
+    kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
     kapt  "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
-
     kapt "androidx.room:room-compiler:$room_version"
-
     kapt "com.airbnb.android:paris-processor:$paris_version"
 
     testImplementation "junit:junit:4.12"
@@ -136,11 +136,71 @@ dependencies {
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version"
     testImplementation "joda-time:joda-time:$joda_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+
+    kaptAndroidTest "com.airbnb.android:epoxy-processor:$epoxy_version"
+    kaptAndroidTest  "com.google.dagger:dagger-compiler:$dagger_version"
+    kaptAndroidTest "com.google.dagger:dagger-android-processor:$dagger_version"
+    kaptAndroidTest "androidx.room:room-compiler:$room_version"
+    kaptAndroidTest "com.airbnb.android:paris-processor:$paris_version"
+
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    androidTestImplementation "androidx.appcompat:appcompat:$appcompat_version"
+    androidTestImplementation "androidx.core:core-ktx:$core_ktx_version"
+    androidTestImplementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
+    androidTestImplementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    androidTestImplementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    androidTestImplementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
+    androidTestImplementation "com.google.code.gson:gson:$gson_version"
+    androidTestImplementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    androidTestImplementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    androidTestImplementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    androidTestImplementation "androidx.recyclerview:recyclerview:1.1.0"
+    androidTestImplementation "org.jetbrains.anko:anko-commons:$anko_version"
+    androidTestImplementation "net.danlew:android.joda:$joda_version"
+    androidTestImplementation "android.arch.lifecycle:viewmodel:$viewmodel_version"
+    androidTestImplementation "android.arch.lifecycle:reactivestreams:$reactivestreams_version"
+    androidTestImplementation "androidx.lifecycle:lifecycle-livedata:$livedata_version"
+    androidTestImplementation "androidx.room:room-runtime:$room_version"
+    androidTestImplementation "androidx.room:room-ktx:$room_version"
+    androidTestImplementation "androidx.room:room-rxjava2:$room_version"
+
+    androidTestImplementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$ktx_version"
+    androidTestImplementation "androidx.lifecycle:lifecycle-runtime-ktx:$ktx_version"
+    androidTestImplementation "androidx.lifecycle:lifecycle-livedata-ktx:$ktx_version"
+
+    androidTestImplementation "com.google.android.material:material:$material_version"
+
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:$coroutines_version"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    androidTestImplementation "com.airbnb.android:paris:$paris_version"
+    androidTestImplementation "com.airbnb.android:epoxy:$epoxy_version"
+
+    androidTestImplementation "com.google.dagger:dagger:$dagger_version"
+    androidTestImplementation "com.google.dagger:dagger-android:$dagger_version"
+    androidTestImplementation "com.google.dagger:dagger-android-support:$dagger_version"
+
+    androidTestImplementation "androidx.preference:preference-ktx:$preferences_ktx_version"
+    androidTestImplementation "com.f2prateek.rx.preferences2:rx-preferences:$rx_preferences_version"
+
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+    
+    androidTestImplementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    androidTestImplementation "org.mockito:mockito-android:$mockito_version"
+    androidTestImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version" , {
+        exclude group: 'org.mockito', module: 'mockito-core'
+    })
 
     androidTestImplementation "androidx.test.ext:junit:$android_test_runner_version"
     androidTestImplementation "androidx.test:rules:$android_test_version"
     androidTestImplementation "androidx.arch.core:core-testing:$arch_testing_version"
     androidTestImplementation "junit:junit:4.12"
+    androidTestImplementation "com.squareup.rx.idler:rx2-idler:$idler_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
+    androidTestImplementation "androidx.test:runner:$android_test_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_core"
+    androidTestImplementation "androidx.fragment:fragment-testing:$fragment_version"
+
 }

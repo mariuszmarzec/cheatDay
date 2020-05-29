@@ -9,7 +9,7 @@ import com.marzec.cheatday.extensions.toLiveData
 import com.marzec.cheatday.interactor.DaysInteractor
 import javax.inject.Inject
 
-class DaysCounterViewModel @Inject constructor(
+open class DaysCounterViewModel @Inject constructor(
     private val daysInteractor: DaysInteractor
 ) : BaseViewModel() {
 
