@@ -32,7 +32,7 @@ buildscript {
     ext.epoxy_version = '3.11.0'
     ext.espresso_core = '3.2.0'
     ext.idler_version = '0.10.0'
-    ext.fragment_version = '1.2.4'
+    ext.fragment_version = '1.2.5'
 
     repositories {
         google()

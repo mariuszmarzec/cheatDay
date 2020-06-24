@@ -15,7 +15,7 @@ abstract class BaseFragment : Fragment {
     constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
+        CustomFragmentInjection.inject(this)
         super.onCreate(savedInstanceState)
     }
 
@@ -38,5 +38,14 @@ abstract class BaseFragment : Fragment {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment, tag)
             .commit()
+    }
+}
+
+object CustomFragmentInjection {
+    var injectingEnabled = true
+    fun inject(fragment: Fragment) {
+        if (injectingEnabled) {
+            AndroidSupportInjection.inject(fragment)
+        }
     }
 }
