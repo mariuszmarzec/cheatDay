@@ -1,12 +1,16 @@
 package com.marzec.cheatday.common
 
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import com.marzec.cheatday.R
+import com.marzec.cheatday.viewmodel.InjectingSavedStateViewModelFactory
 import dagger.android.support.AndroidSupportInjection
+import javax.inject.Inject
 
 abstract class BaseFragment : Fragment {
 
@@ -39,6 +43,25 @@ abstract class BaseFragment : Fragment {
             .replace(R.id.fragmentContainer, fragment, tag)
             .commit()
     }
+}
+
+abstract class BaseVMFragment<VM: ViewModel> : BaseFragment {
+
+    constructor() : super()
+
+    constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
+
+    @Inject
+    lateinit var vmFactory: InjectingSavedStateViewModelFactory
+
+    protected lateinit var viewModel: VM
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = vmFactory.create(this).create(viewModelClass())
+    }
+
+    abstract fun viewModelClass(): Class<out VM>
 }
 
 object CustomFragmentInjection {

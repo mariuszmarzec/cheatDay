@@ -127,6 +127,11 @@ dependencies {
     implementation "androidx.fragment:fragment:$fragment_version"
     debugImplementation("androidx.fragment:fragment-testing:$fragment_version")
 
+    implementation "androidx.activity:activity:$activity_version"
+
+    implementation 'com.squareup.inject:assisted-inject-annotations-dagger2:0.5.2'
+    kapt'com.squareup.inject:assisted-inject-processor-dagger2:0.5.2'
+
     kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
     kapt  "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"

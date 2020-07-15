@@ -3,6 +3,8 @@ package com.marzec.cheatday.extensions
 import com.marzec.cheatday.view.model.ListItem
 import org.joda.time.DateTime
 
+fun emptyString() = ""
+
 fun Long?.toDateTime() = this?.let { DateTime(it) }
 
 fun Int.incIf(condition: () -> Boolean) = if (condition()) inc() else this

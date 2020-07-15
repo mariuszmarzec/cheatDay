@@ -1,19 +1,32 @@
 package com.marzec.cheatday.di
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.marzec.cheatday.viewmodel.CustomViewModelFactory
+import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultViewModel
+import com.marzec.cheatday.feature.home.dayscounter.DaysCounterViewModel
+import com.marzec.cheatday.feature.home.weights.WeightsViewModel
+import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
+import com.squareup.inject.assisted.dagger2.AssistedModule
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
-import javax.inject.Provider
+import dagger.multibindings.IntoMap
 
 @Suppress("unused")
-@Module
-open class ViewModelModule {
+@AssistedModule
+@Module(includes = [AssistedInject_ViewModelModule::class])
+interface ViewModelModule {
 
-    @Provides
-    open fun bindViewModelFactory(
-        creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
-    ): ViewModelProvider.Factory = CustomViewModelFactory(creators)
+    @Binds
+    @IntoMap
+    @ViewModelKey(DaysCounterViewModel::class)
+    fun bindDaysCounter(viewModel: DaysCounterViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(WeightsViewModel::class)
+    fun bindWeightsViewModel(viewModel: WeightsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddNewWeightResultViewModel::class)
+    abstract fun bindVMFactory(f: AddNewWeightResultViewModel.Factory): AssistedSavedStateViewModelFactory<out ViewModel>
 }

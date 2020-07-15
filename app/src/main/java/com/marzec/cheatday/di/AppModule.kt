@@ -8,6 +8,8 @@ import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.dao.WeightDao
+import com.marzec.cheatday.feature.home.weights.WeightsMapper
+import com.marzec.cheatday.feature.home.weights.WeightsMapperImpl
 import com.marzec.cheatday.notifications.NotificationHelper
 import com.marzec.cheatday.notifications.NotificationHelperImpl
 import dagger.Binds
@@ -25,6 +27,9 @@ interface AppModule {
     @Binds
     @Singleton
     fun bindNotificationHelper(notificationHelper: NotificationHelperImpl): NotificationHelper
+
+    @Binds
+    fun bindWeightsMapper(mapper: WeightsMapperImpl): WeightsMapper
 
     @Module
     companion object {

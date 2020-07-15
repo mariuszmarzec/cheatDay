@@ -33,6 +33,7 @@ buildscript {
     ext.espresso_core = '3.2.0'
     ext.idler_version = '0.10.0'
     ext.fragment_version = '1.2.5'
+    ext.activity_version = '1.1.0'
 
     repositories {
         google()

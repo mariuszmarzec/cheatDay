@@ -1,14 +1,15 @@
 package com.marzec.cheatday.feature.home.addnewresult
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.marzec.cheatday.common.BaseViewModel
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.common.SingleLiveEvent
 import com.marzec.cheatday.domain.WeightResult
+import com.marzec.cheatday.extensions.emptyString
 import com.marzec.cheatday.interactor.WeightInteractor
+import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
@@ -16,15 +17,16 @@ import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class AddNewWeightResultViewModel @Inject constructor(
-    private val weightInteractor: WeightInteractor
+class AddNewWeightResultViewModel @AssistedInject constructor(
+    private val weightInteractor: WeightInteractor,
+    @Assisted private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel() {
 
     private val weightResult = MutableLiveData<WeightResult>()
     private val dateInternal = MutableLiveData<DateTime>()
     private val loadingInternal = MutableLiveData<Boolean>()
 
-    val weight = MutableLiveData<String>()
+    val weight = savedStateHandle.getLiveData<String>(STATE_WEIGHT, emptyString())
 
     val date: LiveData<String> = dateInternal.map { it.toString(Constants.DATE_PICKER_PATTERN) }
 
@@ -82,6 +84,12 @@ class AddNewWeightResultViewModel @Inject constructor(
         } else {
             error.call()
         }
+    }
 
+    @AssistedInject.Factory
+    interface Factory : AssistedSavedStateViewModelFactory<AddNewWeightResultViewModel>
+
+    companion object {
+        private const val STATE_WEIGHT = "STATE_WEIGHT"
     }
 }
