@@ -14,13 +14,14 @@ import javax.inject.Singleton
     AppModule::class,
     ActivityBuilder::class,
     ApiModule::class,
-    ViewModelModule::class
+    ViewModelModule::class,
+    ViewModelFactoryModule::class
 ])
 interface TestAppComponent : AppComponent {
 
     @Component.Builder
     interface Builder {
-        fun viewModelModule(module: ViewModelModule): Builder
+        fun viewModelFactoryModule(moduleFactory: ViewModelFactoryModule): Builder
         @BindsInstance
         fun app(App: App): Builder
         fun build(): TestAppComponent

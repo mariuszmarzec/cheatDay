@@ -4,20 +4,20 @@ import android.os.Bundle
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
 import dagger.Reusable
 import javax.inject.Inject
 import javax.inject.Provider
 
-@Reusable
-class InjectingSavedStateViewModelFactory @Inject constructor(
+class InjectingSavedStateViewModelFactory(
     private val assistedFactories: Map<Class<out ViewModel>, @JvmSuppressWildcards AssistedSavedStateViewModelFactory<out ViewModel>>,
     private val viewModelProviders: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
-) {
+): ViewModelFactory {
     /**
      * Creates instance of ViewModel either annotated with @AssistedInject or @Inject and passes dependencies it needs.
      */
-    fun create(owner: SavedStateRegistryOwner, defaultArgs: Bundle? = null) =
+    override fun create(owner: SavedStateRegistryOwner, defaultArgs: Bundle?): ViewModelProvider.Factory =
         object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
             override fun <T : ViewModel?> create(
                 key: String,
@@ -62,4 +62,8 @@ class InjectingSavedStateViewModelFactory @Inject constructor(
 
         return creator.get()
     }
+}
+
+interface ViewModelFactory {
+    fun create(owner: SavedStateRegistryOwner, defaultArgs: Bundle? = null): ViewModelProvider.Factory
 }

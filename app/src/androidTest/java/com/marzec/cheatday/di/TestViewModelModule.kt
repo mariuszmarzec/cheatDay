@@ -2,14 +2,26 @@ package com.marzec.cheatday.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.nhaarman.mockitokotlin2.mock
+import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
+import com.marzec.cheatday.viewmodel.ViewModelFactory
+import com.nhaarman.mockitokotlin2.*
 import javax.inject.Provider
 
-object TestViewModelModule : ViewModelModule() {
+object TestViewModelFactoryModule : ViewModelFactoryModule() {
 
     val viewModelFactory = mock<ViewModelProvider.Factory>()
 
-    override fun bindViewModelFactory(creators: Map<Class<out ViewModel>, Provider<ViewModel>>): ViewModelProvider.Factory {
-        return viewModelFactory
+    override fun provideViewModelFactory(
+        assistedFactories: Map<Class<out ViewModel>, @JvmSuppressWildcards AssistedSavedStateViewModelFactory<out ViewModel>>,
+        viewModelProviders: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
+    ): ViewModelFactory {
+        return createFactoryMock()
     }
+
+    fun createFactoryMock(): ViewModelFactory {
+        return mock<ViewModelFactory>().apply {
+            whenever(create(any(), anyOrNull())) doReturn viewModelFactory
+        }
+    }
+
 }

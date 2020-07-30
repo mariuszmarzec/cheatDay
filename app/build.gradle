@@ -196,9 +196,7 @@ dependencies {
     
     androidTestImplementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     androidTestImplementation "org.mockito:mockito-android:$mockito_version"
-    androidTestImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version" , {
-        exclude group: 'org.mockito', module: 'mockito-core'
-    })
+    androidTestImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin_version")
 
     androidTestImplementation "androidx.test.ext:junit:$android_test_runner_version"
     androidTestImplementation "androidx.test:rules:$android_test_version"

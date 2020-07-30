@@ -2,14 +2,14 @@ package com.marzec.cheatday.feature.home.dayscounter
 
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModel
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.CustomFragmentInjection
-import com.marzec.cheatday.di.TestViewModelModule
+import com.marzec.cheatday.di.TestViewModelFactoryModule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -26,24 +26,25 @@ class DaysCounterFragmentTest {
 
     @Before
     fun setUp() {
-        val viewModelFactory = TestViewModelModule.viewModelFactory
-        whenever(viewModelFactory.create(DaysCounterViewModel::class.java)) doReturn viewModel
+        val viewModelFactory = TestViewModelFactoryModule.viewModelFactory
+        whenever(viewModelFactory.create<DaysCounterViewModel>(any())) doReturn viewModel
     }
 
     @After
     fun cleanUp() {
-        CustomFragmentInjection.injectingEnabled = true
+        CustomFragmentInjection.daggerInjectionEnabled = true
+        CustomFragmentInjection.onTestInject = null
     }
 
     @Test
     fun cheat_days_are_present_on_screen() {
-        CustomFragmentInjection.injectingEnabled = false
+        CustomFragmentInjection.daggerInjectionEnabled = false
 
-        val scenario = launchFragmentInContainer<DaysCounterFragment>(
+        val scenario = launchFragmentInContainer(
             themeResId = R.style.AppTheme
         ) {
             DaysCounterFragment().apply {
-                viewModel = this@DaysCounterFragmentTest.viewModel
+                vmFactory = TestViewModelFactoryModule.createFactoryMock()
             }
         }
         scenario.moveToState(Lifecycle.State.RESUMED)

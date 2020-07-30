@@ -5,10 +5,15 @@ import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultViewModel
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterViewModel
 import com.marzec.cheatday.feature.home.weights.WeightsViewModel
 import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
+import com.marzec.cheatday.viewmodel.InjectingSavedStateViewModelFactory
+import com.marzec.cheatday.viewmodel.ViewModelFactory
 import com.squareup.inject.assisted.dagger2.AssistedModule
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
+import dagger.Reusable
 import dagger.multibindings.IntoMap
+import javax.inject.Provider
 
 @Suppress("unused")
 @AssistedModule
@@ -28,5 +33,17 @@ interface ViewModelModule {
     @Binds
     @IntoMap
     @ViewModelKey(AddNewWeightResultViewModel::class)
-    abstract fun bindVMFactory(f: AddNewWeightResultViewModel.Factory): AssistedSavedStateViewModelFactory<out ViewModel>
+    fun bindVMFactory(f: AddNewWeightResultViewModel.Factory): AssistedSavedStateViewModelFactory<out ViewModel>
+}
+
+
+@Module
+open class ViewModelFactoryModule {
+
+    @Provides
+    @Reusable
+    open fun provideViewModelFactory(
+        assistedFactories: Map<Class<out ViewModel>, @JvmSuppressWildcards AssistedSavedStateViewModelFactory<out ViewModel>>,
+        viewModelProviders: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
+    ): ViewModelFactory = InjectingSavedStateViewModelFactory(assistedFactories, viewModelProviders)
 }
