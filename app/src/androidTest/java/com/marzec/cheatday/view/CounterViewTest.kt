@@ -6,7 +6,14 @@ import com.facebook.testing.screenshot.ViewHelpers
 import com.marzec.cheatday.R
 import org.junit.Test
 
+/*
+To ensure working ui tests:
+https://github.com/facebook/screenshot-tests-for-android/issues/224
 
+adb shell settings put global hidden_api_policy_p_apps 1
+adb shell settings put global hidden_api_policy_pre_p_apps 1
+adb shell settings put global hidden_api_policy  1 // this is for Q+
+ */
 class CounterViewTest {
 
     @Test
