@@ -18,7 +18,7 @@ abstract class BaseFragment : Fragment {
     constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        CustomFragmentInjection.inject(this)
+        AndroidSupportInjection.inject(this)
         super.onCreate(savedInstanceState)
     }
 
@@ -61,16 +61,4 @@ abstract class BaseVMFragment<VM: ViewModel> : BaseFragment {
     }
 
     abstract fun viewModelClass(): Class<out VM>
-}
-
-object CustomFragmentInjection {
-    var daggerInjectionEnabled = true
-    var onTestInject: (Fragment.() -> Unit)? = null
-    fun inject(fragment: Fragment) {
-        if (daggerInjectionEnabled) {
-            AndroidSupportInjection.inject(fragment)
-        } else {
-            onTestInject?.invoke(fragment)
-        }
-    }
 }

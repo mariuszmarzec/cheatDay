@@ -5,11 +5,13 @@ import android.content.Context
 import android.os.Bundle
 import android.os.StrictMode
 import androidx.test.runner.AndroidJUnitRunner
+import com.facebook.testing.screenshot.ScreenshotRunner
 import com.squareup.rx2.idler.Rx2Idler
 import io.reactivex.plugins.RxJavaPlugins
 
 class MockTestRunner : AndroidJUnitRunner() {
     override fun onCreate(arguments: Bundle) {
+        ScreenshotRunner.onCreate(this, arguments);
         StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().permitAll().build())
         super.onCreate(arguments)
     }
@@ -17,6 +19,11 @@ class MockTestRunner : AndroidJUnitRunner() {
     override fun onStart() {
         super.onStart()
         setupRxJavaPlugins()
+    }
+
+    override fun finish(resultCode: Int, results: Bundle?) {
+        ScreenshotRunner.onDestroy()
+        super.finish(resultCode, results)
     }
 
     @Throws(

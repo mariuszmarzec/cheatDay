@@ -3,6 +3,8 @@ package com.marzec.cheatday.view
 import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.annotation.Px
 import androidx.annotation.StringRes
@@ -35,7 +37,9 @@ class CounterView @JvmOverloads constructor(
     var onIncreaseButtonClickListener: (() -> Unit)? = null
 
     init {
-        inflate(getContext(), R.layout.view_counter, this)
+        LayoutInflater.from(context).inflate(R.layout.view_counter, this)
+        orientation = VERTICAL
+        gravity = Gravity.CENTER_HORIZONTAL
         style(attrs)
 
         increaseButton.setOnClickListener {
