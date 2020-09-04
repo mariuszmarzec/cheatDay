@@ -4,6 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: 'com.facebook.testing.screenshot'
+apply plugin: 'kotlin-allopen'
 
 android {
     compileSdkVersion 29
@@ -87,6 +88,9 @@ kapt {
     }
 }
 
+allOpen {
+    annotation 'com.marzec.cheatday.OpenClass'
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -217,5 +221,6 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_core"
     androidTestImplementation "androidx.fragment:fragment-testing:$fragment_version"
+    androidTestImplementation "com.agoda.kakao:kakao:$kakao_version"
 
 }

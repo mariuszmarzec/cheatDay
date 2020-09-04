@@ -32,7 +32,7 @@ class WeightsMapperImpl @Inject constructor(
         val minWeightItem = minWeight?.let {
             LabeledRowItem(
                 id = WeightsMapper.MIN_ID,
-                payload = this,
+                data = this,
                 value = "${it.value} ${context.getString(R.string.unit_kg_short)}",
                 label = "${context.getString(R.string.weights_min_label)} ${context.getString(R.string.weight_row_date_label)} ${it.date.toString(
                     "dd MMM yyyy"
@@ -41,7 +41,7 @@ class WeightsMapperImpl @Inject constructor(
         }
         val targetWeightItem = LabeledRowItem(
             id = WeightsMapper.TARGET_ID,
-            payload = this,
+            data = this,
             value = "$targetWeight ${context.getString(R.string.unit_kg_short)}",
             label = context.getString(R.string.weights_target_label)
         )
@@ -49,7 +49,7 @@ class WeightsMapperImpl @Inject constructor(
             with(weightResult) {
                 LabeledRowItem(
                     id = this.id.toString(),
-                    payload = this,
+                    data = this,
                     value = "$value ${context.getString(R.string.unit_kg_short)}",
                     label = "${context.getString(R.string.weight_row_date_label)} ${date.toString("dd MMM yyyy")}"
                 )

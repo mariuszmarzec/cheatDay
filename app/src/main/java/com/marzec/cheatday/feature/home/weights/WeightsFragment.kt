@@ -36,7 +36,7 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
             }
         }
 
-        viewModel.goToAddResultScreen.observe() {
+        viewModel.goToAddResultScreen.observe {
             replaceFragment<AddNewWeightResultFragment>()
         }
 

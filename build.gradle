@@ -35,6 +35,7 @@ buildscript {
     ext.fragment_version = '1.2.5'
     ext.activity_version = '1.1.0'
     ext.screenshot_testing_version = '0.13.0'
+    ext.kakao_version = '2.3.4'
 
     repositories {
         google()
@@ -45,6 +46,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "de.mannodermaus.gradle.plugins:android-junit5:1.4.2.1"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath "com.facebook.testing.screenshot:plugin:$screenshot_testing_version"
     }
 }
