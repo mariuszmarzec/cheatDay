@@ -7,6 +7,7 @@ import com.marzec.cheatday.OpenForTesting
 import com.marzec.cheatday.common.BaseViewModel
 import com.marzec.cheatday.common.SingleLiveEvent
 import com.marzec.cheatday.domain.WeightResult
+import com.marzec.cheatday.feature.home.weights.WeightsMapper.Companion.TARGET_ID
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.view.model.ListItem
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +30,10 @@ class WeightsViewModel @Inject constructor(
 
     val goToAddResultScreen = SingleLiveEvent<Unit>()
 
+    val showTargetWeightDialog = SingleLiveEvent<Unit>()
+
+    val showError = SingleLiveEvent<Unit>()
+
     @InternalCoroutinesApi
     val list: LiveData<List<ListItem>> = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
         minAndTargetFlow.combine(weightInteractor.observeWeights()) { (min, target), weights ->
@@ -39,10 +44,18 @@ class WeightsViewModel @Inject constructor(
     }
 
     fun onClick(listId: String) {
-
+        if (listId == TARGET_ID) {
+            showTargetWeightDialog.call()
+        }
     }
 
     fun onFloatingButtonClick() {
         goToAddResultScreen.call()
+    }
+
+    fun changeTargetWeight(newTargetWeight: String) {
+        newTargetWeight.toFloatOrNull()?.let { weight ->
+            weightInteractor.setTargetWeight(weight)
+        } ?: showError.call()
     }
 }
