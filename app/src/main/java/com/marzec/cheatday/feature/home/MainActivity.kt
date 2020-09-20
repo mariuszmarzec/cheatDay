@@ -2,6 +2,9 @@ package com.marzec.cheatday.feature.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseActivity
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragment
@@ -13,32 +16,14 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.fragmentContainerView)
 
-        if (savedInstanceState == null) {
-            replaceFragment<DaysCounterFragment>()
+        navHostFragment?.let { fragment ->
+            NavigationUI.setupWithNavController(
+                bottomNavigationView,
+                fragment.findNavController()
+            )
         }
-
-        bottomNavigationBar.setOnNavigationItemSelectedListener { item ->
-            when(item.itemId) {
-                R.id.action_home -> {
-                    replaceFragment<DaysCounterFragment>()
-                    true
-                }
-                R.id.action_weight -> {
-                    replaceFragment<WeightsFragment>()
-                    true
-                }
-                else -> false
-            }
-        }
-    }
-
-    private inline fun <reified F: Fragment> replaceFragment() {
-        val tag = F::class.java.simpleName
-        val fragment: Fragment =
-            supportFragmentManager.findFragmentByTag(tag) ?: F::class.java.newInstance()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment, tag)
-            .commit()
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.common.BaseVMFragment
@@ -15,7 +16,8 @@ import org.jetbrains.anko.alert
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-class AddNewWeightResultFragment : BaseVMFragment<AddNewWeightResultViewModel>(R.layout.fragment_add_new_weight_result) {
+class AddNewWeightResultFragment :
+    BaseVMFragment<AddNewWeightResultViewModel>(R.layout.fragment_add_new_weight_result) {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +35,7 @@ class AddNewWeightResultFragment : BaseVMFragment<AddNewWeightResultViewModel>(R
         viewModel.load(null)
 
         viewModel.saveSuccess.observe {
-            replaceFragment<WeightsFragment>()
+            findNavController().popBackStack()
         }
 
         viewModel.error.observe {
@@ -48,7 +50,7 @@ class AddNewWeightResultFragment : BaseVMFragment<AddNewWeightResultViewModel>(R
         viewModel.showDatePickerEvent.observeNonNull { date ->
             val datePickerDialog = DatePickerDialog(
                 requireContext(),
-                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                { _, year, monthOfYear, dayOfMonth ->
                     viewModel.setDate(DateTime(year, monthOfYear + 1, dayOfMonth, 0, 0))
                 },
                 date.year,
@@ -66,6 +68,7 @@ class AddNewWeightResultFragment : BaseVMFragment<AddNewWeightResultViewModel>(R
         button.setOnClickListener { viewModel.save() }
     }
 
-    override fun viewModelClass(): Class<out AddNewWeightResultViewModel> = AddNewWeightResultViewModel::class.java
+    override fun viewModelClass(): Class<out AddNewWeightResultViewModel> =
+        AddNewWeightResultViewModel::class.java
 }
 

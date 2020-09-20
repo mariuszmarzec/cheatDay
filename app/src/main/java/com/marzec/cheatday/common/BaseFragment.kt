@@ -33,15 +33,6 @@ abstract class BaseFragment : Fragment {
             observer(it)
         })
     }
-
-    inline fun <reified F : Fragment> replaceFragment() {
-        val tag = F::class.java.simpleName
-        val fragment: Fragment =
-            parentFragmentManager.findFragmentByTag(tag) ?: F::class.java.newInstance()
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment, tag)
-            .commit()
-    }
 }
 
 abstract class BaseVMFragment<VM: ViewModel> : BaseFragment {

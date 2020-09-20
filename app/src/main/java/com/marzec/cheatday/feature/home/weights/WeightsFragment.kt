@@ -2,6 +2,7 @@ package com.marzec.cheatday.feature.home.weights
 
 import android.os.Bundle
 import android.text.InputType
+import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseVMFragment
 import com.marzec.cheatday.extensions.DialogOptions
@@ -40,7 +41,7 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
         }
 
         viewModel.goToAddResultScreen.observe {
-            replaceFragment<AddNewWeightResultFragment>()
+            findNavController().navigate(WeightsFragmentDirections.actionWeightsToAddWeight())
         }
 
         viewModel.showTargetWeightDialog.observe {

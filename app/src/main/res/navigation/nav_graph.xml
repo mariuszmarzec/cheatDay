@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/home">
+    <fragment
+        android:id="@+id/home"
+        android:name="com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragment"
+        android:label="DaysCounterFragment" />
+
+    <fragment
+        android:id="@+id/weights"
+        android:name="com.marzec.cheatday.feature.home.weights.WeightsFragment"
+        android:label="WeightsFragment" >
+        <action
+            android:id="@+id/action_weights_to_addWeight"
+            app:destination="@id/addWeight" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addWeight"
+        android:name="com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultFragment"
+        android:label="AddNewWeightResultFragment">
+
+    </fragment>
+
+</navigation>
