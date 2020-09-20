@@ -74,7 +74,7 @@ android {
         }
     }
 
-    viewBinding.isEnabled = true
+    buildFeatures.viewBinding = true
 
     testOptions.animationsDisabled = true
     testOptions.unitTests.isIncludeAndroidResources = true
