@@ -1,9 +1,9 @@
 object Config {
 
-    val kotlin_version = "1.3.72"
+    val kotlin_version = "1.4.0"
     val junit4_version = "4.13"
     val leak_canary_version = "2.5"
-    val coroutines_version = "1.3.7"
+    val coroutines_version = "1.3.9"
     val dagger_version = "2.27"
     val appcompat_version = "1.1.0"
     val material_version = "1.1.0"
