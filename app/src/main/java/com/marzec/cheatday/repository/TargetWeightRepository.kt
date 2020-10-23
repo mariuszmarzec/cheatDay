@@ -5,21 +5,24 @@ import io.reactivex.Observable
 import javax.inject.Inject
 
 class TargetWeightRepositoryImpl @Inject constructor(
-    private val sharedPreferences: RxSharedPreferences
+    private val sharedPreferences: RxSharedPreferences,
+    private val userRepository: UserRepository
 ) : TargetWeightRepository {
 
-    override fun setTargetWeight(weight: Float) {
-        sharedPreferences.getFloat("weight").set(weight)
+    override suspend fun setTargetWeight(weight: Float) {
+        val userId = userRepository.getCurrentUserSuspend().uuid
+        sharedPreferences.getFloat("${userId}_weight").set(weight)
     }
 
-    override fun observeTargetWeight(): Observable<Float> {
-        return sharedPreferences.getFloat("weight").asObservable()
-    }
+    override fun observeTargetWeight(): Observable<Float> =
+        userRepository.getCurrentUser().flatMapObservable { user ->
+            sharedPreferences.getFloat("${user.uuid}_weight").asObservable()
+        }
 }
 
 interface TargetWeightRepository {
 
-    fun setTargetWeight(weight: Float)
+    suspend fun setTargetWeight(weight: Float)
 
     fun observeTargetWeight(): Observable<Float>
 }

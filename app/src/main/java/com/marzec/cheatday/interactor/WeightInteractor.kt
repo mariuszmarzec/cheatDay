@@ -20,7 +20,7 @@ interface WeightInteractor {
 
     fun observeMinWeight(): Flow<WeightResult?>
 
-    fun setTargetWeight(weight: Float)
+    suspend fun setTargetWeight(weight: Float)
 
     fun observeWeights(): Flow<List<WeightResult>>
 
@@ -48,7 +48,7 @@ class WeightInteractorImpl @Inject constructor(
         }
     }
 
-    override fun setTargetWeight(weight: Float) = targetRepository.setTargetWeight(weight)
+    override suspend fun setTargetWeight(weight: Float) = targetRepository.setTargetWeight(weight)
 
     override fun observeWeights(): Flow<List<WeightResult>> {
         return userRepository.getCurrentUserFlow().flatMapLatest { user ->
