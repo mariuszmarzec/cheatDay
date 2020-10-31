@@ -1,7 +1,7 @@
 package com.marzec.cheatday.interactor
 
 import com.marzec.cheatday.domain.User
-import com.marzec.cheatday.repository.TargetWeightRepository
+import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.repository.WeightResultRepository
 import com.marzec.cheatday.stubs.stubWeightResult
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test
 class WeightInteractorTest {
 
     private val userRepository: UserRepository = mock()
-    private val targetRepository: TargetWeightRepository = mock()
+    private val targetRepository: UserPreferencesRepository = mock()
     private val weightResultRepository: WeightResultRepository = mock()
     private val daysInteractor: DaysInteractor = mock()
 

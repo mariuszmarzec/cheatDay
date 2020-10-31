@@ -2,7 +2,7 @@ package com.marzec.cheatday.interactor
 
 import com.marzec.cheatday.domain.WeightResult
 import com.marzec.cheatday.extensions.incIf
-import com.marzec.cheatday.repository.TargetWeightRepository
+import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.repository.WeightResultRepository
 import io.reactivex.BackpressureStrategy
@@ -34,7 +34,7 @@ interface WeightInteractor {
 @ExperimentalCoroutinesApi
 class WeightInteractorImpl @Inject constructor(
     private val userRepository: UserRepository,
-    private val targetRepository: TargetWeightRepository,
+    private val targetRepository: UserPreferencesRepository,
     private val weightResultRepository: WeightResultRepository,
     private val daysInteractor: DaysInteractor
 ) : WeightInteractor {

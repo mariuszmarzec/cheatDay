@@ -11,7 +11,7 @@ interface RepositoryModule {
     fun bindDayRepository(repository: DayRepositoryImpl): DayRepository
 
     @Binds
-    fun bindTargetWeightRepository(repository: TargetWeightRepositoryImpl): TargetWeightRepository
+    fun bindTargetWeightRepository(repository: UserPreferencesRepositoryImpl): UserPreferencesRepository
 
     @Binds
     fun bindUserRepository(repository: UserRepositoryImpl): UserRepository
