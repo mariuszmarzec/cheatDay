@@ -63,6 +63,7 @@ class NotificationHelperImpl @Inject constructor(
     }
 
     override fun scheduleEveryDayNotification() {
+        val alarmManager = context.getSystemService<AlarmManager>()
         val timeInMillis = DateTime.now()
             .withTimeAtStartOfDay()
             .withHourOfDay(22)
@@ -78,10 +79,12 @@ class NotificationHelperImpl @Inject constructor(
             context,
             Constants.ALARM_ID_NOTIFICATION_EVERY_DAY,
             intent,
-            PendingIntent.FLAG_CANCEL_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        context.getSystemService<AlarmManager>()
+        alarmManager?.cancel(pendingIntent)
+
+        alarmManager
             ?.setRepeating(
                 AlarmManager.RTC_WAKEUP,
                 timeInMillis,
