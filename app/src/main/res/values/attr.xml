@@ -6,6 +6,7 @@
         <attr name="cv_title" format="reference" />
         <attr name="cv_value" format="integer" />
         <attr name="cv_max" format="integer" />
+        <attr name="cv_button_color" format="color" />
         <attr name="cv_title_text_size" format="dimension" />
     </declare-styleable>
 

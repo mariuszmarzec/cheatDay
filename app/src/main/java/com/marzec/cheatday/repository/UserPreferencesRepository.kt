@@ -1,7 +1,7 @@
 package com.marzec.cheatday.repository
 
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.marzec.cheatday.domain.Day
+import com.marzec.cheatday.model.domain.Day
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,7 +32,7 @@ class UserPreferencesRepositoryImpl @Inject constructor(
                 val today = DateTime.now().withTimeAtStartOfDay()
                 today == DateTime(savedTime)
             }
-        }.toFlowable(BackpressureStrategy.DROP).asFlow()
+        }.toFlowable(BackpressureStrategy.BUFFER).asFlow()
 
     override suspend fun setWasClickedToday(day: Day.Type) {
         val userId = userRepository.getCurrentUserSuspend().uuid

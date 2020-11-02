@@ -2,9 +2,9 @@ package com.marzec.cheatday.repository
 
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.db.model.db.WeightResultEntity
-import com.marzec.cheatday.domain.WeightResult
-import com.marzec.cheatday.domain.toDb
-import com.marzec.cheatday.domain.toDomain
+import com.marzec.cheatday.model.domain.WeightResult
+import com.marzec.cheatday.model.domain.toDb
+import com.marzec.cheatday.model.domain.toDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

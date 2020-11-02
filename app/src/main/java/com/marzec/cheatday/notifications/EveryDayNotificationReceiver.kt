@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.Constants
+import com.marzec.cheatday.repository.UserPreferencesRepository
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
@@ -12,6 +13,9 @@ class EveryDayNotificationReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var notificationHelper: NotificationHelper
+
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
 
     override fun onReceive(context: Context, intent: Intent) {
         AndroidInjection.inject(this, context)

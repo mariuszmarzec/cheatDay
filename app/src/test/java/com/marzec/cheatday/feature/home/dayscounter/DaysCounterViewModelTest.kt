@@ -2,8 +2,8 @@ package com.marzec.cheatday.feature.home.dayscounter
 
 import androidx.lifecycle.Observer
 import com.marzec.cheatday.InstantExecutorExtension
-import com.marzec.cheatday.domain.Day
-import com.marzec.cheatday.domain.DaysGroup
+import com.marzec.cheatday.model.domain.Day
+import com.marzec.cheatday.model.domain.DaysGroup
 import com.marzec.cheatday.interactor.DaysInteractor
 import com.marzec.cheatday.stubs.stubDay
 import com.marzec.cheatday.stubs.stubDaysGroup

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.marzec.cheatday.OpenForTesting
 import com.marzec.cheatday.common.BaseViewModel
 import com.marzec.cheatday.common.SingleLiveEvent
-import com.marzec.cheatday.domain.WeightResult
+import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.feature.home.weights.WeightsMapper.Companion.TARGET_ID
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.view.model.ListItem

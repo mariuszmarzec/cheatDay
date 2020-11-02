@@ -1,6 +1,6 @@
 package com.marzec.cheatday.stubs
 
-import com.marzec.cheatday.domain.WeightResult
+import com.marzec.cheatday.model.domain.WeightResult
 import org.joda.time.DateTime
 
 fun stubWeightResult(

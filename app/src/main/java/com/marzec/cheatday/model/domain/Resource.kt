@@ -1,4 +1,4 @@
-package com.marzec.cheatday.domain
+package com.marzec.cheatday.model.domain
 
 sealed class Resource<T>(
     open val data: T? = null,

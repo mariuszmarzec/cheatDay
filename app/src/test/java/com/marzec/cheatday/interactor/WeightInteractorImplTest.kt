@@ -1,6 +1,6 @@
 package com.marzec.cheatday.interactor
 
-import com.marzec.cheatday.domain.User
+import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.repository.WeightResultRepository

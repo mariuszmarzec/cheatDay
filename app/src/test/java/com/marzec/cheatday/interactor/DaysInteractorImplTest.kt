@@ -1,9 +1,9 @@
 package com.marzec.cheatday.interactor
 
 import com.marzec.cheatday.common.Constants
-import com.marzec.cheatday.domain.Day
-import com.marzec.cheatday.domain.DaysGroup
-import com.marzec.cheatday.domain.User
+import com.marzec.cheatday.model.domain.Day
+import com.marzec.cheatday.model.domain.DaysGroup
+import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.DayRepository
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.stubs.stubDay

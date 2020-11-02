@@ -4,8 +4,8 @@ import com.marzec.cheatday.TestSchedulersRule
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.model.db.DayEntity
-import com.marzec.cheatday.domain.Day
-import com.marzec.cheatday.domain.DaysGroup
+import com.marzec.cheatday.model.domain.Day
+import com.marzec.cheatday.model.domain.DaysGroup
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
 import io.reactivex.Observable

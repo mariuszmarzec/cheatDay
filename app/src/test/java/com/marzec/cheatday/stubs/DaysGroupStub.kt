@@ -1,7 +1,7 @@
 package com.marzec.cheatday.stubs
 
-import com.marzec.cheatday.domain.Day
-import com.marzec.cheatday.domain.DaysGroup
+import com.marzec.cheatday.model.domain.Day
+import com.marzec.cheatday.model.domain.DaysGroup
 
 fun stubDaysGroup(
     cheat: Day = stubDay(),

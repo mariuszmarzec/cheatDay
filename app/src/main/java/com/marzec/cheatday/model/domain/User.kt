@@ -1,4 +1,4 @@
-package com.marzec.cheatday.domain
+package com.marzec.cheatday.model.domain
 
 import com.marzec.cheatday.db.model.db.UserEntity
 

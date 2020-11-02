@@ -2,7 +2,7 @@ package com.marzec.cheatday.feature.home.weights
 
 import android.content.Context
 import com.marzec.cheatday.R
-import com.marzec.cheatday.domain.WeightResult
+import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.extensions.plus
 import com.marzec.cheatday.view.model.LabeledRowItem
 import com.marzec.cheatday.view.model.ListItem

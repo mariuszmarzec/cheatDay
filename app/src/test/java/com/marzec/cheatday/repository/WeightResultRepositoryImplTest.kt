@@ -2,8 +2,8 @@ package com.marzec.cheatday.repository
 
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.db.model.db.WeightResultEntity
-import com.marzec.cheatday.domain.WeightResult
-import com.marzec.cheatday.domain.toDomain
+import com.marzec.cheatday.model.domain.WeightResult
+import com.marzec.cheatday.model.domain.toDomain
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify

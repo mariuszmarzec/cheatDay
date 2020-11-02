@@ -3,8 +3,8 @@ package com.marzec.cheatday.repository
 import com.marzec.cheatday.common.Constants.DEFAULT_USER
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
-import com.marzec.cheatday.domain.User
-import com.marzec.cheatday.domain.toDomain
+import com.marzec.cheatday.model.domain.User
+import com.marzec.cheatday.model.domain.toDomain
 import com.marzec.cheatday.extensions.onIo
 import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow

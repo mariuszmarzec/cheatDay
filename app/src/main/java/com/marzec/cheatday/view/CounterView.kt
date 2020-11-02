@@ -6,13 +6,15 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.annotation.Px
 import androidx.annotation.StringRes
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.extensions.style
 import com.marzec.cheatday.R
-import com.marzec.cheatday.domain.Day
+import com.marzec.cheatday.model.domain.Day
 import com.marzec.cheatday.extensions.enumValueOfOrDefault
 import com.marzec.cheatday.extensions.gone
 import com.marzec.cheatday.extensions.setVisible
@@ -79,6 +81,12 @@ class CounterView @JvmOverloads constructor(
     fun setTextSize(@Px textSize: Int) {
         this.titleTextSize = textSize
         titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize.toFloat())
+    }
+
+    @Attr(R.styleable.CounterView_cv_button_color)
+    fun setButtonColor(@ColorInt color: Int) {
+        increaseButton.setColorFilter(color)
+        decreaseButton.setColorFilter(color)
     }
 
     fun setDay(day: Day) {

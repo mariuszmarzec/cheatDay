@@ -6,6 +6,7 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.BindingMethod
 import androidx.databinding.BindingMethods
 import androidx.databinding.InverseBindingAdapter
+import com.marzec.cheatday.R
 import com.marzec.cheatday.view.CounterView
 
 @BindingMethods(
@@ -17,7 +18,17 @@ import com.marzec.cheatday.view.CounterView
         )
     ]
 )
-object CounterViewBinding
+object CounterViewBinding {
+
+    @BindingAdapter("cv_clicked")
+    @JvmStatic
+    fun setClickedState(counterView: CounterView, isClicked: Boolean) {
+        val context = counterView.context
+        counterView.setButtonColor(context.getColor(
+            if (isClicked) R.color.colorPrimary else R.color.colorAccent)
+        )
+    }
+}
 
 object EditTextBinding {
 
