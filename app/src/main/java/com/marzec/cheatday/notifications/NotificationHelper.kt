@@ -90,6 +90,6 @@ class NotificationHelperImpl @Inject constructor(
                 timeInMillis,
                 AlarmManager.INTERVAL_DAY,
                 pendingIntent
-            );
+            )
     }
 }
