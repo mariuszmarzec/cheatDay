@@ -2,6 +2,7 @@ package com.marzec.cheatday.di
 
 import androidx.lifecycle.ViewModel
 import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultViewModel
+import com.marzec.cheatday.feature.home.chart.ChartsViewModel
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterViewModel
 import com.marzec.cheatday.feature.home.weights.WeightsViewModel
 import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
@@ -29,6 +30,11 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(WeightsViewModel::class)
     fun bindWeightsViewModel(viewModel: WeightsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ChartsViewModel::class)
+    fun bindChartsViewModel(viewModel: ChartsViewModel): ViewModel
 
     @Binds
     @IntoMap

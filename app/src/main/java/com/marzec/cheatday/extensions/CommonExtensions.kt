@@ -23,13 +23,18 @@ operator fun <T : ListItem> List<T>.plus(item: T): List<T> {
     return this + listOf(item)
 }
 
-fun <T1, T2, T3, R> combine(
+fun <T1, T2> combine(
+    first: Flow<T1>,
+    second: Flow<T2>
+): Flow<Pair<T1, T2>> =
+    first.combine(second) { a, b -> Pair(a, b) }
+
+fun <T1, T2, T3> combine(
     first: Flow<T1>,
     second: Flow<T2>,
     third: Flow<T3>,
-    transform: suspend (T1, T2, T3) -> R
-): Flow<R> =
-    first.combine(second) { a, b -> a to b }
+): Flow<Triple<T1, T2, T3>> =
+    combine(first, second)
         .combine(third) { (a, b), c ->
-            transform(a, b, c)
+            Triple(a, b, c)
         }

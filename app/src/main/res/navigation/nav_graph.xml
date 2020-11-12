@@ -15,13 +15,20 @@
         <action
             android:id="@+id/action_weights_to_addWeight"
             app:destination="@id/addWeight" />
+        <action
+            android:id="@+id/action_weights_to_chart"
+            app:destination="@id/chart" />
     </fragment>
 
     <fragment
         android:id="@+id/addWeight"
         android:name="com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultFragment"
         android:label="AddNewWeightResultFragment">
-
     </fragment>
+
+    <fragment
+        android:id="@+id/chart"
+        android:name="com.marzec.cheatday.feature.home.chart.ChartFragment"
+        android:label="ChartFragment" />
 
 </navigation>

@@ -143,6 +143,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:${Config.nav_version}")
     implementation("androidx.navigation:navigation-ui-ktx:${Config.nav_version}")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:${Config.nav_version}")
+    implementation("com.github.PhilJay:MPAndroidChart:${Config.chart_version}")
     debugImplementation("androidx.fragment:fragment-testing:${Config.fragment_version}")
     androidTestImplementation("androidx.navigation:navigation-testing:${Config.nav_version}")
     kapt("com.airbnb.android:epoxy-processor:${Config.epoxy_version}")

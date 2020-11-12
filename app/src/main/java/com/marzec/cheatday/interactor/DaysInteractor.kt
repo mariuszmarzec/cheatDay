@@ -14,6 +14,8 @@ import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
+import com.marzec.cheatday.extensions.combine
+import kotlinx.coroutines.flow.map
 
 class DaysInteractorImpl @Inject constructor(
     private val userRepository: UserRepository,
@@ -73,7 +75,7 @@ class DaysInteractorImpl @Inject constructor(
         val cheatFlow = preferencesRepository.observeWasClickToday(Day.Type.CHEAT)
         val workoutFlow = preferencesRepository.observeWasClickToday(Day.Type.WORKOUT)
         val dietFlow = preferencesRepository.observeWasClickToday(Day.Type.DIET)
-        return combine(cheatFlow, workoutFlow, dietFlow) { cheatClicked, workoutClicked, dietClicked ->
+        return combine(cheatFlow, workoutFlow, dietFlow).map { (cheatClicked, workoutClicked, dietClicked) ->
             ClickedStates(cheatClicked, workoutClicked, dietClicked)
         }
     }

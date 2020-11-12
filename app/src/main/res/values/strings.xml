@@ -20,4 +20,5 @@
     <string name="dialog_change_target_weight_message">Change target weight</string>
     <string name="ok">ok</string>
     <string name="cancel">cancel</string>
+    <string name="menu_chart">Show chart</string>
 </resources>

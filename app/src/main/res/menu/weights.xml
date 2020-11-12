@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/chart"
+        android:title="@string/menu_chart"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_baseline_show_chart_24" />
+</menu>

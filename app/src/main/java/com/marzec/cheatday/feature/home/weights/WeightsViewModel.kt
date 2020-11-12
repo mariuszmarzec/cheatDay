@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.marzec.cheatday.OpenForTesting
 import com.marzec.cheatday.common.BaseViewModel
 import com.marzec.cheatday.common.SingleLiveEvent
+import com.marzec.cheatday.extensions.combine
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.feature.home.weights.WeightsMapper.Companion.TARGET_ID
 import com.marzec.cheatday.interactor.WeightInteractor
@@ -24,22 +25,23 @@ class WeightsViewModel @Inject constructor(
     private val mapper: WeightsMapper
 ) : BaseViewModel() {
 
-    private val minAndTargetFlow: Flow<Pair<WeightResult?, Float>>
-        get() = weightInteractor.observeMinWeight().combine(weightInteractor.observeTargetWeight()) { min, target ->
-            min to target
-        }
-
     val goToAddResultScreen = SingleLiveEvent<Unit>()
 
     val showTargetWeightDialog = SingleLiveEvent<Unit>()
 
+    val goToChartAction = SingleLiveEvent<Unit>()
+
     val showError = SingleLiveEvent<Unit>()
 
+    private val context = viewModelScope.coroutineContext + Dispatchers.IO
+
     @InternalCoroutinesApi
-    val list: LiveData<List<ListItem>> = liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-        minAndTargetFlow.combine(weightInteractor.observeWeights()) { (min, target), weights ->
-            Triple(min, target, weights)
-        }.collect { (min, target, weights) ->
+    val list: LiveData<List<ListItem>> = liveData(context) {
+        combine(
+            weightInteractor.observeMinWeight(),
+            weightInteractor.observeTargetWeight(),
+            weightInteractor.observeWeights()
+        ).collect { (min, target, weights) ->
             this@liveData.emit(mapper.mapWeights(min, target, weights))
         }
     }
@@ -60,5 +62,9 @@ class WeightsViewModel @Inject constructor(
                 weightInteractor.setTargetWeight(weight)
             } ?: showError.call()
         }
+    }
+
+    fun goToChart() {
+        goToChartAction.call()
     }
 }

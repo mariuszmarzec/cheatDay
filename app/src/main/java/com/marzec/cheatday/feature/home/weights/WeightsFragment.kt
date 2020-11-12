@@ -2,6 +2,9 @@ package com.marzec.cheatday.feature.home.weights
 
 import android.os.Bundle
 import android.text.InputType
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseVMFragment
@@ -20,6 +23,7 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
     @InternalCoroutinesApi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
 
         viewModel.list.observeNonNull { items ->
             recyclerView.withModels {
@@ -52,6 +56,10 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
             requireActivity().showErrorDialog()
         }
 
+        viewModel.goToChartAction.observe {
+            findNavController().navigate(R.id.action_weights_to_chart)
+        }
+
         floatingButton.setOnClickListener {
             viewModel.onFloatingButtonClick()
         }
@@ -68,6 +76,17 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
                 onInputText = { newTargetWeight -> viewModel.changeTargetWeight(newTargetWeight) }
             )
         )
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.weights, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.chart -> viewModel.goToChart().run { true }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun viewModelClass() = WeightsViewModel::class.java

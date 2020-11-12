@@ -38,6 +38,7 @@ object Config {
     val screenshot_testing_version = "0.13.0"
     val kakao_version = "2.3.4"
     val nav_version = "2.3.0"
+    val chart_version = "v3.1.0"
     val junit5_plugin_version = "1.4.2.1"
     val android_gradle_plugin = "4.0.1"
 
