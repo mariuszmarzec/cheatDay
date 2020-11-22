@@ -1,5 +1,6 @@
 package com.marzec.cheatday.feature.home.weights
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -20,7 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OpenForTesting
-class WeightsViewModel @Inject constructor(
+class WeightsViewModel @ViewModelInject constructor(
     private val weightInteractor: WeightInteractor,
     private val mapper: WeightsMapper
 ) : BaseViewModel() {

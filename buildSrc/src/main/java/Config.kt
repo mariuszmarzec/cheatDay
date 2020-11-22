@@ -4,7 +4,6 @@ object Config {
     val junit4_version = "4.13"
     val leak_canary_version = "2.5"
     val coroutines_version = "1.3.9"
-    val dagger_version = "2.27"
     val appcompat_version = "1.1.0"
     val material_version = "1.1.0"
     val ktx_version = "2.3.0-alpha02"
@@ -41,6 +40,8 @@ object Config {
     val chart_version = "v3.1.0"
     val junit5_plugin_version = "1.4.2.1"
     val android_gradle_plugin = "4.0.1"
+    val hilt_plugin = "2.28-alpha"
+    val hilt_compiler_version = "1.0.0-alpha01"
 
     object BuildPlugins {
         val androidBuildPlugin = "com.android.tools.build:gradle:${android_gradle_plugin}"
@@ -49,6 +50,7 @@ object Config {
         val kotlinAllOpen = "org.jetbrains.kotlin:kotlin-allopen:${kotlin_version}"
         val screenshots = "com.facebook.testing.screenshot:plugin:${screenshot_testing_version}"
         val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${nav_version}"
+        val hilt = "com.google.dagger:hilt-android-gradle-plugin:${hilt_plugin}"
     }
 
     object Android {

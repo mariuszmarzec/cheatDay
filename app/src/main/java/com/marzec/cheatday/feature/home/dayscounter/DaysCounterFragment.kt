@@ -4,11 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.marzec.cheatday.common.BaseVMFragment
+import androidx.fragment.app.viewModels
+import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.databinding.FragmentDaysCounterBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_days_counter.*
 
-class DaysCounterFragment : BaseVMFragment<DaysCounterViewModel>() {
+@AndroidEntryPoint
+class DaysCounterFragment : BaseFragment() {
+
+    private val viewModel: DaysCounterViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,9 +39,5 @@ class DaysCounterFragment : BaseVMFragment<DaysCounterViewModel>() {
         workoutCounter.onIncreaseButtonClickListener = {
             viewModel.onWorkoutIncreaseClick()
         }
-    }
-
-    override fun viewModelClass(): Class<out DaysCounterViewModel> {
-        return DaysCounterViewModel::class.java
     }
 }

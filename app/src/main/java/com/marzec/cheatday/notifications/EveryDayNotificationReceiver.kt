@@ -6,8 +6,6 @@ import android.content.Intent
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.interactor.DaysInteractor
-import com.marzec.cheatday.repository.UserPreferencesRepository
-import dagger.android.AndroidInjection
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
@@ -20,7 +18,6 @@ class EveryDayNotificationReceiver : BroadcastReceiver() {
     lateinit var daysInteractor: DaysInteractor
 
     override fun onReceive(context: Context, intent: Intent) {
-        AndroidInjection.inject(this, context)
         runBlocking {
             if (!daysInteractor.isStateSettled()) {
                 notificationHelper.show(

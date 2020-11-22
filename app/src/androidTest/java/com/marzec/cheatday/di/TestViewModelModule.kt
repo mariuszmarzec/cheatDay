@@ -1,27 +1,38 @@
 package com.marzec.cheatday.di
 
+import androidx.hilt.lifecycle.ViewModelAssistedFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
-import com.marzec.cheatday.viewmodel.ViewModelFactory
+import com.marzec.cheatday.feature.home.weights.WeightsViewModel
+import com.marzec.cheatday.feature.home.weights.WeightsViewModel_AssistedFactory
 import com.nhaarman.mockitokotlin2.*
-import javax.inject.Provider
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.multibindings.IntoMap
+import dagger.multibindings.StringKey
 
-object TestViewModelFactoryModule : ViewModelFactoryModule() {
+@Module
+@InstallIn(ApplicationComponent::class)
+object TestViewModelFactoryModule {
 
     val viewModelFactory = mock<ViewModelProvider.Factory>()
 
-    override fun provideViewModelFactory(
-        assistedFactories: Map<Class<out ViewModel>, @JvmSuppressWildcards AssistedSavedStateViewModelFactory<out ViewModel>>,
-        viewModelProviders: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
-    ): ViewModelFactory {
-        return createFactoryMock()
-    }
-
-    fun createFactoryMock(): ViewModelFactory {
+    fun createFactoryMock(): ViewModelAssistedFactory<out ViewModel> {
         return mock<ViewModelFactory>().apply {
             whenever(create(any(), anyOrNull())) doReturn viewModelFactory
         }
     }
 
+}
+
+@InstallIn(ActivityRetainedComponent::class)
+@Module
+interface AssistedFactoryModule{
+    @Binds
+    @IntoMap
+    @StringKey("com.marzec.cheatday.feature.home.weights.WeightsViewModel")
+    fun bind(factory: WeightsViewModel_AssistedFactory): ViewModelAssistedFactory<out ViewModel>
 }

@@ -6,6 +6,7 @@ import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.extensions.plus
 import com.marzec.cheatday.view.model.LabeledRowItem
 import com.marzec.cheatday.view.model.ListItem
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 interface WeightsMapper {
@@ -22,7 +23,7 @@ interface WeightsMapper {
 }
 
 class WeightsMapperImpl @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) : WeightsMapper {
     override fun mapWeights(
         minWeight: WeightResult?,

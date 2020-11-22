@@ -10,6 +10,7 @@ plugins {
     id("de.mannodermaus.android-junit5")
     id("com.facebook.testing.screenshot")
     id("androidx.navigation.safeargs.kotlin")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -25,7 +26,7 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = mapOf(
+                arguments = arguments + mapOf(
                     "room.schemaLocation" to "$projectDir/schemas",
                     "room.incremental" to "true",
                     "room.expandProjection" to "true"
@@ -130,25 +131,22 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Config.coroutines_version}")
     implementation("com.airbnb.android:paris:${Config.paris_version}")
     implementation("com.airbnb.android:epoxy:${Config.epoxy_version}")
-    implementation("com.google.dagger:dagger:${Config.dagger_version}")
-    implementation("com.google.dagger:dagger-android:${Config.dagger_version}")
-    implementation("com.google.dagger:dagger-android-support:${Config.dagger_version}")
     implementation("androidx.preference:preference-ktx:${Config.preferences_ktx_version}")
     implementation("com.f2prateek.rx.preferences2:rx-preferences:${Config.rx_preferences_version}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Config.coroutines_version}")
     implementation("androidx.fragment:fragment:${Config.fragment_version}")
     implementation("androidx.activity:activity:${Config.activity_version}")
-    implementation("com.squareup.inject:assisted-inject-annotations-dagger2:0.5.2")
-    kapt("com.squareup.inject:assisted-inject-processor-dagger2:0.5.2")
     implementation("androidx.navigation:navigation-fragment-ktx:${Config.nav_version}")
     implementation("androidx.navigation:navigation-ui-ktx:${Config.nav_version}")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:${Config.nav_version}")
     implementation("com.github.PhilJay:MPAndroidChart:${Config.chart_version}")
     debugImplementation("androidx.fragment:fragment-testing:${Config.fragment_version}")
     androidTestImplementation("androidx.navigation:navigation-testing:${Config.nav_version}")
+    implementation("com.google.dagger:hilt-android:${Config.hilt_plugin}")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:${Config.hilt_compiler_version}")
+    kapt("androidx.hilt:hilt-compiler:${Config.hilt_compiler_version}")
+    kapt("com.google.dagger:hilt-android-compiler:${Config.hilt_plugin}")
     kapt("com.airbnb.android:epoxy-processor:${Config.epoxy_version}")
-    kapt( "com.google.dagger:dagger-compiler:${Config.dagger_version}")
-    kapt("com.google.dagger:dagger-android-processor:${Config.dagger_version}")
     kapt("androidx.room:room-compiler:${Config.room_version}")
     kapt("com.airbnb.android:paris-processor:${Config.paris_version}")
     testImplementation("junit:junit:${Config.junit4_version}")
@@ -158,8 +156,6 @@ dependencies {
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Config.mockito_kotlin_version}")
     testImplementation("joda-time:joda-time:${Config.joda_version}")
     kaptAndroidTest("com.airbnb.android:epoxy-processor:${Config.epoxy_version}")
-    kaptAndroidTest( "com.google.dagger:dagger-compiler:${Config.dagger_version}")
-    kaptAndroidTest("com.google.dagger:dagger-android-processor:${Config.dagger_version}")
     kaptAndroidTest("androidx.room:room-compiler:${Config.room_version}")
     kaptAndroidTest("com.airbnb.android:paris-processor:${Config.paris_version}")
     androidTestImplementation("com.squareup.leakcanary:leakcanary-android-instrumentation:${Config.leak_canary_version}")

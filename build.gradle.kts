@@ -14,6 +14,7 @@ buildscript {
         classpath(Config.BuildPlugins.kotlinAllOpen)
         classpath(Config.BuildPlugins.screenshots)
         classpath(Config.BuildPlugins.navigationSafeArgs)
+        classpath(Config.BuildPlugins.hilt)
     }
 }
 

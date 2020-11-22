@@ -1,5 +1,6 @@
 package com.marzec.cheatday.feature.home.chart
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -11,7 +12,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 
-class ChartsViewModel @Inject constructor(
+class ChartsViewModel @ViewModelInject constructor(
     private val weightInteractor: WeightInteractor,
     ) : BaseViewModel() {
 

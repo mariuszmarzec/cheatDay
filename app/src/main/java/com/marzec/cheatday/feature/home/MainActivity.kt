@@ -1,17 +1,15 @@
 package com.marzec.cheatday.feature.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.marzec.cheatday.R
-import com.marzec.cheatday.common.BaseActivity
-import com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragment
-import com.marzec.cheatday.feature.home.weights.WeightsFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
