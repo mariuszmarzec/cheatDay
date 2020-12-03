@@ -15,22 +15,13 @@ interface BaseDao<T> {
 
     @Update
     fun update(ob: T)
-
+    
     @Insert
-    fun insertCompletable(ob: T): Completable
+    suspend fun insertSuspend(ob: T)
 
     @Delete
-    fun removeCompletable(ob: T): Completable
+    suspend fun removeSuspend(ob: T)
 
     @Update
-    fun updateCompletable(ob: T): Completable
-
-    @Insert
-    fun insertSuspend(ob: T)
-
-    @Delete
-    fun removeSuspend(ob: T)
-
-    @Update
-    fun updateSuspend(ob: T)
+    suspend fun updateSuspend(ob: T)
 }

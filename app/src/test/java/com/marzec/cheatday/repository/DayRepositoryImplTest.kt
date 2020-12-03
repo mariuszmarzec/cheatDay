@@ -8,7 +8,6 @@ import com.marzec.cheatday.model.domain.Day
 import com.marzec.cheatday.model.domain.DaysGroup
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -26,7 +25,7 @@ internal class DayRepositoryImplTest {
     fun setUp() {
         whenever(dayDao.createOrUpdateCompletable(any())).thenReturn(Completable.complete())
         whenever(dayDao.getDay(any(), any())).thenReturn(null)
-        whenever(dayDao.getDayObservable(any(), any())).thenReturn(Observable.empty())
+        whenever(dayDao.observeDay(any(), any())).thenReturn(Observable.empty())
         repository = DayRepositoryImpl(dayDao)
     }
 
@@ -54,9 +53,9 @@ internal class DayRepositoryImplTest {
         val subjectWorkout = BehaviorSubject.create<DayEntity>()
         val subjectDiet = BehaviorSubject.create<DayEntity>()
         whenever(dayDao.getDay(any(), any())).thenReturn(DayEntity(0, "CHEAT", 0, 0, "userId"))
-        whenever(dayDao.getDayObservable(any(), eq(Day.Type.CHEAT.name))).thenReturn(subjectCheat)
-        whenever(dayDao.getDayObservable(any(), eq(Day.Type.WORKOUT.name))).thenReturn(subjectWorkout)
-        whenever(dayDao.getDayObservable(any(), eq(Day.Type.DIET.name))).thenReturn(subjectDiet)
+        whenever(dayDao.observeDay(any(), eq(Day.Type.CHEAT.name))).thenReturn(subjectCheat)
+        whenever(dayDao.observeDay(any(), eq(Day.Type.WORKOUT.name))).thenReturn(subjectWorkout)
+        whenever(dayDao.observeDay(any(), eq(Day.Type.DIET.name))).thenReturn(subjectDiet)
 
         val testObserver = repository.getDaysByUser("userId")
             .test()

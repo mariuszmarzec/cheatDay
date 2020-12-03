@@ -9,7 +9,6 @@ import com.marzec.cheatday.stubs.stubDay
 import com.marzec.cheatday.stubs.stubDaysGroup
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,7 +22,7 @@ class DaysCounterViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        whenever(daysInteractor.getDays()) doReturn Observable.never()
+        whenever(daysInteractor.observeDays()) doReturn Observable.never()
         whenever(daysInteractor.updateDay(any())) doReturn Completable.never()
         viewModel = DaysCounterViewModel(daysInteractor)
     }
@@ -32,11 +31,11 @@ class DaysCounterViewModelTest {
     fun getDays() {
         val subject = PublishSubject.create<DaysGroup>()
         val observer = mock<Observer<in DaysGroup>>()
-        whenever(daysInteractor.getDays()) doReturn subject
+        whenever(daysInteractor.observeDays()) doReturn subject
 
         viewModel.days.observeForever(observer)
 
-        verify(daysInteractor).getDays()
+        verify(daysInteractor).observeDays()
 
         subject.onNext(stubDaysGroup())
         subject.onNext(stubDaysGroup(stubDay(count = 1L)))
@@ -48,7 +47,7 @@ class DaysCounterViewModelTest {
     @Test
     fun onCheatDecreaseClick() {
         whenever(daysInteractor.updateDay(any())) doReturn Completable.complete()
-        whenever(daysInteractor.getDays()) doReturn Observable.just(
+        whenever(daysInteractor.observeDays()) doReturn Observable.just(
             stubDaysGroup(
                 stubDay(type = Day.Type.CHEAT),
                 stubDay(type = Day.Type.WORKOUT),
@@ -64,7 +63,7 @@ class DaysCounterViewModelTest {
     @Test
     fun onDietIncreaseClick() {
         whenever(daysInteractor.updateDay(any())) doReturn Completable.complete()
-        whenever(daysInteractor.getDays()) doReturn Observable.just(
+        whenever(daysInteractor.observeDays()) doReturn Observable.just(
             stubDaysGroup(
                 stubDay(type = Day.Type.CHEAT),
                 stubDay(type = Day.Type.WORKOUT),
@@ -80,7 +79,7 @@ class DaysCounterViewModelTest {
     @Test
     fun onWorkoutIncreaseClick() {
         whenever(daysInteractor.updateDay(any())) doReturn Completable.complete()
-        whenever(daysInteractor.getDays()) doReturn Observable.just(
+        whenever(daysInteractor.observeDays()) doReturn Observable.just(
             stubDaysGroup(
                 stubDay(type = Day.Type.CHEAT),
                 stubDay(type = Day.Type.WORKOUT),

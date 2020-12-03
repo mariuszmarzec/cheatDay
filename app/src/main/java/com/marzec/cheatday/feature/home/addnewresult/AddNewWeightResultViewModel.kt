@@ -5,8 +5,8 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.marzec.cheatday.common.BaseViewModel
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.common.SingleLiveEvent
 import com.marzec.cheatday.model.domain.WeightResult
@@ -20,7 +20,7 @@ import org.joda.time.DateTime
 class AddNewWeightResultViewModel @ViewModelInject constructor(
     private val weightInteractor: WeightInteractor,
     @Assisted private val savedStateHandle: SavedStateHandle
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val weightResult = MutableLiveData<WeightResult>()
     private val dateInternal = MutableLiveData<DateTime>()

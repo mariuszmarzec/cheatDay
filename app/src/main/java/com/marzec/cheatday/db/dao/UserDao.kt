@@ -10,11 +10,8 @@ import kotlinx.coroutines.flow.Flow
 interface UserDao : BaseDao<UserEntity> {
 
     @Query("SELECT * FROM users WHERE :email = email")
-    fun getUser(email: String): Single<UserEntity>
+    fun observeUser(email: String): Flow<UserEntity>
 
     @Query("SELECT * FROM users WHERE :email = email")
-    fun getUserFlow(email: String): Flow<UserEntity>
-
-    @Query("SELECT * FROM users WHERE :email = email")
-    suspend fun getUserSuspend(email: String): UserEntity
+    suspend fun getUser(email: String): UserEntity
 }

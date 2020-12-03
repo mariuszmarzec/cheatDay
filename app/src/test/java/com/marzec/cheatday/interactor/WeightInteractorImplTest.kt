@@ -7,7 +7,6 @@ import com.marzec.cheatday.repository.WeightResultRepository
 import com.marzec.cheatday.stubs.stubWeightResult
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
-import io.reactivex.Observable
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*

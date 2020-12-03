@@ -1,4 +1,4 @@
-object Config {
+object Dependency {
 
     val kotlin_version = "1.4.0"
     val junit4_version = "4.13"
@@ -10,10 +10,8 @@ object Config {
     val core_ktx_version = "1.2.0"
     val constraint_layout_version = "1.1.3"
     val retrofit_version = "2.6.0"
-    val rxjava_version = "2.2.19"
     val gson_version = "2.8.5"
     val okhttp_version = "4.0.0"
-    val rxandroid_version = "2.1.1"
     val anko_version = "0.10.8"
     val junit5_version = "5.5.0"
     val mockito_version = "3.3.3"

@@ -5,7 +5,7 @@ import com.marzec.cheatday.extensions.incIf
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.repository.WeightResultRepository
-import io.reactivex.BackpressureStrategy
+
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -39,8 +39,7 @@ class WeightInteractorImpl @Inject constructor(
     private val daysInteractor: DaysInteractor
 ) : WeightInteractor {
 
-    override fun observeTargetWeight() = targetRepository
-        .observeTargetWeight().toFlowable(BackpressureStrategy.BUFFER).asFlow()
+    override fun observeTargetWeight() = targetRepository.observeTargetWeight()
 
     override fun observeMinWeight(): Flow<WeightResult?> {
         return userRepository.getCurrentUserFlow().flatMapLatest { user ->
@@ -75,8 +74,7 @@ class WeightInteractorImpl @Inject constructor(
     ) {
         val min = weightResultRepository.observeMinWeight(userId).first()!!.value
         val target =
-            targetRepository.observeTargetWeight().toFlowable(BackpressureStrategy.BUFFER)
-                .asFlow().first()
+            targetRepository.observeTargetWeight().first()
         val new = weight.value
 
         val newCheatDays = if (new > old && new > target) {
@@ -88,7 +86,7 @@ class WeightInteractorImpl @Inject constructor(
         }.incIf { min > new }
 
         if (newCheatDays != 0) {
-            daysInteractor.incrementCheatDays(newCheatDays).blockingAwait()
+            daysInteractor.incrementCheatDays(newCheatDays)
         }
     }
 

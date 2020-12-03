@@ -8,13 +8,13 @@ buildscript {
 
     }
     dependencies {
-        classpath(Config.BuildPlugins.androidBuildPlugin)
-        classpath(Config.BuildPlugins.kotlinGradlePlugin)
-        classpath(Config.BuildPlugins.jUnit5Plugin)
-        classpath(Config.BuildPlugins.kotlinAllOpen)
-        classpath(Config.BuildPlugins.screenshots)
-        classpath(Config.BuildPlugins.navigationSafeArgs)
-        classpath(Config.BuildPlugins.hilt)
+        classpath(Dependency.BuildPlugins.androidBuildPlugin)
+        classpath(Dependency.BuildPlugins.kotlinGradlePlugin)
+        classpath(Dependency.BuildPlugins.jUnit5Plugin)
+        classpath(Dependency.BuildPlugins.kotlinAllOpen)
+        classpath(Dependency.BuildPlugins.screenshots)
+        classpath(Dependency.BuildPlugins.navigationSafeArgs)
+        classpath(Dependency.BuildPlugins.hilt)
     }
 }
 

@@ -8,13 +8,11 @@ import com.marzec.cheatday.model.domain.DaysGroup
 import com.marzec.cheatday.repository.DayRepository
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.UserRepository
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import javax.inject.Inject
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import javax.inject.Inject
-import com.marzec.cheatday.extensions.combine
+import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
 
 class DaysInteractorImpl @Inject constructor(
@@ -22,53 +20,44 @@ class DaysInteractorImpl @Inject constructor(
     private val daysRepository: DayRepository,
     private val preferencesRepository: UserPreferencesRepository
 ): DaysInteractor {
-    override fun getDays(): Observable<DaysGroup> {
-        return userRepository.getCurrentUser().flatMapObservable { user ->
-            daysRepository.getDaysByUser(user.uuid)
+    @FlowPreview
+    override fun observeDays(): Flow<DaysGroup> {
+        return userRepository.getCurrentUserFlow().flatMapMerge { user ->
+            daysRepository.observeDaysByUser(user.uuid)
         }
     }
 
-    override fun updateDay(day: Day): Completable {
-        return userRepository.getCurrentUser().flatMapCompletable { user ->
-            when (day.type) {
-                Day.Type.CHEAT -> {
-                    daysRepository.update(user.uuid, day)
-                }
-                Day.Type.WORKOUT -> {
-                    updateDayWithCheatIfNeeded(user.uuid, day, Constants.MAX_WORKOUT_DAYS.toLong())
-                }
-                Day.Type.DIET -> {
-                    updateDayWithCheatIfNeeded(user.uuid, day, Constants.MAX_DIET_DAYS.toLong())
-                }
+    override suspend fun updateDay(day: Day) {
+        val user = userRepository.getCurrentUser()
+        when (day.type) {
+            Day.Type.CHEAT -> {
+                daysRepository.update(user.uuid, day)
+            }
+            Day.Type.WORKOUT -> {
+                updateDayWithCheatIfNeeded(user.uuid, day, Constants.MAX_WORKOUT_DAYS.toLong())
+            }
+            Day.Type.DIET -> {
+                updateDayWithCheatIfNeeded(user.uuid, day, Constants.MAX_DIET_DAYS.toLong())
             }
         }
     }
 
-    private fun updateDayWithCheatIfNeeded(
-        userId: String,
-        day: Day,
-        maxCount: Long
-    ): Completable {
-        return if (day.count > 0 && day.count.rem(maxCount) == 0L) {
+    private suspend fun updateDayWithCheatIfNeeded(userId: String, day: Day, maxCount: Long) {
+        if (day.count > 0 && day.count.rem(maxCount) == 0L) {
             incrementCheatDays(daysCount = 1)
-        } else {
-            Completable.complete()
-        }.andThen(daysRepository.update(userId, day))
+        }
+        daysRepository.update(userId, day)
     }
 
-    override fun getMaxDietDays(): Single<Int> {
-        return Single.just(Constants.MAX_DIET_DAYS)
-    }
+    override suspend fun getMaxDietDays(): Int = Constants.MAX_DIET_DAYS
 
-    override fun getMaxWorkoutDays(): Single<Int> {
-        return Single.just(Constants.MAX_WORKOUT_DAYS)
-    }
+    override suspend fun getMaxWorkoutDays(): Int = Constants.MAX_WORKOUT_DAYS
 
-    override fun incrementCheatDays(daysCount: Int): Completable {
-        return getDays().firstOrError().map { it.cheat.copy(count = it.cheat.count + daysCount) }
-            .flatMapCompletable { cheatDays ->
-                updateDay(cheatDays)
-            }
+    override suspend fun incrementCheatDays(daysCount: Int) {
+        observeDays().first().let {
+            val cheatDays = it.cheat.copy(count = it.cheat.count + daysCount)
+            updateDay(cheatDays)
+        }
     }
 
     override fun observeClickedStates(): Flow<ClickedStates> {
@@ -94,15 +83,15 @@ class DaysInteractorImpl @Inject constructor(
 
 interface DaysInteractor {
 
-    fun getDays(): Observable<DaysGroup>
+    fun observeDays(): Flow<DaysGroup>
 
-    fun updateDay(day: Day): Completable
+    suspend fun updateDay(day: Day)
 
-    fun getMaxDietDays(): Single<Int>
+    suspend fun getMaxDietDays(): Int
 
-    fun getMaxWorkoutDays(): Single<Int>
+    suspend fun getMaxWorkoutDays(): Int
 
-    fun incrementCheatDays(daysCount: Int): Completable
+    suspend fun incrementCheatDays(daysCount: Int)
 
     fun observeClickedStates(): Flow<ClickedStates>
 

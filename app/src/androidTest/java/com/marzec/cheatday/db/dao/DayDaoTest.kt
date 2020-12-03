@@ -98,8 +98,8 @@ class DayDaoTest {
                 "uuid"
             ), dayDao.getDay(userEntity.uuid, "type")
         )
-        dayDao.getDayObservable(userEntity.uuid, "unknown_type").test().assertEmpty()
-        dayDao.getDayObservable(userEntity.uuid, "type").test().assertValue(
+        dayDao.observeDay(userEntity.uuid, "unknown_type").test().assertEmpty()
+        dayDao.observeDay(userEntity.uuid, "type").test().assertValue(
             DayEntity(
                 1,
                 "type",
@@ -114,7 +114,7 @@ class DayDaoTest {
     fun createOrUpdate() {
         dayDao.insert(testEntity)
         dayDao.createOrUpdateCompletable(testEntity.copy(count = 20)).test()
-        dayDao.getDayObservable("uuid", "type").test().assertValue(testEntity.copy(count = 20))
+        dayDao.observeDay("uuid", "type").test().assertValue(testEntity.copy(count = 20))
     }
 
     @Test
@@ -123,6 +123,6 @@ class DayDaoTest {
         val user = userDao.getUser("email").test().values().first()
         userDao.remove(user)
 
-        dayDao.getDayObservable(testEntity.userId, testEntity.type).test().assertEmpty()
+        dayDao.observeDay(testEntity.userId, testEntity.type).test().assertEmpty()
     }
 }

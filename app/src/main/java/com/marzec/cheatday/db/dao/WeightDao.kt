@@ -18,5 +18,5 @@ interface WeightDao : BaseDao<WeightResultEntity> {
     fun observeLastWeight(userId: String): Flow<WeightResultEntity?>
 
     @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE id = :id")
-    fun getWeightSuspend(id: Long): WeightResultEntity
+    suspend fun getWeight(id: Long): WeightResultEntity?
 }

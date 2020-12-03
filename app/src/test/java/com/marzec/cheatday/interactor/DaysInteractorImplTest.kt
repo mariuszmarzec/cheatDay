@@ -10,7 +10,6 @@ import com.marzec.cheatday.stubs.stubDay
 import com.marzec.cheatday.stubs.stubDaysGroup
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import org.junit.jupiter.api.BeforeEach
@@ -40,7 +39,7 @@ internal class DaysInteractorImplTest {
         val subject = BehaviorSubject.create<DaysGroup>()
         whenever(daysRepository.getDaysByUser("user_id")) doReturn subject
 
-        val days = interactor.getDays().test()
+        val days = interactor.observeDays().test()
 
         subject.onNext(stubDaysGroup())
         subject.onNext(stubDaysGroup(stubDay(count = 10)))
