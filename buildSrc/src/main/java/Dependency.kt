@@ -24,7 +24,6 @@ object Dependency {
     val android_test_runner_version = "1.1.0"
     val paris_version = "1.3.0"
     val arch_testing_version = "2.1.0"
-    val rx_preferences_version = "2.0.0"
     val preferences_ktx_version = "1.1.1"
     val reactivestreams_version = "1.1.1"
     val epoxy_version = "3.11.0"
@@ -40,6 +39,7 @@ object Dependency {
     val android_gradle_plugin = "4.0.1"
     val hilt_plugin = "2.28-alpha"
     val hilt_compiler_version = "1.0.0-alpha01"
+    val datastore_version = "1.0.0-alpha05"
 
     object BuildPlugins {
         val androidBuildPlugin = "com.android.tools.build:gradle:${android_gradle_plugin}"

@@ -1,8 +1,9 @@
 package com.marzec.cheatday.di
 
 import android.content.Context
-import androidx.preference.PreferenceManager
-import com.f2prateek.rx.preferences2.RxSharedPreferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.createDataStore
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
@@ -50,9 +51,7 @@ interface AppModule {
 
         @Provides
         @Singleton
-        fun provideSharedPreferences(@ApplicationContext context: Context): RxSharedPreferences {
-            val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-            return RxSharedPreferences.create(preferences)
-        }
+        fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+            context.createDataStore(name = "user_preferences")
     }
 }
