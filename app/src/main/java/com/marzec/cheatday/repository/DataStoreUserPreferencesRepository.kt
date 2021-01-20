@@ -42,11 +42,12 @@ class DataStoreUserPreferencesRepository @Inject constructor(
     override fun observeWasClickToday(day: Day.Type): Flow<Boolean> =
         userRepository.getCurrentUserFlow()
             .flatMapMerge { user ->
-                dataStore.data.mapLatest { prefs -> prefs[preferencesKey<Long>("${user.uuid}_$day")] ?: 0 }
-                    .mapLatest { savedTime ->
-                        val today = DateTime.now().withTimeAtStartOfDay()
-                        today == DateTime(savedTime)
-                    }.flowOn(Dispatchers.IO)
+                dataStore.data.mapLatest { prefs ->
+                    prefs[preferencesKey<Long>("${user.uuid}_$day")] ?: 0
+                }.mapLatest { savedTime ->
+                    val today = DateTime.now().withTimeAtStartOfDay()
+                    today == DateTime(savedTime)
+                }.flowOn(Dispatchers.IO)
             }
 
     override suspend fun setWasClickedToday(day: Day.Type): Unit = withContext(Dispatchers.IO) {

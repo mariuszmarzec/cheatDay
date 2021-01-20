@@ -5,7 +5,6 @@ import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.model.domain.toDomain
-import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
