@@ -1,5 +1,7 @@
 object Dependency {
 
+    val crashlytics_version = "2.4.1"
+    val firebase_version = "26.3.0"
     val kotlin_version = "1.4.0"
     val junit4_version = "4.13"
     val leak_canary_version = "2.5"
@@ -38,8 +40,10 @@ object Dependency {
     val hilt_plugin = "2.28-alpha"
     val hilt_compiler_version = "1.0.0-alpha01"
     val datastore_version = "1.0.0-alpha05"
+    val google_service_version = "4.3.4"
 
     object BuildPlugins {
+        val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"
         val androidBuildPlugin = "com.android.tools.build:gradle:${android_gradle_plugin}"
         val kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
         val jUnit5Plugin = "de.mannodermaus.gradle.plugins:android-junit5:${junit5_plugin_version}"
@@ -47,6 +51,7 @@ object Dependency {
         val screenshots = "com.facebook.testing.screenshot:plugin:${screenshot_testing_version}"
         val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${nav_version}"
         val hilt = "com.google.dagger:hilt-android-gradle-plugin:${hilt_plugin}"
+        val googleServices = "com.google.gms:google-services:${google_service_version}"
     }
 
     object Android {

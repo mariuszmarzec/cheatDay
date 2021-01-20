@@ -28,11 +28,6 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.fragmentContainerView)
 
-        lifecycleScope.launchWhenResumed {
-            Log.d("MainActivity", "settled: ${daysInteractor.isStateSettled()}")
-
-        }
-
         navHostFragment?.let { fragment ->
             NavigationUI.setupWithNavController(
                 bottomNavigationView,

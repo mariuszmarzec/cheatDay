@@ -15,6 +15,9 @@ buildscript {
         classpath(Dependency.BuildPlugins.screenshots)
         classpath(Dependency.BuildPlugins.navigationSafeArgs)
         classpath(Dependency.BuildPlugins.hilt)
+        classpath(Dependency.BuildPlugins.googleServices)
+        classpath(Dependency.BuildPlugins.crashlytics)
+
     }
 }
 

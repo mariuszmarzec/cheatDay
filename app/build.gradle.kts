@@ -11,6 +11,8 @@ plugins {
     id("com.facebook.testing.screenshot")
     id("androidx.navigation.safeargs.kotlin")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -135,6 +137,9 @@ dependencies {
     implementation("androidx.navigation:navigation-dynamic-features-fragment:${Dependency.nav_version}")
     implementation("com.github.PhilJay:MPAndroidChart:${Dependency.chart_version}")
     implementation("androidx.datastore:datastore-preferences:${Dependency.datastore_version}")
+    implementation(platform("com.google.firebase:firebase-bom:${Dependency.firebase_version}"))
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
     debugImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
     androidTestImplementation("androidx.navigation:navigation-testing:${Dependency.nav_version}")
     implementation("com.google.dagger:hilt-android:${Dependency.hilt_plugin}")
