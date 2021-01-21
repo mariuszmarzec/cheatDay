@@ -40,6 +40,7 @@ object Dependency {
     val hilt_compiler_version = "1.0.0-alpha01"
     val datastore_version = "1.0.0-alpha05"
     val google_service_version = "4.3.4"
+    val protobuf_version = "0.8.14"
 
     object BuildPlugins {
         val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"
@@ -51,6 +52,7 @@ object Dependency {
         val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${nav_version}"
         val hilt = "com.google.dagger:hilt-android-gradle-plugin:${hilt_plugin}"
         val googleServices = "com.google.gms:google-services:${google_service_version}"
+        val protobuf = "com.google.protobuf:protobuf-gradle-plugin:${protobuf_version}"
     }
 
     object Android {

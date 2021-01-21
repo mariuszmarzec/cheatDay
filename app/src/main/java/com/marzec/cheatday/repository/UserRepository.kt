@@ -1,19 +1,25 @@
 package com.marzec.cheatday.repository
 
+import androidx.datastore.core.DataStore
 import com.marzec.cheatday.common.Constants.DEFAULT_USER
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
+import com.marzec.cheatday.model.domain.CurrentUserProto
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.model.domain.toDomain
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class UserRepositoryImpl @Inject constructor(
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val currentUser: DataStore<CurrentUserProto>
 ) : UserRepository {
 
     override suspend fun getUserByEmail(email: String): User =
@@ -28,16 +34,19 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCurrentUser(): User = withContext(Dispatchers.IO) {
-        getUserByEmail(DEFAULT_USER)
+        val currentUserEmail = currentUser.data.first().email
+        getUserByEmail(currentUserEmail.ifEmpty { DEFAULT_USER })
     }
 
+    @FlowPreview
     override fun getCurrentUserFlow(): Flow<User> {
-        return getUserByEmailFlow(DEFAULT_USER)
+        return currentUser.data.flatMapMerge { currentUser ->
+            getUserByEmailFlow(currentUser.email.ifEmpty { DEFAULT_USER })
+        }
     }
 
-    override suspend fun getCurrentUserSuspend(): User = withContext(Dispatchers.IO) {
-        getUserByEmailSuspend(DEFAULT_USER)
-    }
+    @Deprecated("deprecated", replaceWith = ReplaceWith("Use getCurrentUser"))
+    override suspend fun getCurrentUserSuspend(): User = getCurrentUser()
 }
 
 interface UserRepository {

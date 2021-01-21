@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+//define the package where User will be located after being generated
+option java_package = "com.marzec.cheatday.model.domain";
+option java_multiple_files = true;
+
+message CurrentUserProto {
+  string email = 1;
+  string authToken = 2;
+}

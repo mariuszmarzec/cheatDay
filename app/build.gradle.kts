@@ -1,5 +1,6 @@
 import java.util.Properties
 import java.io.FileInputStream
+import com.google.protobuf.gradle.*
 
 plugins {
     id("com.android.application")
@@ -13,6 +14,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    id("com.google.protobuf")
 }
 
 android {
@@ -135,6 +137,8 @@ dependencies {
     implementation("androidx.navigation:navigation-dynamic-features-fragment:${Dependency.nav_version}")
     implementation("com.github.PhilJay:MPAndroidChart:${Dependency.chart_version}")
     implementation("androidx.datastore:datastore-preferences:${Dependency.datastore_version}")
+    implementation("androidx.datastore:datastore:${Dependency.datastore_version}")
+    implementation("com.google.protobuf:protobuf-java:3.6.1")
     implementation(platform("com.google.firebase:firebase-bom:${Dependency.firebase_version}"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
@@ -170,4 +174,29 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-contrib:${Dependency.espresso_core}")
     androidTestImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
     androidTestImplementation("com.agoda.kakao:kakao:${Dependency.kakao_version}")
+}
+
+protobuf.protobuf.run {
+
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.10.0"
+    }
+
+    plugins {
+        id("javalite") { artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0" }
+    }
+
+    generateProtoTasks {
+        all().forEach {
+            it.builtins {
+                //  remove("java")
+            }
+
+            it.plugins{
+                create("javalite"){
+                    outputSubDir="java"
+                }
+            }
+        }
+    }
 }

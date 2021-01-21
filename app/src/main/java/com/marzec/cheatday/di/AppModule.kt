@@ -2,14 +2,17 @@ package com.marzec.cheatday.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
+import androidx.datastore.createDataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.createDataStore
+import com.marzec.cheatday.common.CurrentUserProtoSerializer
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.feature.home.weights.WeightsMapper
 import com.marzec.cheatday.feature.home.weights.WeightsMapperImpl
+import com.marzec.cheatday.model.domain.CurrentUserProto
 import com.marzec.cheatday.notifications.NotificationHelper
 import com.marzec.cheatday.notifications.NotificationHelperImpl
 import dagger.Binds
@@ -53,5 +56,14 @@ interface AppModule {
         @Singleton
         fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
             context.createDataStore(name = "user_preferences")
+
+        @Provides
+        @Singleton
+        fun provideCurrentUserDataStore(@ApplicationContext context: Context): DataStore<CurrentUserProto> =
+            context.createDataStore(
+                fileName = "CurrentUserProto.pb",
+                serializer = CurrentUserProtoSerializer
+            )
     }
 }
+
