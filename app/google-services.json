@@ -33,6 +33,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:230923395029:android:752e0adfb401ae8096675c",
+        "android_client_info": {
+          "package_name": "com.marzec.cheatday.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "230923395029-1rtj74qfbbt74p2dckvleevb8b5om8g4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB17KiCTY2Yz7u2UCV6CDnDzDBkEV1w5e4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "230923395029-1rtj74qfbbt74p2dckvleevb8b5om8g4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

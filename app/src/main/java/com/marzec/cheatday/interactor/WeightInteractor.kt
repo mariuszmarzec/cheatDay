@@ -10,7 +10,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.reactive.asFlow
 import org.joda.time.DateTime
 import javax.inject.Inject
 

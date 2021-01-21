@@ -26,7 +26,6 @@ object Dependency {
     val android_test_runner_version = "1.1.0"
     val paris_version = "1.3.0"
     val arch_testing_version = "2.1.0"
-    val reactivestreams_version = "1.1.1"
     val epoxy_version = "3.11.0"
     val espresso_core = "3.2.0"
     val fragment_version = "1.2.5"
