@@ -7,4 +7,5 @@ option java_multiple_files = true;
 message CurrentUserProto {
   string email = 1;
   string authToken = 2;
+  int32 id = 3;
 }
