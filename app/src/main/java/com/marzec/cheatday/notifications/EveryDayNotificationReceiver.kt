@@ -6,11 +6,9 @@ import com.marzec.cheatday.R
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.interactor.DaysInteractor
 import com.marzec.cheatday.receivers.HiltBroadcastReceiver
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 
-@AndroidEntryPoint
 class EveryDayNotificationReceiver : HiltBroadcastReceiver() {
 
     @Inject

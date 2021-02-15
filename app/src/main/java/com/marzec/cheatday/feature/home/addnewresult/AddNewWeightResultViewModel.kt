@@ -1,23 +1,19 @@
 package com.marzec.cheatday.feature.home.addnewresult
 
-import androidx.hilt.Assisted
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.common.SingleLiveEvent
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.extensions.emptyString
-import com.marzec.cheatday.extensions.map
 import com.marzec.cheatday.interactor.WeightInteractor
+import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 
-class AddNewWeightResultViewModel @ViewModelInject constructor(
+class AddNewWeightResultViewModel @AssistedInject constructor(
     private val weightInteractor: WeightInteractor,
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -85,6 +81,9 @@ class AddNewWeightResultViewModel @ViewModelInject constructor(
             error.call()
         }
     }
+
+    @AssistedInject.Factory
+    interface Factory : AssistedSavedStateViewModelFactory<AddNewWeightResultViewModel>
 
     companion object {
         private const val STATE_WEIGHT = "STATE_WEIGHT"

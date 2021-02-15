@@ -8,7 +8,6 @@ import androidx.core.content.getSystemService
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.feature.home.MainActivity
-import dagger.hilt.android.qualifiers.ApplicationContext
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -19,7 +18,7 @@ interface NotificationHelper {
 }
 
 class NotificationHelperImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val context: Context
 ) : NotificationHelper {
 
     override fun show(title: String, content: String, id: Int) {

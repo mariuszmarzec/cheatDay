@@ -5,20 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
+import com.marzec.cheatday.common.BaseVMFragment
 import com.marzec.cheatday.databinding.FragmentAddNewWeightResultBinding
-import dagger.hilt.android.AndroidEntryPoint
+import com.marzec.cheatday.feature.home.weights.WeightsFragment
 import kotlinx.android.synthetic.main.fragment_add_new_weight_result.*
 import org.jetbrains.anko.alert
 import org.joda.time.DateTime
+import javax.inject.Inject
 
-@AndroidEntryPoint
-class AddNewWeightResultFragment : BaseFragment(R.layout.fragment_add_new_weight_result) {
-
-    private val viewModel: AddNewWeightResultViewModel by viewModels()
+class AddNewWeightResultFragment :
+    BaseVMFragment<AddNewWeightResultViewModel>(R.layout.fragment_add_new_weight_result) {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,4 +67,8 @@ class AddNewWeightResultFragment : BaseFragment(R.layout.fragment_add_new_weight
 
         button.setOnClickListener { viewModel.save() }
     }
+
+    override fun viewModelClass(): Class<out AddNewWeightResultViewModel> =
+        AddNewWeightResultViewModel::class.java
 }
+

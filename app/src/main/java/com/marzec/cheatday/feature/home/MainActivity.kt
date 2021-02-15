@@ -4,20 +4,23 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.marzec.cheatday.R
 import com.marzec.cheatday.interactor.DaysInteractor
 import com.marzec.cheatday.repository.UserPreferencesRepository
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import com.marzec.cheatday.common.BaseActivity
+import com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragment
+import com.marzec.cheatday.feature.home.weights.WeightsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var daysInteractor: DaysInteractor

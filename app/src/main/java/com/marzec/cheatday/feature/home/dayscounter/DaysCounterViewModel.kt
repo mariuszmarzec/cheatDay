@@ -1,6 +1,5 @@
 package com.marzec.cheatday.feature.home.dayscounter
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -15,8 +14,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-open class DaysCounterViewModel @ViewModelInject constructor(
+open class DaysCounterViewModel @Inject constructor(
     private val daysInteractor: DaysInteractor,
     private val preferencesRepository: UserPreferencesRepository
 ) : ViewModel() {

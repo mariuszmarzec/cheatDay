@@ -1,16 +1,20 @@
 package com.marzec.cheatday
 
-import android.app.Application
+import com.marzec.cheatday.di.DaggerAppComponent
 import com.marzec.cheatday.notifications.NotificationHelper
-import dagger.hilt.android.HiltAndroidApp
+import dagger.android.AndroidInjector
+import dagger.android.support.DaggerApplication
 import net.danlew.android.joda.JodaTimeAndroid
 import javax.inject.Inject
 
-@HiltAndroidApp
-class App : Application() {
+open class App : DaggerApplication() {
 
     @Inject
     lateinit var notificationHelper: NotificationHelper
+
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerAppComponent.factory().create(this)
+    }
 
     override fun onCreate() {
         super.onCreate()
