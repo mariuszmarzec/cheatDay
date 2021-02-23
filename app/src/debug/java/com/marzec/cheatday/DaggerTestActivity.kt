@@ -1,13 +1,14 @@
 package com.marzec.cheatday
 
 import android.os.Bundle
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.marzec.cheatday.di.FragmentScope
 import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultFragment
 import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultModule
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragment
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragmentModule
+import com.marzec.cheatday.feature.home.login.view.LoginFragment
+import com.marzec.cheatday.feature.home.login.di.LoginFragmentModule
 import com.marzec.cheatday.feature.home.weights.WeightsFragment
 import com.marzec.cheatday.feature.home.weights.WeightsFragmentModule
 import dagger.Module
@@ -31,6 +32,10 @@ class DaggerTestActivity : AppCompatActivity(), HasAndroidInjector {
 
 @Module
 abstract class DaggerTestActivityModule {
+
+    @ContributesAndroidInjector(modules = [LoginFragmentModule::class])
+    @FragmentScope
+    abstract fun bindLoginFragment(): LoginFragment
 
     @ContributesAndroidInjector(modules = [DaysCounterFragmentModule::class])
     @FragmentScope

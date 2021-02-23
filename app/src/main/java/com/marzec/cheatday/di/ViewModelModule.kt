@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultViewModel
 import com.marzec.cheatday.feature.home.chart.ChartsViewModel
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterViewModel
+import com.marzec.cheatday.feature.home.login.model.LoginViewModel
 import com.marzec.cheatday.feature.home.weights.WeightsViewModel
 import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
 import com.marzec.cheatday.viewmodel.InjectingSavedStateViewModelFactory
@@ -20,6 +21,11 @@ import javax.inject.Provider
 @AssistedModule
 @Module(includes = [AssistedInject_ViewModelModule::class])
 interface ViewModelModule {
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginViewModel::class)
+    fun bindLogin(viewModel: LoginViewModel): ViewModel
 
     @Binds
     @IntoMap

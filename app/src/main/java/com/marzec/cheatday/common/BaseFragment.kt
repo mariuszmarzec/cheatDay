@@ -23,15 +23,15 @@ abstract class BaseFragment : Fragment {
     }
 
     fun <T> LiveData<T>.observeNonNull(observer: (T) -> Unit) {
-        observe(this@BaseFragment, Observer {
+        observe(viewLifecycleOwner) {
             it?.let(observer)
-        })
+        }
     }
 
     fun <T> LiveData<T>.observe(observer: (T) -> Unit) {
-        observe(this@BaseFragment, Observer {
+        observe(viewLifecycleOwner) {
             observer(it)
-        })
+        }
     }
 }
 
