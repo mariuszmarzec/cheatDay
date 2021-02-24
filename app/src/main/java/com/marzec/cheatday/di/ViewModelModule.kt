@@ -1,11 +1,14 @@
 package com.marzec.cheatday.di
 
 import androidx.lifecycle.ViewModel
+import com.marzec.cheatday.extensions.emptyString
 import com.marzec.cheatday.feature.home.MainViewModel
 import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultViewModel
 import com.marzec.cheatday.feature.home.chart.ChartsViewModel
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterViewModel
+import com.marzec.cheatday.feature.home.login.model.LoginData
 import com.marzec.cheatday.feature.home.login.model.LoginViewModel
+import com.marzec.cheatday.feature.home.login.model.LoginViewState
 import com.marzec.cheatday.feature.home.weights.WeightsViewModel
 import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
 import com.marzec.cheatday.viewmodel.InjectingSavedStateViewModelFactory
@@ -50,6 +53,12 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(AddNewWeightResultViewModel::class)
     fun bindVMFactory(f: AddNewWeightResultViewModel.Factory): AssistedSavedStateViewModelFactory<out ViewModel>
+
+    companion object {
+        @Provides
+        fun provideLoginViewState(): LoginViewState =
+            LoginViewState.Data(LoginData(login = emptyString(), password = emptyString()))
+    }
 }
 
 
