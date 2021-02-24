@@ -2,6 +2,7 @@ package com.marzec.cheatday.feature.home
 
 import android.os.Bundle
 import androidx.core.view.isVisible
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -37,7 +38,16 @@ class MainActivity : BaseActivity() {
         viewModel.isUserLogged.observe(this) { isUserLogged ->
             bottomNavigationView.isVisible = isUserLogged
             if (!isUserLogged) {
-                navHostFragment?.findNavController()?.navigate(R.id.login)
+                navHostFragment?.findNavController()?.let { controller ->
+                    val options = NavOptions.Builder()
+                        .apply {
+                            controller.currentDestination?.id?.let {
+                                setPopUpTo(it, true)
+                            }
+                        }
+                        .build()
+                    controller.navigate(R.id.login, null, options)
+                }
             }
         }
     }
