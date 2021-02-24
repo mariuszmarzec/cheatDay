@@ -1,11 +1,11 @@
 package com.marzec.cheatday.feature.home.dayscounter
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseVMFragment
 import com.marzec.cheatday.databinding.FragmentDaysCounterBinding
+import com.marzec.cheatday.feature.home.weights.model.DaysSideEffects
 import kotlinx.android.synthetic.main.fragment_days_counter.*
 
 class DaysCounterFragment : BaseVMFragment<DaysCounterViewModel>() {
@@ -24,6 +24,7 @@ class DaysCounterFragment : BaseVMFragment<DaysCounterViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
         cheatCounter.onDecreaseButtonClickListener = {
             viewModel.onCheatDecreaseClick()
@@ -34,8 +35,29 @@ class DaysCounterFragment : BaseVMFragment<DaysCounterViewModel>() {
         workoutCounter.onIncreaseButtonClickListener = {
             viewModel.onWorkoutIncreaseClick()
         }
+
+        viewModel.sideEffects.observeNonNull { effect ->
+            when (effect) {
+                DaysSideEffects.GoToLogin -> goToLogin()
+            }
+        }
     }
 
+    private fun goToLogin() {
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.days, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.login -> viewModel.onLoginClick().run { true }
+            R.id.logout -> viewModel.onLogoutClick().run { true }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
     override fun viewModelClass(): Class<out DaysCounterViewModel> {
         return DaysCounterViewModel::class.java
     }

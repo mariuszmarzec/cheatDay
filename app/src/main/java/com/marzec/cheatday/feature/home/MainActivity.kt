@@ -1,41 +1,44 @@
 package com.marzec.cheatday.feature.home
 
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.marzec.cheatday.R
-import com.marzec.cheatday.interactor.DaysInteractor
-import com.marzec.cheatday.repository.UserPreferencesRepository
-import javax.inject.Inject
 import com.marzec.cheatday.common.BaseActivity
-import com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragment
-import com.marzec.cheatday.feature.home.weights.WeightsFragment
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.marzec.cheatday.viewmodel.ViewModelFactory
+import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
     @Inject
-    lateinit var daysInteractor: DaysInteractor
+    lateinit var vmFactory: ViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.fragmentContainerView)
+
+
+        val viewModel = vmFactory.create(this).create(MainViewModel::class.java)
 
         navHostFragment?.let { fragment ->
             NavigationUI.setupWithNavController(
                 bottomNavigationView,
                 fragment.findNavController()
             )
+        }
+
+        viewModel.isUserLogged.observe(this) { isUserLogged ->
+            bottomNavigationView.isVisible = isUserLogged
+            if (!isUserLogged) {
+                navHostFragment?.findNavController()?.navigate(R.id.login)
+            }
         }
     }
 }

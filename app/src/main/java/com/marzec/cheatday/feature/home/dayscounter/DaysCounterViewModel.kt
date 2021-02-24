@@ -1,18 +1,14 @@
 package com.marzec.cheatday.feature.home.dayscounter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.marzec.cheatday.extensions.map
+import com.marzec.cheatday.feature.home.weights.model.DaysSideEffects
+import com.marzec.cheatday.interactor.DaysInteractor
 import com.marzec.cheatday.model.domain.ClickedStates
 import com.marzec.cheatday.model.domain.DaysGroup
-import com.marzec.cheatday.extensions.map
-import com.marzec.cheatday.interactor.DaysInteractor
 import com.marzec.cheatday.model.ui.DayState
 import com.marzec.cheatday.repository.UserPreferencesRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +16,11 @@ open class DaysCounterViewModel @Inject constructor(
     private val daysInteractor: DaysInteractor,
     private val preferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
+
+    private val sideEffectsInternal = MutableLiveData<DaysSideEffects>()
+
+    val sideEffects: LiveData<DaysSideEffects>
+        get() = sideEffectsInternal
 
     val days: LiveData<Pair<DaysGroup, ClickedStates>> by lazy {
         val days = daysInteractor.observeDays()
@@ -67,5 +68,13 @@ open class DaysCounterViewModel @Inject constructor(
                 daysInteractor.updateDay(day.copy(count = day.count.inc()))
             }
         }
+    }
+
+    fun onLoginClick() {
+
+    }
+
+    fun onLogoutClick() {
+
     }
 }

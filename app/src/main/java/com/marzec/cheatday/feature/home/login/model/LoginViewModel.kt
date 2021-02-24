@@ -7,9 +7,9 @@ import javax.inject.Inject
 
 class LoginViewModel @Inject constructor() : ViewModel() {
 
-    private val sideEffectsInternal = MutableLiveData<LoginEffects>()
+    private val sideEffectsInternal = MutableLiveData<LoginSideEffects>()
 
-    val sideEffects: LiveData<LoginEffects>
+    val sideEffects: LiveData<LoginSideEffects>
         get() = sideEffectsInternal
 
     fun sendAction(action: LoginActions) {
@@ -19,6 +19,6 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun onLoginButtonClick() {
-        sideEffectsInternal.value = LoginEffects.OnLoginSuccessful
+        sideEffectsInternal.value = LoginSideEffects.OnLoginSuccessful
     }
 }

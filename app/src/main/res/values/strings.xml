@@ -21,6 +21,8 @@
     <string name="ok">ok</string>
     <string name="cancel">cancel</string>
     <string name="menu_chart">Show chart</string>
+    <string name="menu_login">Log in</string>
+    <string name="menu_logout">Log out</string>
     <string name="hint_email">user@mail.com</string>
     <string name="hint_password">Password</string>
     <string name="login_screen_submit_button">Login</string>

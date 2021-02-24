@@ -31,4 +31,9 @@
         android:name="com.marzec.cheatday.feature.home.chart.ChartFragment"
         android:label="ChartFragment" />
 
+    <fragment
+        android:id="@+id/login"
+        android:name="com.marzec.cheatday.feature.home.login.view.LoginFragment"
+        android:label="ChartFragment" />
+
 </navigation>

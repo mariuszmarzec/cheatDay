@@ -144,8 +144,6 @@ dependencies {
     debugImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
     androidTestImplementation("androidx.navigation:navigation-testing:${Dependency.nav_version}")
 
-    compileOnly("com.squareup.inject:assisted-inject-annotations-dagger2:0.6.0")
-    kapt("com.squareup.inject:assisted-inject-processor-dagger2:0.6.0")
     implementation("com.google.dagger:dagger:${Dependency.dagger_version}")
     implementation("com.google.dagger:dagger-android:${Dependency.dagger_version}")
     implementation("com.google.dagger:dagger-android-support:${Dependency.dagger_version}")

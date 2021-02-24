@@ -1,6 +1,7 @@
 package com.marzec.cheatday.di
 
 import androidx.lifecycle.ViewModel
+import com.marzec.cheatday.feature.home.MainViewModel
 import com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultViewModel
 import com.marzec.cheatday.feature.home.chart.ChartsViewModel
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterViewModel
@@ -9,7 +10,6 @@ import com.marzec.cheatday.feature.home.weights.WeightsViewModel
 import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
 import com.marzec.cheatday.viewmodel.InjectingSavedStateViewModelFactory
 import com.marzec.cheatday.viewmodel.ViewModelFactory
-import com.squareup.inject.assisted.dagger2.AssistedModule
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -18,9 +18,13 @@ import dagger.multibindings.IntoMap
 import javax.inject.Provider
 
 @Suppress("unused")
-@AssistedModule
-@Module(includes = [AssistedInject_ViewModelModule::class])
+@Module
 interface ViewModelModule {
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainViewModel::class)
+    fun bindMain(viewModel: MainViewModel): ViewModel
 
     @Binds
     @IntoMap

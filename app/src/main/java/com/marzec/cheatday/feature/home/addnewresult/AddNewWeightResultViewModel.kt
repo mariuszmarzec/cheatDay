@@ -7,8 +7,9 @@ import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.extensions.emptyString
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
@@ -82,7 +83,7 @@ class AddNewWeightResultViewModel @AssistedInject constructor(
         }
     }
 
-    @AssistedInject.Factory
+    @AssistedFactory
     interface Factory : AssistedSavedStateViewModelFactory<AddNewWeightResultViewModel>
 
     companion object {

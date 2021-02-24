@@ -38,6 +38,8 @@ class UserRepositoryImpl @Inject constructor(
         getUserByEmail(currentUserEmail.ifEmpty { DEFAULT_USER })
     }
 
+
+
     @FlowPreview
     override fun getCurrentUserFlow(): Flow<User> {
         return currentUser.data.flatMapMerge { currentUser ->
@@ -47,6 +49,10 @@ class UserRepositoryImpl @Inject constructor(
 
     @Deprecated("deprecated", replaceWith = ReplaceWith("Use getCurrentUser"))
     override suspend fun getCurrentUserSuspend(): User = getCurrentUser()
+
+    override fun observeIfUserLogged(): Flow<Boolean> {
+        return currentUser.data.map { it.email.isNotEmpty() && it.authToken.isNotEmpty() }
+    }
 }
 
 interface UserRepository {
@@ -62,4 +68,6 @@ interface UserRepository {
     suspend fun getUserByEmailSuspend(email: String): User
 
     suspend fun getCurrentUserSuspend(): User
+
+    fun observeIfUserLogged() : Flow<Boolean>
 }

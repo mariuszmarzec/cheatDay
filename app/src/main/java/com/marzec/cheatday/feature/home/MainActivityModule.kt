@@ -7,6 +7,8 @@ import com.marzec.cheatday.feature.home.chart.ChartFragment
 import com.marzec.cheatday.feature.home.chart.ChartFragmentModule
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragment
 import com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragmentModule
+import com.marzec.cheatday.feature.home.login.di.LoginFragmentModule
+import com.marzec.cheatday.feature.home.login.view.LoginFragment
 import com.marzec.cheatday.feature.home.weights.WeightsFragment
 import com.marzec.cheatday.feature.home.weights.WeightsFragmentModule
 import dagger.Module
@@ -14,6 +16,10 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class MainActivityModule {
+
+    @ContributesAndroidInjector(modules = [LoginFragmentModule::class])
+    @FragmentScope
+    abstract fun bindLoginFragment(): LoginFragment
 
     @ContributesAndroidInjector(modules = [DaysCounterFragmentModule::class])
     @FragmentScope
