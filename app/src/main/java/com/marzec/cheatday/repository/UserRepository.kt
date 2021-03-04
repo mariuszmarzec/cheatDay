@@ -4,9 +4,8 @@ import androidx.datastore.core.DataStore
 import com.marzec.cheatday.common.Constants.DEFAULT_USER
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
-import com.marzec.cheatday.model.domain.CurrentUserProto
-import com.marzec.cheatday.model.domain.User
-import com.marzec.cheatday.model.domain.toDomain
+import com.marzec.cheatday.extensions.emptyString
+import com.marzec.cheatday.model.domain.*
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -38,7 +37,14 @@ class UserRepositoryImpl @Inject constructor(
         getUserByEmail(currentUserEmail.ifEmpty { DEFAULT_USER })
     }
 
-
+    override suspend fun getCurrentUserWithAuth(): CurrentUserDomain? = withContext(Dispatchers.IO) {
+        val user = currentUser.data.first()
+        if (user.email.isNotEmpty()) {
+            CurrentUserDomain(user.id, user.email, user.authToken)
+        } else {
+            null
+        }
+    }
 
     @FlowPreview
     override fun getCurrentUserFlow(): Flow<User> {
@@ -53,6 +59,21 @@ class UserRepositoryImpl @Inject constructor(
     override fun observeIfUserLogged(): Flow<Boolean> {
         return currentUser.data.map { it.email.isNotEmpty() && it.authToken.isNotEmpty() }
     }
+
+    override suspend fun clearCurrentUser() {
+        setCurrentUserWithAuth(CurrentUserDomain(-1, emptyString(), emptyString()))
+    }
+
+    override suspend fun setCurrentUserWithAuth(newUser: CurrentUserDomain) = withContext(Dispatchers.IO) {
+        currentUser.updateData {
+            it.toBuilder()
+                .setAuthToken(newUser.auth)
+                .setEmail(newUser.email)
+                .setId(newUser.id)
+                .build()
+        }
+        Unit
+    }
 }
 
 interface UserRepository {
@@ -63,6 +84,10 @@ interface UserRepository {
 
     suspend fun getCurrentUser(): User
 
+    suspend fun getCurrentUserWithAuth(): CurrentUserDomain?
+
+    suspend fun setCurrentUserWithAuth(newUser: CurrentUserDomain)
+
     fun getCurrentUserFlow(): Flow<User>
 
     suspend fun getUserByEmailSuspend(email: String): User
@@ -70,4 +95,6 @@ interface UserRepository {
     suspend fun getCurrentUserSuspend(): User
 
     fun observeIfUserLogged() : Flow<Boolean>
+
+    suspend fun clearCurrentUser()
 }

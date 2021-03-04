@@ -19,6 +19,8 @@ import com.marzec.cheatday.notifications.NotificationHelperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 
@@ -35,32 +37,29 @@ interface AppModule {
     @Binds
     fun bindWeightsMapper(mapper: WeightsMapperImpl): WeightsMapper
 
-    @Module
     companion object {
 
         @Provides
+        fun provideCoroutineDispatcher(): CoroutineDispatcher = Dispatchers.IO
+
+        @Provides
         @Singleton
-        @JvmStatic
         fun provideAppDatabase(context: Context): AppDatabase = AppDatabase.getInstance(context)
 
         @Provides
         @Singleton
-        @JvmStatic
         fun provideUserDao(database: AppDatabase): UserDao = database.getUserDao()
 
         @Provides
         @Singleton
-        @JvmStatic
         fun provideWeightDao(database: AppDatabase): WeightDao = database.getWeightDao()
 
         @Provides
         @Singleton
-        @JvmStatic
         fun provideDayDao(database: AppDatabase): DayDao = database.getDayDao()
 
         @Provides
         @Singleton
-        @JvmStatic
         fun provideDataStore(context: Context): DataStore<Preferences> =
             context.createDataStore(name = "user_preferences")
 
