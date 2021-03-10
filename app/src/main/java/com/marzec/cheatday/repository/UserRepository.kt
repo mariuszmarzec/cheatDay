@@ -1,7 +1,6 @@
 package com.marzec.cheatday.repository
 
 import androidx.datastore.core.DataStore
-import com.marzec.cheatday.common.Constants.DEFAULT_USER
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.extensions.emptyString
@@ -9,11 +8,7 @@ import com.marzec.cheatday.model.domain.*
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 
 class UserRepositoryImpl @Inject constructor(
@@ -25,7 +20,7 @@ class UserRepositoryImpl @Inject constructor(
         userDao.getUser(email).let(UserEntity::toDomain)
 
     override fun getUserByEmailFlow(email: String): Flow<User> {
-        return userDao.observeUser(email).map { it.toDomain() }.flowOn(Dispatchers.IO)
+        return userDao.observeUser(email).filterNotNull().map { it.toDomain() }.flowOn(Dispatchers.IO)
     }
 
     override suspend fun getUserByEmailSuspend(email: String): User = withContext(Dispatchers.IO) {
@@ -34,7 +29,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getCurrentUser(): User = withContext(Dispatchers.IO) {
         val currentUserEmail = currentUser.data.first().email
-        getUserByEmail(currentUserEmail.ifEmpty { DEFAULT_USER })
+        getUserByEmail(currentUserEmail)
     }
 
     override suspend fun getCurrentUserWithAuth(): CurrentUserDomain? = withContext(Dispatchers.IO) {
@@ -49,7 +44,7 @@ class UserRepositoryImpl @Inject constructor(
     @FlowPreview
     override fun getCurrentUserFlow(): Flow<User> {
         return currentUser.data.flatMapMerge { currentUser ->
-            getUserByEmailFlow(currentUser.email.ifEmpty { DEFAULT_USER })
+            getUserByEmailFlow(currentUser.email)
         }
     }
 

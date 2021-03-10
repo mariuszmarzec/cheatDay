@@ -33,4 +33,12 @@ class LoginRepository @Inject constructor(
                 user.toDomain()
             }
         }
+
+    suspend fun logout(): Content<Unit> =
+        withContext(dispatcher) {
+            userRepository.clearCurrentUser()
+            asContent {
+                loginApi.logout()
+            }
+        }
 }

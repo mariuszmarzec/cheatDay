@@ -1,13 +1,12 @@
 package com.marzec.cheatday.feature.home.login.model
 
-import android.service.autofill.UserData
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.LoginRepository
 import com.marzec.mvi.Intent
 import com.marzec.mvi.StoreViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 class LoginViewModel @Inject constructor(

@@ -49,25 +49,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "database"
                 ).addMigrations(
                     MIGRATION_1_TO_2
-                ).addCallback(object : RoomDatabase.Callback() {
-                    override fun onOpen(db: SupportSQLiteDatabase) {
-                        super.onOpen(db)
-                        val email = Constants.DEFAULT_USER
-                        val searchQuery = SupportSQLiteQueryBuilder.builder(UserEntity.NAME)
-                            .selection("email = ?", arrayOf(email))
-                            .create()
-                        if (db.query(searchQuery).count == 0) {
-                            db.insert(
-                                UserEntity.NAME,
-                                SQLiteDatabase.CONFLICT_FAIL,
-                                ContentValues().also {
-                                    it.put(UserEntity.COLUMN_UUID, UUID.randomUUID().toString())
-                                    it.put(UserEntity.COLUMN_EMAIL, email)
-                                }
-                            )
-                        }
-                    }
-                }).build()
+                ).build()
             }
             return db
         }

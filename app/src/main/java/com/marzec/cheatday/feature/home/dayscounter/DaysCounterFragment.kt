@@ -53,7 +53,6 @@ class DaysCounterFragment : BaseVMFragment<DaysCounterViewModel>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.login -> viewModel.onLoginClick().run { true }
             R.id.logout -> viewModel.onLogoutClick().run { true }
             else -> super.onOptionsItemSelected(item)
         }
