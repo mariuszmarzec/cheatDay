@@ -30,7 +30,9 @@ class LoginRepository @Inject constructor(
                         user.email
                     )
                 )
-                user.toDomain()
+                val domainUser = user.toDomain()
+                userRepository.addUserToDbIfNeeded(domainUser)
+                domainUser
             }
         }
 

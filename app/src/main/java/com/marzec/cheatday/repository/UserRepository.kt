@@ -5,6 +5,7 @@ import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.extensions.emptyString
 import com.marzec.cheatday.model.domain.*
+import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -59,6 +60,13 @@ class UserRepositoryImpl @Inject constructor(
         setCurrentUserWithAuth(CurrentUserDomain(-1, emptyString(), emptyString()))
     }
 
+    override suspend fun addUserToDbIfNeeded(user: User) {
+        val userExist = userDao.observeUser(user.email).firstOrNull() != null
+        if (!userExist) {
+            userDao.insert(UserEntity(UUID.randomUUID().toString(), user.email))
+        }
+    }
+
     override suspend fun setCurrentUserWithAuth(newUser: CurrentUserDomain) = withContext(Dispatchers.IO) {
         currentUser.updateData {
             it.toBuilder()
@@ -92,4 +100,6 @@ interface UserRepository {
     fun observeIfUserLogged() : Flow<Boolean>
 
     suspend fun clearCurrentUser()
+
+    suspend fun addUserToDbIfNeeded(user: User)
 }
