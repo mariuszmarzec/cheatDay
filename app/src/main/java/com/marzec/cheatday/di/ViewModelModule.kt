@@ -57,7 +57,7 @@ interface ViewModelModule {
     companion object {
         @Provides
         fun provideLoginViewState(): LoginViewState =
-            LoginViewState.Data(LoginData(login = emptyString(), password = emptyString()))
+            LoginViewState.Data(LoginData(login = "mariusz.marzec00@gmail.com", password = "password"))
     }
 }
 

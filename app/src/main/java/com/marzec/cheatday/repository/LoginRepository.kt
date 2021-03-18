@@ -25,9 +25,9 @@ class LoginRepository @Inject constructor(
                 val user = response.body()!!
                 userRepository.setCurrentUserWithAuth(
                     CurrentUserDomain(
-                        user.id,
-                        response.headers()[Api.Headers.AUTHORIZATION].orEmpty(),
-                        user.email
+                        id = user.id,
+                        auth = response.headers()[Api.Headers.AUTHORIZATION].orEmpty(),
+                        email = user.email
                     )
                 )
                 val domainUser = user.toDomain()

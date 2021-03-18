@@ -36,7 +36,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getCurrentUserWithAuth(): CurrentUserDomain? = withContext(Dispatchers.IO) {
         val user = currentUser.data.first()
         if (user.email.isNotEmpty()) {
-            CurrentUserDomain(user.id, user.email, user.authToken)
+            CurrentUserDomain(id = user.id, auth = user.authToken, email = user.email)
         } else {
             null
         }

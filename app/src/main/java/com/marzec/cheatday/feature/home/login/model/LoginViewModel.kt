@@ -10,9 +10,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 class LoginViewModel @Inject constructor(
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    initialState: LoginViewState
 ) : StoreViewModel<LoginViewState, LoginActions, LoginSideEffects>(
-    LoginViewState.Data(LoginData(login = "", password = ""))
+    initialState
 ) {
     init {
         intents = mapOf(
