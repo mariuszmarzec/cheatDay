@@ -1,6 +1,7 @@
 package com.marzec.cheatday.feature.home.addnewresult
 
 import androidx.lifecycle.*
+import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.common.SingleLiveEvent
 import com.marzec.cheatday.model.domain.WeightResult
@@ -72,14 +73,26 @@ class AddNewWeightResultViewModel @AssistedInject constructor(
                 loadingInternal.postValue(true)
                 if (weightResult.id != 0L) {
                     weightInteractor.updateWeight(weightResult)
+                    loadingInternal.postValue(false)
+                    saveSuccess.postValue(Unit)
                 } else {
-                    weightInteractor.addWeight(weightResult)
+                    putNewWeight(weightResult)
                 }
-                loadingInternal.postValue(false)
-                saveSuccess.postValue(Unit)
             }
         } else {
             error.call()
+        }
+    }
+
+    private suspend fun putNewWeight(weightResult: WeightResult) {
+        when (weightInteractor.addWeight(weightResult)) {
+            is Content.Data -> {
+                loadingInternal.postValue(false)
+                saveSuccess.postValue(Unit)
+            }
+            is Content.Error -> {
+                error.call()
+            }
         }
     }
 

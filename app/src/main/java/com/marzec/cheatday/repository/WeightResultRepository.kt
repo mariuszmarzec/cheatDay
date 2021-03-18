@@ -1,5 +1,10 @@
 package com.marzec.cheatday.repository
 
+import com.marzec.cheatday.api.Api
+import com.marzec.cheatday.api.Content
+import com.marzec.cheatday.api.WeightApi
+import com.marzec.cheatday.api.asContent
+import com.marzec.cheatday.api.request.PutWeightRequest
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 import com.marzec.cheatday.model.domain.WeightResult
@@ -13,11 +18,14 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 class WeightResultRepositoryImpl @Inject constructor(
-    private val weightDao: WeightDao
+    private val weightDao: WeightDao,
+    private val userPreferencesRepository: DataStoreUserPreferencesRepository,
+    private val weightApi: WeightApi
 ) : WeightResultRepository {
     override fun observeWeights(userId: String): Flow<List<WeightResult>> =
         weightDao.observeWeights(userId).map { it.map(WeightResultEntity::toDomain) }.flowOn(
-            Dispatchers.IO)
+            Dispatchers.IO
+        )
 
     override fun observeMinWeight(userId: String): Flow<WeightResult?> =
         weightDao.observeMinWeight(userId).map { it?.toDomain() }.flowOn(Dispatchers.IO)
@@ -25,13 +33,26 @@ class WeightResultRepositoryImpl @Inject constructor(
     override fun observeLastWeight(userId: String): Flow<WeightResult?> =
         weightDao.observeLastWeight(userId).map { it?.toDomain() }.flowOn(Dispatchers.IO)
 
-    override suspend fun putWeight(userId: String, weightResult: WeightResult) = withContext(Dispatchers.IO) {
-        weightDao.insertSuspend(weightResult.toDb(userId))
-    }
+    override suspend fun putWeight(userId: String, weightResult: WeightResult) =
+        withContext(Dispatchers.IO) {
+            asContent {
+                if (userPreferencesRepository.isWeightsMigrated()) {
+                    weightApi.put(
+                        PutWeightRequest(
+                            value = weightResult.value,
+                            date = weightResult.date.toString()
+                        )
+                    )
+                } else {
+                    weightDao.insertSuspend(weightResult.toDb(userId))
+                }
+            }
+        }
 
-    override suspend fun updateWeight(userId: String, weightResult: WeightResult) = withContext(Dispatchers.IO) {
-        weightDao.updateSuspend(weightResult.toDb(userId))
-    }
+    override suspend fun updateWeight(userId: String, weightResult: WeightResult) =
+        withContext(Dispatchers.IO) {
+            weightDao.updateSuspend(weightResult.toDb(userId))
+        }
 
     override suspend fun getWeight(id: Long): WeightResult? = withContext(Dispatchers.IO) {
         weightDao.getWeight(id)?.toDomain()
@@ -46,7 +67,7 @@ interface WeightResultRepository {
 
     fun observeLastWeight(userId: String): Flow<WeightResult?>
 
-    suspend fun putWeight(userId: String, weightResult: WeightResult)
+    suspend fun putWeight(userId: String, weightResult: WeightResult): Content<Unit>
 
     suspend fun updateWeight(userId: String, weightResult: WeightResult)
 

@@ -13,5 +13,6 @@ interface LoginApi {
     suspend fun login(@Body request: LoginRequest): Response<UserDto>
 
     @GET("logout")
-    suspend fun logout(): Unit
+    suspend fun logout()
 }
+

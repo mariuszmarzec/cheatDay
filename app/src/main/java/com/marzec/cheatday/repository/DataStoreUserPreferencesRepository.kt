@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
@@ -22,6 +23,21 @@ class DataStoreUserPreferencesRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val userRepository: UserRepository
 ) : UserPreferencesRepository {
+
+    override suspend fun setWeightsMigrated(): Unit = withContext(Dispatchers.IO) {
+        val userId = userRepository.getCurrentUserSuspend().uuid
+        val preferencesKey = preferencesKey<Boolean>("${userId}_weight_migrated")
+        dataStore.updateData { prefs ->
+            prefs.toMutablePreferences().apply { this[preferencesKey] = true }
+        }
+    }
+
+    override suspend fun isWeightsMigrated(): Boolean = withContext(Dispatchers.IO) {
+        val userId = userRepository.getCurrentUserSuspend().uuid
+        val preferencesKey = preferencesKey<Boolean>("${userId}_weight_migrated")
+        dataStore.data.first()[preferencesKey] ?: true // TODO CHANGE TO FALSE BEFORE RELEASE
+    }
+
     override suspend fun setTargetWeight(weight: Float): Unit = withContext(Dispatchers.IO) {
         val userId = userRepository.getCurrentUserSuspend().uuid
         val preferencesKey = preferencesKey<Float>("${userId}_weight")

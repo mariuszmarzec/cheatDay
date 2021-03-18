@@ -1,5 +1,6 @@
 package com.marzec.cheatday.interactor
 
+import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.extensions.incIf
 import com.marzec.cheatday.repository.UserPreferencesRepository
@@ -23,7 +24,7 @@ interface WeightInteractor {
 
     fun observeWeights(): Flow<List<WeightResult>>
 
-    suspend fun addWeight(weight: WeightResult)
+    suspend fun addWeight(weight: WeightResult): Content<Unit>
 
     suspend fun updateWeight(weight: WeightResult)
 
@@ -54,16 +55,19 @@ class WeightInteractorImpl @Inject constructor(
         }
     }
 
-    override suspend fun addWeight(weight: WeightResult) {
+    override suspend fun addWeight(weight: WeightResult): Content<Unit> {
         val userId = userRepository.getCurrentUserSuspend().uuid
 
-        if (weight.date.withTimeAtStartOfDay() == DateTime.now().withTimeAtStartOfDay()) {
-            weightResultRepository.observeLastWeight(userId).first()?.value?.let { old ->
-                incrementCheatDaysIfNeeded(userId, weight, old)
+        val result = weightResultRepository.putWeight(userId, weight)
+
+        if (result is Content.Data) {
+            if (weight.date.withTimeAtStartOfDay() == DateTime.now().withTimeAtStartOfDay()) {
+                weightResultRepository.observeLastWeight(userId).first()?.value?.let { old ->
+                    incrementCheatDaysIfNeeded(userId, weight, old)
+                }
             }
         }
-
-        weightResultRepository.putWeight(userId, weight)
+        return result
     }
 
     private suspend fun incrementCheatDaysIfNeeded(
