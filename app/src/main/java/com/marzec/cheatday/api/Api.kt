@@ -6,6 +6,8 @@ object Api {
 
     const val BASE_CHEAT_URL = "http://fiteo-env.eba-mpctrvdb.us-east-2.elasticbeanstalk.com/test/cheat/api/1/"
 
+    const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
+
     object Headers {
         const val env = "TEST"
 

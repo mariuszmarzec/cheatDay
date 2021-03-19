@@ -40,7 +40,7 @@ class WeightResultRepositoryImpl @Inject constructor(
                     weightApi.put(
                         PutWeightRequest(
                             value = weightResult.value,
-                            date = weightResult.date.toString()
+                            date = weightResult.date.toString(Api.DATE_FORMAT)
                         )
                     )
                 } else {
