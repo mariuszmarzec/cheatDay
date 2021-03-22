@@ -53,6 +53,11 @@ class ChartFragment : BaseVMFragment<ChartsViewModel>(R.layout.fragment_chart) {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.load()
+    }
+
     override fun viewModelClass(): Class<out ChartsViewModel> = ChartsViewModel::class.java
 }
 

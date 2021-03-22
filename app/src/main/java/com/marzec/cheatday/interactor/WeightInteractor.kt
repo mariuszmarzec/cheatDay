@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import org.joda.time.DateTime
 import javax.inject.Inject
+import kotlinx.coroutines.flow.map
 
 interface WeightInteractor {
 
@@ -22,7 +23,7 @@ interface WeightInteractor {
 
     suspend fun setTargetWeight(weight: Float)
 
-    fun observeWeights(): Flow<List<WeightResult>>
+    fun observeWeights(): Flow<Content<List<WeightResult>>>
 
     suspend fun addWeight(weight: WeightResult): Content<Unit>
 
@@ -49,8 +50,8 @@ class WeightInteractorImpl @Inject constructor(
 
     override suspend fun setTargetWeight(weight: Float) = targetRepository.setTargetWeight(weight)
 
-    override fun observeWeights(): Flow<List<WeightResult>> {
-        return userRepository.getCurrentUserFlow().flatMapLatest { user ->
+    override fun observeWeights(): Flow<Content<List<WeightResult>>> {
+        return userRepository.getCurrentUserFlow().map { user ->
             weightResultRepository.observeWeights(user.uuid)
         }
     }

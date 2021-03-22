@@ -1,9 +1,11 @@
 package com.marzec.cheatday.extensions
 
+import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.view.model.ListItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 
 fun emptyString() = ""
 
@@ -38,3 +40,9 @@ fun <T1, T2, T3> combine(
         .combine(third) { (a, b), c ->
             Triple(a, b, c)
         }
+
+fun String.toDateTime() = try {
+    DateTime.parse(this, Api.DATE_FORMATTER)
+} catch (ex: IllegalArgumentException) {
+    DateTime.parse(this, DateTimeFormat.forPattern(Api.DATE_FORMAT.dropLast(3)))
+}

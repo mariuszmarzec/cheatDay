@@ -16,26 +16,20 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 class WeightResultRepositoryImpl @Inject constructor(
-    private val userRepository: UserRepository,
     private val weightDao: WeightDao,
     private val userPreferencesRepository: DataStoreUserPreferencesRepository,
     private val weightApi: WeightApi
 ) : WeightResultRepository {
-    override suspend fun observeWeights(userId: String): Flow<List<WeightResult>> =
-        if (userPreferencesRepository.isWeightsMigrated()) {
-            withContext(Dispatchers.IO) {
-                flowOf(weightApi.getAll().map { it.toDomain() })
-            }
-        } else {
-            weightDao.observeWeights(userId).map { it.map(WeightResultEntity::toDomain) }.flowOn(
-                Dispatchers.IO
-            )
+    override suspend fun observeWeights(userId: String): Content<List<WeightResult>> =
+        withContext(Dispatchers.IO) {
+            asContent { weightApi.getAll().map { it.toDomain() }.sortedByDescending { it.date } }
         }
 
     override fun observeMinWeight(userId: String): Flow<WeightResult?> =
@@ -68,29 +62,11 @@ class WeightResultRepositoryImpl @Inject constructor(
     override suspend fun getWeight(id: Long): WeightResult? = withContext(Dispatchers.IO) {
         weightDao.getWeight(id)?.toDomain()
     }
-
-    override suspend fun migrateWeights() {
-        val currentUser = userRepository.getCurrentUserWithAuth()
-        if (currentUser != null &&
-            !userPreferencesRepository.isWeightsMigrated() &&
-            weightsFromApiEmpty()) {
-            val user = userRepository.getCurrentUser()
-            val weights = weightDao.observeWeights(user.uuid).first()
-
-            weights.map { it.toDomain() }.forEach {
-               putWeight(user.uuid, it, forceApi = true)
-                delay(300)
-            }
-            userPreferencesRepository.setWeightsMigrated()
-        }
-    }
-
-    private suspend fun weightsFromApiEmpty(): Boolean = weightApi.getAll().isEmpty()
 }
 
 interface WeightResultRepository {
 
-    suspend fun observeWeights(userId: String): Flow<List<WeightResult>>
+    suspend fun observeWeights(userId: String): Content<List<WeightResult>>
 
     fun observeMinWeight(userId: String): Flow<WeightResult?>
 
@@ -101,6 +77,4 @@ interface WeightResultRepository {
     suspend fun updateWeight(userId: String, weightResult: WeightResult)
 
     suspend fun getWeight(id: Long): WeightResult?
-
-    suspend fun migrateWeights()
 }

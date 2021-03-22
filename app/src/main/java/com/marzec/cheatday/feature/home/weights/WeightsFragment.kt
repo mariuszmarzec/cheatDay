@@ -65,6 +65,11 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.load()
+    }
+
     private fun showTargetWeightDialog() {
         requireActivity().showInputDialog(
             DialogOptions(

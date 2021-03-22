@@ -1,10 +1,13 @@
 package com.marzec.cheatday.feature.home.weights
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.marzec.cheatday.OpenForTesting
+import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.common.SingleLiveEvent
 import com.marzec.cheatday.extensions.combine
 import com.marzec.cheatday.feature.home.weights.WeightsMapper.Companion.TARGET_ID
@@ -30,16 +33,26 @@ class WeightsViewModel @Inject constructor(
 
     val showError = SingleLiveEvent<Unit>()
 
-    private val context = viewModelScope.coroutineContext + Dispatchers.IO
+    private val _list = MutableLiveData<List<ListItem>>()
+    val list: LiveData<List<ListItem>>
+        get() = _list
 
-    @InternalCoroutinesApi
-    val list: LiveData<List<ListItem>> = liveData(context) {
-        combine(
-            weightInteractor.observeMinWeight(),
-            weightInteractor.observeTargetWeight(),
-            weightInteractor.observeWeights()
-        ).collect { (min, target, weights) ->
-            this@liveData.emit(mapper.mapWeights(min, target, weights))
+    fun load() {
+        viewModelScope.launch {
+            combine(
+                weightInteractor.observeMinWeight(),
+                weightInteractor.observeTargetWeight(),
+                weightInteractor.observeWeights()
+            ).collect { (min, target, content) ->
+                when (content) {
+                    is Content.Data -> {
+                        _list.postValue(mapper.mapWeights(min, target, content.data))
+                    }
+                    is Content.Error -> {
+                        Log.e(this.javaClass.simpleName, content.exception.toString(), content.exception)
+                    }
+                }
+            }
         }
     }
 

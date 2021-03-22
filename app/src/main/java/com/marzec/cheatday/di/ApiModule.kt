@@ -7,6 +7,7 @@ import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.repository.UserRepository
 import dagger.Module
 import dagger.Provides
+import java.time.Duration
 import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlinx.coroutines.runBlocking
@@ -21,6 +22,9 @@ class ApiModule {
     @Provides
     @Singleton
     fun provideHttpClient(userRepository: UserRepository): OkHttpClient = OkHttpClient.Builder()
+        .callTimeout(Duration.ofMillis(10_000))
+        .writeTimeout(Duration.ofMillis(10_000))
+        .readTimeout(Duration.ofMillis(10_000))
         .addNetworkInterceptor(Interceptor { chain ->
             var request = chain.request()
             runBlocking { userRepository.getCurrentUserWithAuth() }?.let { user ->
