@@ -35,7 +35,7 @@ class DataStoreUserPreferencesRepository @Inject constructor(
     override suspend fun isWeightsMigrated(): Boolean = withContext(Dispatchers.IO) {
         val userId = userRepository.getCurrentUserSuspend().uuid
         val preferencesKey = preferencesKey<Boolean>("${userId}_weight_migrated")
-        dataStore.data.first()[preferencesKey] ?: true // TODO CHANGE TO FALSE BEFORE RELEASE
+        dataStore.data.first()[preferencesKey] ?: false
     }
 
     override suspend fun setTargetWeight(weight: Float): Unit = withContext(Dispatchers.IO) {

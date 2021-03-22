@@ -15,7 +15,8 @@ import javax.inject.Inject
 class LoginRepository @Inject constructor(
     private val userRepository: UserRepository,
     private val loginApi: LoginApi,
-    private val dispatcher: CoroutineDispatcher
+    private val dispatcher: CoroutineDispatcher,
+    private val weightResultRepository: WeightResultRepository
 ) {
 
     suspend fun login(email: String, password: String): Content<User> =
@@ -32,6 +33,7 @@ class LoginRepository @Inject constructor(
                 )
                 val domainUser = user.toDomain()
                 userRepository.addUserToDbIfNeeded(domainUser)
+                weightResultRepository.migrateWeights()
                 domainUser
             }
         }

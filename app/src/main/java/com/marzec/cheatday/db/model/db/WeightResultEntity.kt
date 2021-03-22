@@ -2,6 +2,8 @@ package com.marzec.cheatday.db.model.db
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
+import com.marzec.cheatday.model.domain.WeightResult
+import org.joda.time.DateTime
 
 @Entity(
     tableName = WeightResultEntity.NAME,
@@ -27,3 +29,9 @@ data class WeightResultEntity(
         const val COLUMN_USER_ID = "user_id"
     }
 }
+
+fun WeightResultEntity.toDomain() = WeightResult(
+    id = id,
+    value = value,
+    date = DateTime(date)
+)
