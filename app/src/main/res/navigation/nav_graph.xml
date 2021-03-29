@@ -5,12 +5,12 @@
     app:startDestination="@id/home">
     <fragment
         android:id="@+id/home"
-        android:name="com.marzec.cheatday.feature.home.dayscounter.DaysCounterFragment"
+        android:name="com.marzec.cheatday.screen.dayscounter.DaysCounterFragment"
         android:label="DaysCounterFragment" />
 
     <fragment
         android:id="@+id/weights"
-        android:name="com.marzec.cheatday.feature.home.weights.WeightsFragment"
+        android:name="com.marzec.cheatday.screen.weights.WeightsFragment"
         android:label="WeightsFragment" >
         <action
             android:id="@+id/action_weights_to_addWeight"
@@ -22,18 +22,18 @@
 
     <fragment
         android:id="@+id/addWeight"
-        android:name="com.marzec.cheatday.feature.home.addnewresult.AddNewWeightResultFragment"
+        android:name="com.marzec.cheatday.screen.addnewresult.AddNewWeightResultFragment"
         android:label="AddNewWeightResultFragment">
     </fragment>
 
     <fragment
         android:id="@+id/chart"
-        android:name="com.marzec.cheatday.feature.home.chart.ChartFragment"
+        android:name="com.marzec.cheatday.screen.chart.ChartFragment"
         android:label="ChartFragment" />
 
     <fragment
         android:id="@+id/login"
-        android:name="com.marzec.cheatday.feature.home.login.view.LoginFragment"
+        android:name="com.marzec.cheatday.screen.login.view.LoginFragment"
         android:label="ChartFragment" />
 
 </navigation>

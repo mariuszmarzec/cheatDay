@@ -1,37 +1,21 @@
-package com.marzec.cheatday
+package com.marzec.cheatday.screen.home.di
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.marzec.cheatday.di.FragmentScope
 import com.marzec.cheatday.screen.addnewresult.AddNewWeightResultFragment
 import com.marzec.cheatday.screen.addnewresult.di.AddNewWeightResultModule
+import com.marzec.cheatday.screen.chart.ChartFragment
+import com.marzec.cheatday.screen.chart.di.ChartFragmentModule
 import com.marzec.cheatday.screen.dayscounter.DaysCounterFragment
 import com.marzec.cheatday.screen.dayscounter.di.DaysCounterFragmentModule
-import com.marzec.cheatday.screen.login.view.LoginFragment
 import com.marzec.cheatday.screen.login.di.LoginFragmentModule
+import com.marzec.cheatday.screen.login.view.LoginFragment
 import com.marzec.cheatday.screen.weights.WeightsFragment
 import com.marzec.cheatday.screen.weights.di.WeightsFragmentModule
 import dagger.Module
-import dagger.android.*
-import javax.inject.Inject
-
-class DaggerTestActivity : AppCompatActivity(), HasAndroidInjector {
-
-    @Inject
-    lateinit var androidInjector: DispatchingAndroidInjector<Any>
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this);
-        super.onCreate(savedInstanceState)
-    }
-
-    override fun androidInjector(): AndroidInjector<Any?>? {
-        return androidInjector
-    }
-}
+import dagger.android.ContributesAndroidInjector
 
 @Module
-abstract class DaggerTestActivityModule {
+abstract class MainActivityModule {
 
     @ContributesAndroidInjector(modules = [LoginFragmentModule::class])
     @FragmentScope
@@ -48,4 +32,8 @@ abstract class DaggerTestActivityModule {
     @ContributesAndroidInjector(modules = [AddNewWeightResultModule::class])
     @FragmentScope
     abstract fun bindAddNewWeightResultFragment(): AddNewWeightResultFragment
+
+    @ContributesAndroidInjector(modules = [ChartFragmentModule::class])
+    @FragmentScope
+    abstract fun bindChartFragment(): ChartFragment
 }

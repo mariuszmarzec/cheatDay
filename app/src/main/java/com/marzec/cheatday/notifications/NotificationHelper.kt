@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory
 import androidx.core.content.getSystemService
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.Constants
-import com.marzec.cheatday.feature.home.MainActivity
+import com.marzec.cheatday.screen.home.MainActivity
 import org.joda.time.DateTime
 import javax.inject.Inject
 

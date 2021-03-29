@@ -1,7 +1,7 @@
 package com.marzec.cheatday.di
 
-import com.marzec.cheatday.feature.home.MainActivity
-import com.marzec.cheatday.feature.home.MainActivityModule
+import com.marzec.cheatday.screen.home.MainActivity
+import com.marzec.cheatday.screen.home.di.MainActivityModule
 import com.marzec.cheatday.notifications.EveryDayNotificationReceiver
 import com.marzec.cheatday.receivers.BootReceiver
 import dagger.Module

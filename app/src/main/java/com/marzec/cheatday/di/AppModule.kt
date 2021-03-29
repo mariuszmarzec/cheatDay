@@ -11,8 +11,8 @@ import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.dao.WeightDao
-import com.marzec.cheatday.feature.home.weights.WeightsMapper
-import com.marzec.cheatday.feature.home.weights.WeightsMapperImpl
+import com.marzec.cheatday.screen.weights.model.WeightsMapper
+import com.marzec.cheatday.screen.weights.model.WeightsMapperImpl
 import com.marzec.cheatday.model.domain.CurrentUserProto
 import com.marzec.cheatday.notifications.NotificationHelper
 import com.marzec.cheatday.notifications.NotificationHelperImpl
