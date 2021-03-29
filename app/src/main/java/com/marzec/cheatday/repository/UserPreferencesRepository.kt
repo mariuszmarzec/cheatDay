@@ -5,10 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserPreferencesRepository {
 
-    suspend fun setWeightsMigrated()
-
-    suspend fun isWeightsMigrated(): Boolean
-
     suspend fun setTargetWeight(weight: Float)
 
     fun observeTargetWeight(): Flow<Float>

@@ -35,9 +35,9 @@ class ChartFragment : BaseVMFragment<ChartsViewModel>(R.layout.fragment_chart) {
         chart.axisRight.textColor = color
 
         viewModel.weights.observe { weights ->
-            val idToWeight = weights.map { it.id to it.date.toString(Constants.DATE_PICKER_PATTERN) }.toMap()
+            val idToWeight = weights.mapIndexed { index, weight -> index to weight.date.toString(Constants.DATE_PICKER_PATTERN) }.toMap()
 
-            val values = weights.sortedBy { it.id }.map { weight -> Entry(weight.id.toFloat(), weight.value) }
+            val values = weights.mapIndexed { index, weight -> Entry(index.toFloat(), weight.value) }
             val lineDataSet = LineDataSet(values, "")
 
             lineDataSet.setColors(rgb("#2ecc71"))
@@ -46,7 +46,7 @@ class ChartFragment : BaseVMFragment<ChartsViewModel>(R.layout.fragment_chart) {
             chart.data = LineData(lineDataSet)
             chart.xAxis.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return idToWeight[value.toLong()].orEmpty()
+                    return idToWeight[value.toInt()].orEmpty()
                 }
             }
             chart.invalidate()

@@ -29,7 +29,7 @@ class ChartsViewModel @Inject constructor(
             weightInteractor.observeWeights().collect { content ->
                 when (content) {
                     is Content.Data -> {
-                        _weights.postValue(content.data)
+                        _weights.postValue(content.data.sortedBy { it.date })
                     }
                     is Content.Error -> {
                         Log.e(this.javaClass.simpleName, content.exception.toString(), content.exception)

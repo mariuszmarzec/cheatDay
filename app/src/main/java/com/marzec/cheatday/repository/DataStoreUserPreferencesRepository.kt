@@ -24,20 +24,6 @@ class DataStoreUserPreferencesRepository @Inject constructor(
     private val userRepository: UserRepository
 ) : UserPreferencesRepository {
 
-    override suspend fun setWeightsMigrated(): Unit = withContext(Dispatchers.IO) {
-        val userId = userRepository.getCurrentUserSuspend().uuid
-        val preferencesKey = preferencesKey<Boolean>("${userId}_weight_migrated")
-        dataStore.updateData { prefs ->
-            prefs.toMutablePreferences().apply { this[preferencesKey] = true }
-        }
-    }
-
-    override suspend fun isWeightsMigrated(): Boolean = withContext(Dispatchers.IO) {
-        val userId = userRepository.getCurrentUserSuspend().uuid
-        val preferencesKey = preferencesKey<Boolean>("${userId}_weight_migrated")
-        dataStore.data.first()[preferencesKey] ?: false
-    }
-
     override suspend fun setTargetWeight(weight: Float): Unit = withContext(Dispatchers.IO) {
         val userId = userRepository.getCurrentUserSuspend().uuid
         val preferencesKey = preferencesKey<Float>("${userId}_weight")
