@@ -52,6 +52,10 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
             showTargetWeightDialog()
         }
 
+        viewModel.showMaxPossibleWeightDialog.observe {
+            showMaxPossibleWeightDialog()
+        }
+
         viewModel.showError.observe {
             requireActivity().showErrorDialog()
         }
@@ -79,6 +83,19 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
                 positiveButton = getString(R.string.ok),
                 inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
                 onInputText = { newTargetWeight -> viewModel.changeTargetWeight(newTargetWeight) }
+            )
+        )
+    }
+
+    private fun showMaxPossibleWeightDialog() {
+        requireActivity().showInputDialog(
+            DialogOptions(
+                title = getString(R.string.weights_max_possible_label),
+                message = getString(R.string.dialog_change_max_weight_message),
+                negativeButton = getString(R.string.cancel),
+                positiveButton = getString(R.string.ok),
+                inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
+                onInputText = { newTargetWeight -> viewModel.changeMaxWeight(newTargetWeight) }
             )
         )
     }

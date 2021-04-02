@@ -24,6 +24,22 @@ class DataStoreUserPreferencesRepository @Inject constructor(
     private val userRepository: UserRepository
 ) : UserPreferencesRepository {
 
+    override suspend fun setMaxPossibleWeight(weight: Float): Unit = withContext(Dispatchers.IO) {
+        val userId = userRepository.getCurrentUserSuspend().uuid
+        val preferencesKey = preferencesKey<Float>("${userId}_max_possible_weight")
+        dataStore.updateData { prefs ->
+            prefs.toMutablePreferences().apply { this[preferencesKey] = weight }
+        }
+    }
+
+    override fun observeMaxPossibleWeight(): Flow<Float> =
+        userRepository.getCurrentUserFlow().flatMapMerge { user ->
+            dataStore.data.mapLatest { prefs ->
+                val key = preferencesKey<Float>("${user.uuid}_max_possible_weight")
+                prefs[key] ?: .0f
+            }
+        }.flowOn(Dispatchers.IO)
+
     override suspend fun setTargetWeight(weight: Float): Unit = withContext(Dispatchers.IO) {
         val userId = userRepository.getCurrentUserSuspend().uuid
         val preferencesKey = preferencesKey<Float>("${userId}_weight")

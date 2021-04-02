@@ -19,9 +19,13 @@ interface WeightInteractor {
 
     fun observeTargetWeight(): Flow<Float>
 
+    fun observeMaxPossibleWeight(): Flow<Float>
+
     fun observeMinWeight(): Flow<WeightResult?>
 
     suspend fun setTargetWeight(weight: Float)
+
+    suspend fun setMaxPossibleWeight(weight: Float)
 
     fun observeWeights(): Flow<Content<List<WeightResult>>>
 
@@ -35,12 +39,15 @@ interface WeightInteractor {
 @ExperimentalCoroutinesApi
 class WeightInteractorImpl @Inject constructor(
     private val userRepository: UserRepository,
-    private val targetRepository: UserPreferencesRepository,
+    private val userPreferencesRepository: UserPreferencesRepository,
     private val weightResultRepository: WeightResultRepository,
     private val daysInteractor: DaysInteractor
 ) : WeightInteractor {
 
-    override fun observeTargetWeight() = targetRepository.observeTargetWeight()
+    override fun observeTargetWeight() = userPreferencesRepository.observeTargetWeight()
+
+    override fun observeMaxPossibleWeight(): Flow<Float> =
+        userPreferencesRepository.observeMaxPossibleWeight()
 
     override fun observeMinWeight(): Flow<WeightResult?> {
         return userRepository.getCurrentUserFlow().flatMapLatest { user ->
@@ -48,7 +55,11 @@ class WeightInteractorImpl @Inject constructor(
         }
     }
 
-    override suspend fun setTargetWeight(weight: Float) = targetRepository.setTargetWeight(weight)
+    override suspend fun setTargetWeight(weight: Float) = userPreferencesRepository.setTargetWeight(weight)
+
+    override suspend fun setMaxPossibleWeight(weight: Float) {
+        userPreferencesRepository.setMaxPossibleWeight(weight)
+    }
 
     override fun observeWeights(): Flow<Content<List<WeightResult>>> {
         return userRepository.getCurrentUserFlow().map { user ->
@@ -58,14 +69,13 @@ class WeightInteractorImpl @Inject constructor(
 
     override suspend fun addWeight(weight: WeightResult): Content<Unit> {
         val userId = userRepository.getCurrentUserSuspend().uuid
+        val lastValue = weightResultRepository.observeLastWeight(userId).first()?.value
 
         val result = weightResultRepository.putWeight(userId, weight)
 
         if (result is Content.Data) {
             if (weight.date.withTimeAtStartOfDay() == DateTime.now().withTimeAtStartOfDay()) {
-                weightResultRepository.observeLastWeight(userId).first()?.value?.let { old ->
-                    incrementCheatDaysIfNeeded(userId, weight, old)
-                }
+                lastValue?.let { old -> incrementCheatDaysIfNeeded(userId, weight, old) }
             }
         }
         return result
@@ -76,14 +86,16 @@ class WeightInteractorImpl @Inject constructor(
         weight: WeightResult,
         old: Float
     ) {
-        val min = weightResultRepository.observeMinWeight(userId).first()!!.value
+        val min = weightResultRepository.observeMinWeight(userId).first()?.value ?: return
         val target =
-            targetRepository.observeTargetWeight().first()
+            userPreferencesRepository.observeTargetWeight().first()
+        val maxPossible =
+            userPreferencesRepository.observeMaxPossibleWeight().first()
         val new = weight.value
 
         val newCheatDays = if (new > old && new > target) {
             -1 - (new.toInt() - old.toInt())
-        } else if (new < old) {
+        } else if (new < old && new < maxPossible) {
             1 + (old.toInt() - new.toInt())
         } else {
             0

@@ -11,6 +11,7 @@ import com.marzec.cheatday.common.SingleLiveEvent
 import com.marzec.cheatday.extensions.combine
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.TARGET_ID
 import com.marzec.cheatday.interactor.WeightInteractor
+import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.MAX_POSSIBLE_ID
 import com.marzec.cheatday.view.model.ListItem
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -26,6 +27,8 @@ class WeightsViewModel @Inject constructor(
 
     val showTargetWeightDialog = SingleLiveEvent<Unit>()
 
+    val showMaxPossibleWeightDialog = SingleLiveEvent<Unit>()
+
     val goToChartAction = SingleLiveEvent<Unit>()
 
     val showError = SingleLiveEvent<Unit>()
@@ -38,12 +41,13 @@ class WeightsViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 weightInteractor.observeMinWeight(),
+                weightInteractor.observeMaxPossibleWeight(),
                 weightInteractor.observeTargetWeight(),
                 weightInteractor.observeWeights()
-            ).collect { (min, target, content) ->
+            ).collect { (min, maxPossible, target, content) ->
                 when (content) {
                     is Content.Data -> {
-                        _list.postValue(mapper.mapWeights(min, target, content.data))
+                        _list.postValue(mapper.mapWeights(min, maxPossible, target, content.data))
                     }
                     is Content.Error -> {
                         Log.e(this.javaClass.simpleName, content.exception.toString(), content.exception)
@@ -54,8 +58,13 @@ class WeightsViewModel @Inject constructor(
     }
 
     fun onClick(listId: String) {
-        if (listId == TARGET_ID) {
-            showTargetWeightDialog.call()
+        when (listId) {
+            TARGET_ID -> {
+                showTargetWeightDialog.call()
+            }
+            MAX_POSSIBLE_ID -> {
+                showMaxPossibleWeightDialog.call()
+            }
         }
     }
 
@@ -67,6 +76,14 @@ class WeightsViewModel @Inject constructor(
         viewModelScope.launch {
             newTargetWeight.toFloatOrNull()?.let { weight ->
                 weightInteractor.setTargetWeight(weight)
+            } ?: showError.call()
+        }
+    }
+
+    fun changeMaxWeight(maxWeight: String) {
+        viewModelScope.launch {
+            maxWeight.toFloatOrNull()?.let { weight ->
+                weightInteractor.setMaxPossibleWeight(weight)
             } ?: showError.call()
         }
     }

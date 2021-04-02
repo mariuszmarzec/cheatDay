@@ -11,6 +11,7 @@ import javax.inject.Inject
 interface WeightsMapper {
     fun mapWeights(
         minWeight: WeightResult?,
+        maxPossibleValue: Float,
         targetWeight: Float,
         weights: List<WeightResult>
     ): List<ListItem>
@@ -18,6 +19,7 @@ interface WeightsMapper {
     companion object {
         const val MIN_ID = "MIN_ID"
         const val TARGET_ID = "TARGET_ID"
+        const val MAX_POSSIBLE_ID = "MAX_POSSIBLE_ID"
     }
 }
 
@@ -26,6 +28,7 @@ class WeightsMapperImpl @Inject constructor(
 ) : WeightsMapper {
     override fun mapWeights(
         minWeight: WeightResult?,
+        maxPossibleWeight: Float,
         targetWeight: Float,
         weights: List<WeightResult>
     ): List<ListItem> {
@@ -39,6 +42,12 @@ class WeightsMapperImpl @Inject constructor(
                 )}"
             )
         }
+        val maxPossibleWeightItem = LabeledRowItem(
+            id = WeightsMapper.MAX_POSSIBLE_ID,
+            data = this,
+            value = "$maxPossibleWeight ${context.getString(R.string.unit_kg_short)}",
+            label = context.getString(R.string.weights_max_possible_label)
+        )
         val targetWeightItem = LabeledRowItem(
             id = WeightsMapper.TARGET_ID,
             data = this,
@@ -56,9 +65,9 @@ class WeightsMapperImpl @Inject constructor(
             }
         }
         return if (minWeightItem != null) {
-            minWeightItem + targetWeightItem + weightsList
+            minWeightItem + maxPossibleWeightItem + targetWeightItem + weightsList
         } else {
-            targetWeightItem + weightsList
+            maxPossibleWeightItem + targetWeightItem + weightsList
         }
     }
 }

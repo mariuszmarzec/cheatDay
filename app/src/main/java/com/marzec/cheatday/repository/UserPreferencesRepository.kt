@@ -5,6 +5,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserPreferencesRepository {
 
+    suspend fun setMaxPossibleWeight(weight: Float)
+
+    fun observeMaxPossibleWeight(): Flow<Float>
+
     suspend fun setTargetWeight(weight: Float)
 
     fun observeTargetWeight(): Flow<Float>

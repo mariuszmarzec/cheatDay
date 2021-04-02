@@ -41,8 +41,26 @@ fun <T1, T2, T3> combine(
             Triple(a, b, c)
         }
 
+fun <T1, T2, T3, T4> combine(
+    first: Flow<T1>,
+    second: Flow<T2>,
+    third: Flow<T3>,
+    fourth: Flow<T4>,
+): Flow<Quadruple<T1, T2, T3, T4>> =
+    combine(first, second, third)
+        .combine(fourth) { (a, b, c), d ->
+            Quadruple(a, b, c, d)
+        }
+
 fun String.toDateTime() = try {
     DateTime.parse(this, Api.DATE_FORMATTER)
 } catch (ex: IllegalArgumentException) {
     DateTime.parse(this, DateTimeFormat.forPattern(Api.DATE_FORMAT.dropLast(3)))
 }
+
+data class Quadruple<T1, T2, T3, T4>(
+    val ob1: T1,
+    val ob2: T2,
+    val ob3: T3,
+    val ob4: T4
+)
