@@ -1,10 +1,11 @@
-package com.marzec.cheatday.screen.weights
+ package com.marzec.cheatday.screen.weights
 
 import android.os.Bundle
 import android.text.InputType
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseVMFragment
@@ -45,7 +46,7 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
         }
 
         viewModel.goToAddResultScreen.observe {
-            findNavController().navigate(WeightsFragmentDirections.actionWeightsToAddWeight())
+            findNavController().navigate(WeightsFragmentDirections.actionWeightsToAddWeight(null))
         }
 
         viewModel.showTargetWeightDialog.observe {
@@ -58,6 +59,12 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
 
         viewModel.showError.observe {
             requireActivity().showErrorDialog()
+        }
+
+        viewModel.openWeightAction.observe {
+            findNavController().navigate(
+                WeightsFragmentDirections.actionWeightsToAddWeight(it)
+            )
         }
 
         viewModel.goToChartAction.observe {

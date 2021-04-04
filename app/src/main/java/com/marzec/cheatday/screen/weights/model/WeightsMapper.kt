@@ -28,7 +28,7 @@ class WeightsMapperImpl @Inject constructor(
 ) : WeightsMapper {
     override fun mapWeights(
         minWeight: WeightResult?,
-        maxPossibleWeight: Float,
+        maxPossibleValue: Float,
         targetWeight: Float,
         weights: List<WeightResult>
     ): List<ListItem> {
@@ -45,7 +45,7 @@ class WeightsMapperImpl @Inject constructor(
         val maxPossibleWeightItem = LabeledRowItem(
             id = WeightsMapper.MAX_POSSIBLE_ID,
             data = this,
-            value = "$maxPossibleWeight ${context.getString(R.string.unit_kg_short)}",
+            value = "$maxPossibleValue ${context.getString(R.string.unit_kg_short)}",
             label = context.getString(R.string.weights_max_possible_label)
         )
         val targetWeightItem = LabeledRowItem(

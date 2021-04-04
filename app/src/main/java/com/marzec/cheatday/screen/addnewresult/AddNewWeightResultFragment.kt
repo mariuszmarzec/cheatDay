@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseVMFragment
 import com.marzec.cheatday.databinding.FragmentAddNewWeightResultBinding
@@ -17,20 +18,25 @@ import org.joda.time.DateTime
 class AddNewWeightResultFragment :
     BaseVMFragment<AddNewWeightResultViewModel>(R.layout.fragment_add_new_weight_result) {
 
+    private val args: AddNewWeightResultFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val binding = FragmentAddNewWeightResultBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.vm = viewModel
+        binding.button.setText(
+            args.weightId?.let { R.string.common_update } ?: R.string.common_add
+        )
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.load(null)
+        viewModel.load(args.weightId)
 
         viewModel.saveSuccess.observe {
             findNavController().popBackStack()
@@ -63,7 +69,9 @@ class AddNewWeightResultFragment :
             viewModel.onDatePickerClick()
         }
 
-        button.setOnClickListener { viewModel.save() }
+        button.setOnClickListener {
+            viewModel.save()
+        }
     }
 
     override fun viewModelClass(): Class<out AddNewWeightResultViewModel> =

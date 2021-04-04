@@ -14,6 +14,7 @@
     <string name="weights_target_label">TARGET WEIGHT:</string>
     <string name="weights_max_possible_label">MAX POSSIBLE WEIGHT:</string>
     <string name="common_add">Add</string>
+    <string name="common_update">Update</string>
     <string name="weight_hint">Weight</string>
     <string name="date_hint">Date</string>
     <string name="dialog_error_title_common">Error</string>

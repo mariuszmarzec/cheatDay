@@ -33,6 +33,8 @@ class WeightsViewModel @Inject constructor(
 
     val showError = SingleLiveEvent<Unit>()
 
+    val openWeightAction = SingleLiveEvent<String>()
+
     private val _list = MutableLiveData<List<ListItem>>()
     val list: LiveData<List<ListItem>>
         get() = _list
@@ -64,6 +66,9 @@ class WeightsViewModel @Inject constructor(
             }
             MAX_POSSIBLE_ID -> {
                 showMaxPossibleWeightDialog.call()
+            }
+            else -> {
+                openWeightAction.postValue(listId)
             }
         }
     }

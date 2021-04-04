@@ -37,10 +37,11 @@ class AddNewWeightResultViewModel @AssistedInject constructor(
     val loading: LiveData<Boolean>
         get() = loadingInternal
 
-    fun load(id: Long?) {
+    fun load(id: String?) {
         if (id != null) {
+            val weightId = id.toLong()
             viewModelScope.launch(viewModelScope.coroutineContext + Dispatchers.IO) {
-                weightInteractor.getWeight(id)?.let {
+                weightInteractor.getWeight(weightId)?.let {
                     weightResult.postValue(it)
                     weight.postValue(it.value.toString())
                     dateInternal.postValue(it.date)

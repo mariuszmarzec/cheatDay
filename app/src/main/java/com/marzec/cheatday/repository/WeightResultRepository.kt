@@ -5,8 +5,10 @@ import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.api.asContent
 import com.marzec.cheatday.api.request.PutWeightRequest
+import com.marzec.cheatday.api.response.WeightDto
 import com.marzec.cheatday.api.response.toDomain
 import com.marzec.cheatday.model.domain.WeightResult
+import com.marzec.cheatday.model.domain.toDto
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +48,7 @@ class WeightResultRepositoryImpl @Inject constructor(
 
     override suspend fun updateWeight(userId: String, weightResult: WeightResult) =
         withContext(Dispatchers.IO) {
-            TODO("TODO UPDATE")
+            weightApi.update(weightResult.toDto())
         }
 
     override suspend fun getWeight(id: Long): WeightResult? = withContext(Dispatchers.IO) {

@@ -24,6 +24,12 @@
         android:id="@+id/addWeight"
         android:name="com.marzec.cheatday.screen.addnewresult.AddNewWeightResultFragment"
         android:label="AddNewWeightResultFragment">
+
+        <argument
+            android:name="weightId"
+            app:argType="string"
+            app:nullable="true"
+            />
     </fragment>
 
     <fragment

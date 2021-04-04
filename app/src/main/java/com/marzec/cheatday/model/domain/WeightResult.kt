@@ -1,5 +1,7 @@
 package com.marzec.cheatday.model.domain
 
+import com.marzec.cheatday.api.Api
+import com.marzec.cheatday.api.response.WeightDto
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 import org.joda.time.DateTime
 
@@ -17,3 +19,7 @@ fun WeightResult.toDb(userId: String) = WeightResultEntity(
     date.millis,
     userId
 )
+
+fun WeightResult.toDto(): WeightDto {
+    return WeightDto(id.toInt(), value, date.toString(Api.DATE_FORMAT))
+}
