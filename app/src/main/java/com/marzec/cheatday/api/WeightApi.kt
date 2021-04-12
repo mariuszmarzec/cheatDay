@@ -18,7 +18,7 @@ interface WeightApi {
     suspend fun update(@Body request: WeightDto)
 
     @DELETE("weight/{id}")
-    suspend fun remove(@Path("id") id: String)
+    suspend fun remove(@Path("id") id: Long)
 
     @GET("weights")
     suspend fun getAll(): List<WeightDto>

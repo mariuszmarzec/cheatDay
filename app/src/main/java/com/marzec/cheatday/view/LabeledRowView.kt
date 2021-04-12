@@ -37,4 +37,9 @@ class LabeledRowView @JvmOverloads constructor(
     override fun setOnClickListener(l: OnClickListener?) {
         super.setOnClickListener(l)
     }
+
+    @ModelProp(options = [ModelProp.Option.DoNotHash])
+    override fun setOnLongClickListener(l: OnLongClickListener?) {
+        super.setOnLongClickListener(l)
+    }
 }

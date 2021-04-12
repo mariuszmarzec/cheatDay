@@ -34,6 +34,8 @@ interface WeightInteractor {
     suspend fun updateWeight(weight: WeightResult)
 
     suspend fun getWeight(id: Long): WeightResult?
+
+    suspend fun removeWeight(id: Long)
 }
 
 @ExperimentalCoroutinesApi
@@ -112,5 +114,9 @@ class WeightInteractorImpl @Inject constructor(
 
     override suspend fun getWeight(id: Long): WeightResult? {
         return weightResultRepository.getWeight(id)
+    }
+
+    override suspend fun removeWeight(id: Long) {
+        weightResultRepository.removeWeight(id)
     }
 }

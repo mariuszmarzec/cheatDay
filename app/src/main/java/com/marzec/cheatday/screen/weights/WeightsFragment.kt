@@ -5,11 +5,12 @@ import android.text.InputType
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseVMFragment
+import com.marzec.cheatday.extensions.DialogInputOptions
 import com.marzec.cheatday.extensions.DialogOptions
+import com.marzec.cheatday.extensions.showAnswerDialog
 import com.marzec.cheatday.extensions.showErrorDialog
 import com.marzec.cheatday.extensions.showInputDialog
 import com.marzec.cheatday.screen.weights.model.WeightsViewModel
@@ -37,6 +38,10 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
                                 value(item.value)
                                 onClickListener { _, _, _, _ ->
                                     viewModel.onClick(item.id)
+                                }
+                                onLongClickListener { _, _, _, _ ->
+                                    viewModel.onLongClick(item.id)
+                                    true
                                 }
                             }
                         }
@@ -67,6 +72,10 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
             )
         }
 
+        viewModel.showRemoveDialog.observe {
+            showIfRemoveDialog(it)
+        }
+
         viewModel.goToChartAction.observe {
             findNavController().navigate(R.id.action_weights_to_chart)
         }
@@ -83,7 +92,7 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
 
     private fun showTargetWeightDialog() {
         requireActivity().showInputDialog(
-            DialogOptions(
+            DialogInputOptions(
                 title = getString(R.string.weights_target_label),
                 message = getString(R.string.dialog_change_target_weight_message),
                 negativeButton = getString(R.string.cancel),
@@ -96,13 +105,25 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
 
     private fun showMaxPossibleWeightDialog() {
         requireActivity().showInputDialog(
-            DialogOptions(
+            DialogInputOptions(
                 title = getString(R.string.weights_max_possible_label),
                 message = getString(R.string.dialog_change_max_weight_message),
                 negativeButton = getString(R.string.cancel),
                 positiveButton = getString(R.string.ok),
                 inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL,
                 onInputText = { newTargetWeight -> viewModel.changeMaxWeight(newTargetWeight) }
+            )
+        )
+    }
+
+    private fun showIfRemoveDialog(id: String) {
+        requireActivity().showAnswerDialog(
+            DialogOptions(
+                title = getString(R.string.remove_weight_dialog_title),
+                message = getString(R.string.remove_weight_dialog_message),
+                negativeButton = getString(R.string.no),
+                positiveButton = getString(R.string.yes),
+                onPositiveButtonClicked = { viewModel.removeWeight(id) }
             )
         )
     }

@@ -1,7 +1,6 @@
 package com.marzec.cheatday.di
 
 import com.marzec.cheatday.api.Api
-import com.marzec.cheatday.api.CheatDayApi
 import com.marzec.cheatday.api.LoginApi
 import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.repository.UserRepository
@@ -64,12 +63,6 @@ class ApiModule {
     @Singleton
     fun provideLoginApi(@LoginApiClient retrofit: Retrofit): LoginApi =
         retrofit.create(LoginApi::class.java)
-
-    @Provides
-    @Singleton
-    fun provideCheatDayApi(@CheatDayApiClient retrofit: Retrofit): CheatDayApi = retrofit.create(
-        CheatDayApi::class.java
-    )
 
     @Provides
     @Singleton

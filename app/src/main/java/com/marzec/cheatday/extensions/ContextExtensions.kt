@@ -8,9 +8,9 @@ import androidx.appcompat.app.AlertDialog
 import com.marzec.cheatday.R
 import org.jetbrains.anko.alert
 
-fun Context.showInputDialog(dialogOptions: DialogOptions): Unit = with(dialogOptions) {
+fun Context.showInputDialog(dialogInputOptions: DialogInputOptions): Unit = with(dialogInputOptions) {
     val editText = EditText(this@showInputDialog).apply {
-        inputType = dialogOptions.inputType
+        inputType = inputType
     }
     val dialog: AlertDialog = AlertDialog.Builder(this@showInputDialog)
         .setTitle(title)
@@ -22,6 +22,23 @@ fun Context.showInputDialog(dialogOptions: DialogOptions): Unit = with(dialogOpt
             val text = editText.text.toString()
             dialog.dismiss()
             onInputText(text)
+        }
+        .setNegativeButton(negativeButton) { dialog, _ ->
+            dialog.dismiss()
+        }
+        .create()
+    dialog.show()
+}
+
+fun Context.showAnswerDialog(dialogOptions: DialogOptions): Unit = with(dialogOptions) {
+    val dialog: AlertDialog = AlertDialog.Builder(this@showAnswerDialog)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton(
+            positiveButton
+        ) { dialog, _ ->
+            dialog.dismiss()
+            onPositiveButtonClicked()
         }
         .setNegativeButton(negativeButton) { dialog, _ ->
             dialog.dismiss()
@@ -42,11 +59,19 @@ fun Context.showErrorDialog(
     }
 }
 
-data class DialogOptions(
+data class DialogInputOptions(
     val title: String,
     val message: String,
     val positiveButton: String,
     val negativeButton: String,
     val inputType: Int = InputType.TYPE_CLASS_TEXT,
     val onInputText: (String) -> Unit = {}
+)
+
+data class DialogOptions(
+    val title: String,
+    val message: String,
+    val positiveButton: String,
+    val negativeButton: String,
+    val onPositiveButtonClicked: () -> Unit = {}
 )

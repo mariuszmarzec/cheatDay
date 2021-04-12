@@ -54,6 +54,10 @@ class WeightResultRepositoryImpl @Inject constructor(
     override suspend fun getWeight(id: Long): WeightResult? = withContext(Dispatchers.IO) {
         weightApi.getAll().map { it.toDomain() }.find { it.id == id }
     }
+
+    override suspend fun removeWeight(id: Long): Unit = withContext(Dispatchers.IO) {
+        asContent { weightApi.remove(id) }
+    }
 }
 
 interface WeightResultRepository {
@@ -69,4 +73,6 @@ interface WeightResultRepository {
     suspend fun updateWeight(userId: String, weightResult: WeightResult)
 
     suspend fun getWeight(id: Long): WeightResult?
+
+    suspend fun removeWeight(id: Long)
 }

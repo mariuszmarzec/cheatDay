@@ -29,4 +29,8 @@
     <string name="hint_email">user@mail.com</string>
     <string name="hint_password">Password</string>
     <string name="login_screen_submit_button">Login</string>
+    <string name="remove_weight_dialog_title">Remove weight</string>
+    <string name="remove_weight_dialog_message">Do you want to remove weight result?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
 </resources>

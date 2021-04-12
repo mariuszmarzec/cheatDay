@@ -35,6 +35,8 @@ class WeightsViewModel @Inject constructor(
 
     val openWeightAction = SingleLiveEvent<String>()
 
+    val showRemoveDialog = SingleLiveEvent<String>()
+
     private val _list = MutableLiveData<List<ListItem>>()
     val list: LiveData<List<ListItem>>
         get() = _list
@@ -73,6 +75,10 @@ class WeightsViewModel @Inject constructor(
         }
     }
 
+    fun onLongClick(listId: String) {
+        showRemoveDialog.value = listId
+    }
+
     fun onFloatingButtonClick() {
         goToAddResultScreen.call()
     }
@@ -95,5 +101,12 @@ class WeightsViewModel @Inject constructor(
 
     fun goToChart() {
         goToChartAction.call()
+    }
+
+    fun removeWeight(id: String) {
+        viewModelScope.launch {
+            weightInteractor.removeWeight(id.toLong())
+            load()
+        }
     }
 }
