@@ -3,8 +3,8 @@ package com.marzec.cheatday.screen.chart
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
 import com.marzec.cheatday.R
-import com.marzec.cheatday.common.BaseVMFragment
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
@@ -12,11 +12,16 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate.rgb
+import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.screen.chart.model.ChartsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.InternalCoroutinesApi
 
-class ChartFragment : BaseVMFragment<ChartsViewModel>(R.layout.fragment_chart) {
+@AndroidEntryPoint
+class ChartFragment : BaseFragment(R.layout.fragment_chart) {
+
+    private val viewModel: ChartsViewModel by viewModels()
 
     @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,7 +63,4 @@ class ChartFragment : BaseVMFragment<ChartsViewModel>(R.layout.fragment_chart) {
         super.onResume()
         viewModel.load()
     }
-
-    override fun viewModelClass(): Class<out ChartsViewModel> = ChartsViewModel::class.java
 }
-

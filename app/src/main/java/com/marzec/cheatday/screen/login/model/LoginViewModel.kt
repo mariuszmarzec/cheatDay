@@ -5,10 +5,12 @@ import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.LoginRepository
 import com.marzec.mvi.Intent
 import com.marzec.mvi.StoreViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
+@HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     initialState: LoginViewState

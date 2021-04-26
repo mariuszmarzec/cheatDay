@@ -6,6 +6,8 @@ import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.repository.UserRepository
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import java.time.Duration
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -16,6 +18,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
+@InstallIn(SingletonComponent::class)
 class ApiModule {
 
     @Provides

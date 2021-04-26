@@ -8,10 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.model.domain.WeightResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
+@HiltViewModel
 class ChartsViewModel @Inject constructor(
     private val weightInteractor: WeightInteractor,
     ) : ViewModel() {

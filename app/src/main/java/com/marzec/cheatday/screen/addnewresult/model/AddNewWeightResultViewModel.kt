@@ -1,30 +1,36 @@
 package com.marzec.cheatday.screen.addnewresult.model
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import androidx.lifecycle.viewModelScope
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.common.SingleLiveEvent
-import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.extensions.emptyString
 import com.marzec.cheatday.interactor.WeightInteractor
-import com.marzec.cheatday.viewmodel.AssistedSavedStateViewModelFactory
+import com.marzec.cheatday.model.domain.WeightResult
 import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 
-class AddNewWeightResultViewModel @AssistedInject constructor(
+@HiltViewModel
+class AddNewWeightResultViewModel @Inject constructor(
     private val weightInteractor: WeightInteractor,
-    @Assisted private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val weightResult = MutableLiveData<WeightResult>()
     private val dateInternal = MutableLiveData<DateTime>()
     private val loadingInternal = MutableLiveData<Boolean>()
 
-    val weight = savedStateHandle.getLiveData<String>(STATE_WEIGHT, emptyString())
+    val weight = savedStateHandle.getLiveData(STATE_WEIGHT, emptyString())
 
     val date: LiveData<String> = dateInternal.map { it.toString(Constants.DATE_PICKER_PATTERN) }
 
@@ -96,9 +102,6 @@ class AddNewWeightResultViewModel @AssistedInject constructor(
             }
         }
     }
-
-    @AssistedFactory
-    interface Factory : AssistedSavedStateViewModelFactory<AddNewWeightResultViewModel>
 
     companion object {
         private const val STATE_WEIGHT = "STATE_WEIGHT"

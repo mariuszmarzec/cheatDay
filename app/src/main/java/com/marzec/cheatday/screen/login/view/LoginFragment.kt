@@ -4,16 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
-import com.marzec.cheatday.common.BaseVMFragment
+import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.screen.login.model.LoginActions
 import com.marzec.cheatday.screen.login.model.LoginSideEffects
 import com.marzec.cheatday.screen.login.model.LoginViewModel
 import com.marzec.cheatday.screen.login.render.LoginRender
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-class LoginFragment : BaseVMFragment<LoginViewModel>(R.layout.fragment_login) {
+@AndroidEntryPoint
+class LoginFragment : BaseFragment(R.layout.fragment_login) {
+
+    private val viewModel: LoginViewModel by viewModels()
 
     @Inject
     lateinit var loginRender: LoginRender
@@ -46,6 +51,4 @@ class LoginFragment : BaseVMFragment<LoginViewModel>(R.layout.fragment_login) {
     private fun onLoginSuccessful() {
         findNavController().navigateUp()
     }
-
-    override fun viewModelClass(): Class<out LoginViewModel> = LoginViewModel::class.java
 }

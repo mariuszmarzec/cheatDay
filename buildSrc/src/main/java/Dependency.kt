@@ -6,7 +6,6 @@ object Dependency {
     val junit4_version = "4.13"
     val leak_canary_version = "2.5"
     val coroutines_version = "1.3.9"
-    val dagger_version = "2.32"
     val appcompat_version = "1.1.0"
     val material_version = "1.1.0"
     val ktx_version = "2.3.0-alpha02"
@@ -40,6 +39,7 @@ object Dependency {
     val datastore_version = "1.0.0-alpha05"
     val google_service_version = "4.3.4"
     val protobuf_version = "0.8.14"
+    val hilt_version = "2.35"
 
     object BuildPlugins {
         val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"
@@ -51,6 +51,7 @@ object Dependency {
         val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${nav_version}"
         val googleServices = "com.google.gms:google-services:${google_service_version}"
         val protobuf = "com.google.protobuf:protobuf-gradle-plugin:${protobuf_version}"
+        val hilt = "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
     }
 
     object Android {

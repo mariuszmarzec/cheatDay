@@ -19,16 +19,17 @@ import com.marzec.cheatday.notifications.NotificationHelperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 
 @Module
+@InstallIn(SingletonComponent::class)
 interface AppModule {
-
-    @Binds
-    fun bindContext(application: App): Context
 
     @Binds
     @Singleton
@@ -44,7 +45,7 @@ interface AppModule {
 
         @Provides
         @Singleton
-        fun provideAppDatabase(context: Context): AppDatabase = AppDatabase.getInstance(context)
+        fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase = AppDatabase.getInstance(context)
 
         @Provides
         @Singleton
@@ -60,12 +61,12 @@ interface AppModule {
 
         @Provides
         @Singleton
-        fun provideDataStore(context: Context): DataStore<Preferences> =
+        fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
             context.createDataStore(name = "user_preferences")
 
         @Provides
         @Singleton
-        fun provideCurrentUserDataStore(context: Context): DataStore<CurrentUserProto> =
+        fun provideCurrentUserDataStore(@ApplicationContext context: Context): DataStore<CurrentUserProto> =
             context.createDataStore(
                 fileName = "CurrentUserProto.pb",
                 serializer = CurrentUserProtoSerializer

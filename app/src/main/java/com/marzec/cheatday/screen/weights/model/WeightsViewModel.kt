@@ -13,11 +13,13 @@ import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.TARGET_I
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.MAX_POSSIBLE_ID
 import com.marzec.cheatday.view.model.ListItem
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OpenForTesting
+@HiltViewModel
 class WeightsViewModel @Inject constructor(
     private val weightInteractor: WeightInteractor,
     private val mapper: WeightsMapper

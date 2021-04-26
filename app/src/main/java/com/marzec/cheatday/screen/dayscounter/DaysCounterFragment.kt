@@ -2,14 +2,19 @@ package com.marzec.cheatday.screen.dayscounter
 
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.viewModels
 import com.marzec.cheatday.R
-import com.marzec.cheatday.common.BaseVMFragment
+import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.databinding.FragmentDaysCounterBinding
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterViewModel
 import com.marzec.cheatday.screen.weights.model.DaysSideEffects
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_days_counter.*
 
-class DaysCounterFragment : BaseVMFragment<DaysCounterViewModel>() {
+@AndroidEntryPoint
+class DaysCounterFragment : BaseFragment() {
+
+    private val viewModel: DaysCounterViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,8 +62,5 @@ class DaysCounterFragment : BaseVMFragment<DaysCounterViewModel>() {
             R.id.logout -> viewModel.onLogoutClick().run { true }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-    override fun viewModelClass(): Class<out DaysCounterViewModel> {
-        return DaysCounterViewModel::class.java
     }
 }

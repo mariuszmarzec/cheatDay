@@ -17,6 +17,7 @@ buildscript {
         classpath(Dependency.BuildPlugins.googleServices)
         classpath(Dependency.BuildPlugins.crashlytics)
         classpath(Dependency.BuildPlugins.protobuf)
+        classpath(Dependency.BuildPlugins.hilt)
 
     }
 }

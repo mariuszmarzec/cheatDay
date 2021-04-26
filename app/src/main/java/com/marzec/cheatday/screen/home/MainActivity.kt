@@ -1,21 +1,21 @@
 package com.marzec.cheatday.screen.home
 
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.marzec.cheatday.R
-import com.marzec.cheatday.common.BaseActivity
 import com.marzec.cheatday.screen.home.model.MainViewModel
-import com.marzec.cheatday.viewmodel.ViewModelFactory
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : BaseActivity() {
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var vmFactory: ViewModelFactory
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +25,6 @@ class MainActivity : BaseActivity() {
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.fragmentContainerView)
-
-
-        val viewModel = vmFactory.create(this).create(MainViewModel::class.java)
 
         navHostFragment?.let { fragment ->
             NavigationUI.setupWithNavController(

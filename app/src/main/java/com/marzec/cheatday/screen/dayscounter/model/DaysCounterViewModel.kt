@@ -1,6 +1,7 @@
 package com.marzec.cheatday.screen.dayscounter.model
 
 import androidx.lifecycle.*
+import com.marzec.cheatday.OpenForTesting
 import com.marzec.cheatday.extensions.map
 import com.marzec.cheatday.screen.weights.model.DaysSideEffects
 import com.marzec.cheatday.interactor.DaysInteractor
@@ -9,11 +10,14 @@ import com.marzec.cheatday.model.domain.DaysGroup
 import com.marzec.cheatday.model.ui.DayState
 import com.marzec.cheatday.repository.LoginRepository
 import com.marzec.cheatday.repository.UserPreferencesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-open class DaysCounterViewModel @Inject constructor(
+@HiltViewModel
+@OpenForTesting
+class DaysCounterViewModel @Inject constructor(
     private val daysInteractor: DaysInteractor,
     private val preferencesRepository: UserPreferencesRepository,
     private val loginRepository: LoginRepository

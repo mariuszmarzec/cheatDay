@@ -1,15 +1,17 @@
 package com.marzec.cheatday.notifications
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.interactor.DaysInteractor
-import com.marzec.cheatday.receivers.HiltBroadcastReceiver
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 
-class EveryDayNotificationReceiver : HiltBroadcastReceiver() {
+@AndroidEntryPoint
+class EveryDayNotificationReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var notificationHelper: NotificationHelper
@@ -18,7 +20,6 @@ class EveryDayNotificationReceiver : HiltBroadcastReceiver() {
     lateinit var daysInteractor: DaysInteractor
 
     override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
         runBlocking {
             if (!daysInteractor.isStateSettled()) {
                 notificationHelper.show(

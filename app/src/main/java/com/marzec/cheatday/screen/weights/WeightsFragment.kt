@@ -5,9 +5,11 @@ import android.text.InputType
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
-import com.marzec.cheatday.common.BaseVMFragment
+import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.extensions.DialogInputOptions
 import com.marzec.cheatday.extensions.DialogOptions
 import com.marzec.cheatday.extensions.showAnswerDialog
@@ -16,15 +18,18 @@ import com.marzec.cheatday.extensions.showInputDialog
 import com.marzec.cheatday.screen.weights.model.WeightsViewModel
 import com.marzec.cheatday.view.labeledRowView
 import com.marzec.cheatday.view.model.LabeledRowItem
-import kotlinx.android.synthetic.main.fragment_weights.*
-import kotlinx.coroutines.InternalCoroutinesApi
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_weights.floatingButton
+import kotlinx.android.synthetic.main.fragment_weights.recyclerView
 
 
-class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weights) {
+ @AndroidEntryPoint
+class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
 
-    @InternalCoroutinesApi
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private val viewModel: WeightsViewModel by viewModels()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
         viewModel.list.observeNonNull { items ->
@@ -138,6 +143,4 @@ class WeightsFragment : BaseVMFragment<WeightsViewModel>(R.layout.fragment_weigh
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-    override fun viewModelClass() = WeightsViewModel::class.java
 }

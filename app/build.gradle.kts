@@ -15,6 +15,7 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("com.google.protobuf")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -145,13 +146,8 @@ dependencies {
     debugImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
     androidTestImplementation("androidx.navigation:navigation-testing:${Dependency.nav_version}")
 
-    implementation("com.google.dagger:dagger:${Dependency.dagger_version}")
-    implementation("com.google.dagger:dagger-android:${Dependency.dagger_version}")
-    implementation("com.google.dagger:dagger-android-support:${Dependency.dagger_version}")
-    kapt( "com.google.dagger:dagger-compiler:${Dependency.dagger_version}")
-    kapt("com.google.dagger:dagger-android-processor:${Dependency.dagger_version}")
-    kaptAndroidTest( "com.google.dagger:dagger-compiler:${Dependency.dagger_version}")
-    kaptAndroidTest("com.google.dagger:dagger-android-processor:${Dependency.dagger_version}")
+    implementation("com.google.dagger:hilt-android:${Dependency.hilt_version}")
+    kapt("com.google.dagger:hilt-compiler:${Dependency.hilt_version}")
 
     kapt("com.airbnb.android:epoxy-processor:${Dependency.epoxy_version}")
     kapt("androidx.room:room-compiler:${Dependency.room_version}")
