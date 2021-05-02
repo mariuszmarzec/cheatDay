@@ -100,6 +100,10 @@ kapt {
     }
 }
 
+hilt {
+    enableTransformForLocalTests = true
+}
+
 allOpen {
     annotation("com.marzec.cheatday.OpenClass")
 }
@@ -148,6 +152,9 @@ dependencies {
 
     implementation("com.google.dagger:hilt-android:${Dependency.hilt_version}")
     kapt("com.google.dagger:hilt-compiler:${Dependency.hilt_version}")
+
+    androidTestImplementation("com.google.dagger:hilt-android-testing:${Dependency.hilt_version}")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:${Dependency.hilt_version}")
 
     kapt("com.airbnb.android:epoxy-processor:${Dependency.epoxy_version}")
     kapt("androidx.room:room-compiler:${Dependency.room_version}")

@@ -9,7 +9,7 @@
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true">
         <activity
-            android:name=".DaggerTestActivity"
+            android:name=".HiltTestActivity"
             android:exported="false" />
     </application>
 

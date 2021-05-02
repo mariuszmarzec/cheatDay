@@ -1,4 +1,4 @@
-package com.marzec.cheatday.feature.home.dayscounter
+package com.marzec.cheatday.screen.home.dayscounter
 
 import androidx.lifecycle.Observer
 import com.marzec.cheatday.InstantExecutorExtension

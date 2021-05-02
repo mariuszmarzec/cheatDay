@@ -6,19 +6,13 @@ import android.os.Bundle
 import android.os.StrictMode
 import androidx.test.runner.AndroidJUnitRunner
 import com.facebook.testing.screenshot.ScreenshotRunner
-import com.squareup.rx2.idler.Rx2Idler
-import io.reactivex.plugins.RxJavaPlugins
+import dagger.hilt.android.testing.HiltTestApplication
 
 class MockTestRunner : AndroidJUnitRunner() {
     override fun onCreate(arguments: Bundle) {
         ScreenshotRunner.onCreate(this, arguments);
         StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().permitAll().build())
         super.onCreate(arguments)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        setupRxJavaPlugins()
     }
 
     override fun finish(resultCode: Int, results: Bundle?) {
@@ -36,14 +30,6 @@ class MockTestRunner : AndroidJUnitRunner() {
         className: String,
         context: Context
     ): Application {
-        return super.newApplication(cl, TestApp::class.java.name, context)
+        return super.newApplication(cl, HiltTestApplication::class.java.name, context)
     }
-
-    private fun setupRxJavaPlugins() {
-        RxJavaPlugins.setInitComputationSchedulerHandler(Rx2Idler.create("RxJava 2.x Computation Scheduler"));
-        RxJavaPlugins.setInitIoSchedulerHandler(Rx2Idler.create("RxJava 2.x IO Scheduler"));
-        RxJavaPlugins.setInitNewThreadSchedulerHandler(Rx2Idler.create("RxJava 2.x NewThread Scheduler"));
-        RxJavaPlugins.setInitSingleSchedulerHandler(Rx2Idler.create("RxJava 2.x Single Scheduler"));
-    }
-
 }
