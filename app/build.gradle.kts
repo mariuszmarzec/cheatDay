@@ -16,7 +16,10 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("com.google.protobuf")
     id("dagger.hilt.android.plugin")
+    jacoco
 }
+
+apply(from = "jacoco.gradle.kts")
 
 android {
     compileSdkVersion(Dependency.Android.compileSdkVersion)
@@ -70,14 +73,21 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             signingConfig = signingConfigs.getByName("release")
         }
         getByName("debug") {
+            isTestCoverageEnabled = true
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
