@@ -7,8 +7,8 @@ object Api {
 
     const val env = "TEST"
 
-    val HOST = if (env == "TEST") "http://fiteo-env.eba-mpctrvdb.us-east-2.elasticbeanstalk.com/test"
-    else "http://fiteo-env.eba-mpctrvdb.us-east-2.elasticbeanstalk.com/"
+    val HOST = if (env == "TEST") "http://fiteo-env-1.eba-cba76vkj.us-east-2.elasticbeanstalk.com/test"
+    else "http://fiteo-env-1.eba-cba76vkj.us-east-2.elasticbeanstalk.com/"
 
     val BASE_URL = "$HOST/fiteo/api/1/"
 
