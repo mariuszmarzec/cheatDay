@@ -3,64 +3,61 @@ package com.marzec.cheatday.screen.login.model
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.LoginRepository
-import com.marzec.mvi.Intent
 import com.marzec.mvi.StoreViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 
 @ExperimentalCoroutinesApi
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     initialState: LoginViewState
-) : StoreViewModel<LoginViewState, LoginActions, LoginSideEffects>(
+) : StoreViewModel<LoginViewState, LoginSideEffects>(
     initialState
 ) {
-    init {
-        intents = mapOf(
-            LoginActions.LoginButtonClick::class to Intent(
-                onTrigger = {
-                    loginRepository.login(it.loginData.login, it.loginData.password)
-                },
-                reducer = { action: Any, result: Any?, state: LoginViewState ->
-                    action as LoginActions.LoginButtonClick
-                    result as Content<User>
-                    when (result) {
-                        is Content.Data<*> -> LoginViewState.Data(state.loginData.copy())
-                        is Content.Error<*> -> LoginViewState.Error(state.loginData.copy(), error = result.exception.message.toString())
-                    }
-                },
-                sideEffect = { action: Any, result: Any?, state: LoginViewState ->
-                    if (state is LoginViewState.Data) {
-                        LoginSideEffects.OnLoginSuccessful
-                    } else {
-                        null
-                    }
-                }
-            ),
-            LoginActions.LoginChanged::class to Intent(
-                reducer = { action: Any, _: Any?, state: LoginViewState ->
-                    action as LoginActions.LoginChanged
-                    val loginData = state.loginData.copy(login = action.login)
-                    when (state) {
-                        is LoginViewState.Data -> state.copy(loginData = loginData)
-                        is LoginViewState.Pending -> state.copy(loginData = loginData)
-                        is LoginViewState.Error -> state.copy(loginData = loginData)
-                    }
-                }
-            ),
-            LoginActions.PasswordChanged::class to Intent(
-                reducer = { action: Any, _: Any?, state: LoginViewState ->
-                    action as LoginActions.PasswordChanged
-                    val loginData = state.loginData.copy(password = action.password)
-                    when (state) {
-                        is LoginViewState.Data -> state.copy(loginData = loginData)
-                        is LoginViewState.Pending -> state.copy(loginData = loginData)
-                        is LoginViewState.Error -> state.copy(loginData = loginData)
-                    }
-                }
-            )
-        )
+
+    fun onLoginButtonClicked() = intent<Content<User>> {
+        onTrigger {
+            flow {
+                emit(Content.Loading())
+                emit(loginRepository.login(state.loginData.login, state.loginData.password))
+            }
+        }
+
+        reducer {
+            when (val result = resultNonNull()) {
+                is Content.Data<*> -> LoginViewState.Data(state.loginData.copy())
+                is Content.Error<*> -> LoginViewState.Error(state.loginData.copy(), error = result.exception.message.toString())
+                is Content.Loading -> LoginViewState.Pending(state.loginData.copy())
+            }
+        }
+
+        emitSideEffect {
+            (state as? LoginViewState.Data)?.let { LoginSideEffects.OnLoginSuccessful }
+        }
+    }
+
+    fun onLoginChanged(login: String) = intent<Unit> {
+        reducer {
+            val loginData = state.loginData.copy(login = login)
+            when (state) {
+                is LoginViewState.Data -> state.copy(loginData = loginData)
+                is LoginViewState.Pending -> state.copy(loginData = loginData)
+                is LoginViewState.Error -> state.copy(loginData = loginData)
+            }
+        }
+    }
+
+    fun onPasswordChanged(password: String) = intent<Unit> {
+        reducer {
+            val loginData = state.loginData.copy(password = password)
+            when (state) {
+                is LoginViewState.Data -> state.copy(loginData = loginData)
+                is LoginViewState.Pending -> state.copy(loginData = loginData)
+                is LoginViewState.Error -> state.copy(loginData = loginData)
+            }
+        }
     }
 }

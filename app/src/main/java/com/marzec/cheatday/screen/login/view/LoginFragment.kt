@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
-import com.marzec.cheatday.screen.login.model.LoginActions
 import com.marzec.cheatday.screen.login.model.LoginSideEffects
 import com.marzec.cheatday.screen.login.model.LoginViewModel
 import com.marzec.cheatday.screen.login.render.LoginRender
@@ -28,9 +27,9 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? = super.onCreateView(inflater, container, savedInstanceState)?.apply {
-        loginRender.onLoginButtonClick = { viewModel.sendAction(LoginActions.LoginButtonClick) }
-        loginRender.onPasswordChange = { viewModel.sendAction(LoginActions.PasswordChanged(it)) }
-        loginRender.onLoginChange = { viewModel.sendAction(LoginActions.LoginChanged(it)) }
+        loginRender.onLoginButtonClick = { viewModel.onLoginButtonClicked() }
+        loginRender.onPasswordChange = { viewModel.onPasswordChanged(it) }
+        loginRender.onLoginChange = { viewModel.onLoginChanged(it) }
         loginRender.init(this)
     }
 

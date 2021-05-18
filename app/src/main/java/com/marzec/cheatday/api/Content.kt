@@ -5,6 +5,7 @@ import android.util.Log
 sealed class Content<T> {
 
     data class Data<T>(val data: T) : Content<T>()
+    data class Loading<T>(val data: T? = null) : Content<T>()
     data class Error<T>(val exception: Throwable) : Content<T>()
 }
 
