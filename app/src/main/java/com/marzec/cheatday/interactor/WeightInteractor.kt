@@ -73,22 +73,24 @@ class WeightInteractorImpl @Inject constructor(
         val userId = userRepository.getCurrentUserSuspend().uuid
         val lastValue = weightResultRepository.observeLastWeight(userId).first()?.value
 
+        val minBeforeNewAdded = weightResultRepository.observeMinWeight(userId).first()?.value
+
         val result = weightResultRepository.putWeight(userId, weight)
 
         if (result is Content.Data) {
             if (weight.date.withTimeAtStartOfDay() == DateTime.now().withTimeAtStartOfDay()) {
-                lastValue?.let { old -> incrementCheatDaysIfNeeded(userId, weight, old) }
+                lastValue?.let { old -> incrementCheatDaysIfNeeded(minBeforeNewAdded, weight, old) }
             }
         }
         return result
     }
 
     private suspend fun incrementCheatDaysIfNeeded(
-        userId: String,
+        minBeforeNewAdded: Float?,
         weight: WeightResult,
         old: Float
     ) {
-        val min = weightResultRepository.observeMinWeight(userId).first()?.value ?: return
+        if (minBeforeNewAdded == null) return
         val target =
             userPreferencesRepository.observeTargetWeight().first()
         val maxPossible =
@@ -101,7 +103,7 @@ class WeightInteractorImpl @Inject constructor(
             1 + (old.toInt() - new.toInt())
         } else {
             0
-        }.incIf { min > new }
+        }.incIf { minBeforeNewAdded > new }
 
         if (newCheatDays != 0) {
             daysInteractor.incrementCheatDays(newCheatDays)
