@@ -35,7 +35,7 @@ class AddNewWeightResultFragment :
     ): View {
         val binding = FragmentAddNewWeightResultBinding.inflate(inflater, container, false)
         dateEditText = binding.root.findViewById(R.id.weight_edit_text)
-        dateEditText = binding.root.findViewById(R.id.button)
+        button = binding.root.findViewById(R.id.button)
 
         binding.lifecycleOwner = this
         binding.vm = viewModel
