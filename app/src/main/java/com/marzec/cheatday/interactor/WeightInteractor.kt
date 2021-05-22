@@ -70,7 +70,7 @@ class WeightInteractorImpl @Inject constructor(
     }
 
     override suspend fun addWeight(weight: WeightResult): Content<Unit> {
-        val userId = userRepository.getCurrentUserSuspend().uuid
+        val userId = userRepository.getCurrentUser().uuid
         val lastValue = weightResultRepository.observeLastWeight(userId).first()?.value
 
         val minBeforeNewAdded = weightResultRepository.observeMinWeight(userId).first()?.value
@@ -111,7 +111,7 @@ class WeightInteractorImpl @Inject constructor(
     }
 
     override suspend fun updateWeight(weight: WeightResult) {
-        weightResultRepository.updateWeight(userRepository.getCurrentUserSuspend().uuid, weight)
+        weightResultRepository.updateWeight(userRepository.getCurrentUser().uuid, weight)
     }
 
     override suspend fun getWeight(id: Long): WeightResult? {

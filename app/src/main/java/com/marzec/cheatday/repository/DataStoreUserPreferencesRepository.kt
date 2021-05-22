@@ -25,7 +25,7 @@ class DataStoreUserPreferencesRepository @Inject constructor(
 ) : UserPreferencesRepository {
 
     override suspend fun setMaxPossibleWeight(weight: Float): Unit = withContext(Dispatchers.IO) {
-        val userId = userRepository.getCurrentUserSuspend().uuid
+        val userId = userRepository.getCurrentUser().uuid
         val preferencesKey = preferencesKey<Float>("${userId}_max_possible_weight")
         dataStore.updateData { prefs ->
             prefs.toMutablePreferences().apply { this[preferencesKey] = weight }
@@ -41,7 +41,7 @@ class DataStoreUserPreferencesRepository @Inject constructor(
         }.flowOn(Dispatchers.IO)
 
     override suspend fun setTargetWeight(weight: Float): Unit = withContext(Dispatchers.IO) {
-        val userId = userRepository.getCurrentUserSuspend().uuid
+        val userId = userRepository.getCurrentUser().uuid
         val preferencesKey = preferencesKey<Float>("${userId}_weight")
         dataStore.updateData { prefs ->
             prefs.toMutablePreferences().apply { this[preferencesKey] = weight }
@@ -69,7 +69,7 @@ class DataStoreUserPreferencesRepository @Inject constructor(
             }
 
     override suspend fun setWasClickedToday(day: Day.Type): Unit = withContext(Dispatchers.IO) {
-        val userId = userRepository.getCurrentUserSuspend().uuid
+        val userId = userRepository.getCurrentUser().uuid
         val timeInMillis = DateTime.now().withTimeAtStartOfDay().millis
         dataStore.updateData { prefs ->
             val preferencesKey = preferencesKey<Long>("${userId}_$day")

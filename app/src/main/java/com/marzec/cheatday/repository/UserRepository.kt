@@ -49,9 +49,6 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    @Deprecated("deprecated", replaceWith = ReplaceWith("Use getCurrentUser"))
-    override suspend fun getCurrentUserSuspend(): User = getCurrentUser()
-
     override fun observeIfUserLogged(): Flow<Boolean> {
         return currentUser.data.map { it.email.isNotEmpty() && it.authToken.isNotEmpty() }
     }
@@ -94,8 +91,6 @@ interface UserRepository {
     fun getCurrentUserFlow(): Flow<User>
 
     suspend fun getUserByEmailSuspend(email: String): User
-
-    suspend fun getCurrentUserSuspend(): User
 
     fun observeIfUserLogged() : Flow<Boolean>
 
