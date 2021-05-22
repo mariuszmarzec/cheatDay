@@ -8,6 +8,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.airbnb.epoxy.EpoxyRecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.extensions.DialogInputOptions
@@ -19,9 +21,6 @@ import com.marzec.cheatday.screen.weights.model.WeightsViewModel
 import com.marzec.cheatday.view.labeledRowView
 import com.marzec.cheatday.view.model.LabeledRowItem
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_weights.floatingButton
-import kotlinx.android.synthetic.main.fragment_weights.recyclerView
-
 
  @AndroidEntryPoint
 class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
@@ -31,6 +30,9 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+
+        val recyclerView = view.findViewById<EpoxyRecyclerView>(R.id.recycler_view)
+        val floatingButton = view.findViewById<FloatingActionButton>(R.id.floating_button)
 
         viewModel.list.observeNonNull { items ->
             recyclerView.withModels {

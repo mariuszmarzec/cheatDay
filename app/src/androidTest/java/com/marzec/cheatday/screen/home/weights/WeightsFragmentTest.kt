@@ -73,9 +73,9 @@ class Item(parent: Matcher<View>) : KRecyclerItem<Item>(parent) {
 }
 
 class WeightsScreen : Screen<WeightsScreen>() {
-    val fab = KImageView { withId(R.id.floatingButton) }
+    val fab = KImageView { withId(R.id.floating_button) }
     val recyclerView = KRecyclerView({
-        withId(R.id.recyclerView)
+        withId(R.id.recycler_view)
     }, itemTypeBuilder = {
         itemType(::Item)
     })

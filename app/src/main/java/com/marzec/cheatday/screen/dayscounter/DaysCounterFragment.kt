@@ -8,13 +8,17 @@ import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.databinding.FragmentDaysCounterBinding
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterViewModel
 import com.marzec.cheatday.screen.weights.model.DaysSideEffects
+import com.marzec.cheatday.view.CounterView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_days_counter.*
 
 @AndroidEntryPoint
 class DaysCounterFragment : BaseFragment() {
 
     private val viewModel: DaysCounterViewModel by viewModels()
+
+    private lateinit var cheatCounter: CounterView
+    private lateinit var dietCounter: CounterView
+    private lateinit var workoutCounter: CounterView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,6 +26,10 @@ class DaysCounterFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentDaysCounterBinding.inflate(inflater, container, false)
+        cheatCounter = binding.root.findViewById(R.id.cheat_counter)
+        dietCounter = binding.root.findViewById(R.id.diet_counter)
+        workoutCounter = binding.root.findViewById(R.id.workout_counter)
+
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 

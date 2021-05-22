@@ -6,20 +6,20 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.Px
 import androidx.annotation.StringRes
+import androidx.appcompat.widget.AppCompatImageView
 import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.extensions.style
 import com.marzec.cheatday.R
-import com.marzec.cheatday.model.domain.Day
 import com.marzec.cheatday.extensions.enumValueOfOrDefault
 import com.marzec.cheatday.extensions.gone
 import com.marzec.cheatday.extensions.setVisible
 import com.marzec.cheatday.extensions.visible
-import kotlinx.android.synthetic.main.view_counter.view.*
+import com.marzec.cheatday.model.domain.Day
 
 @Styleable("CounterView")
 class CounterView @JvmOverloads constructor(
@@ -35,11 +35,22 @@ class CounterView @JvmOverloads constructor(
     private var titleTextSize = context.resources.getDimensionPixelSize(R.dimen.counter_title_text_size)
     private var mode = CountMode.DECREASE
 
+    private val decreaseButton: AppCompatImageView
+    private val increaseButton: AppCompatImageView
+    private val titleTextView: TextView
+    private val valueTextView: TextView
+
     var onDecreaseButtonClickListener: (() -> Unit)? = null
     var onIncreaseButtonClickListener: (() -> Unit)? = null
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_counter, this)
+
+        decreaseButton = findViewById(R.id.decrease_button)
+        increaseButton = findViewById(R.id.increase_button)
+        titleTextView = findViewById(R.id.title_text_view)
+        valueTextView = findViewById(R.id.value_text_view)
+
         orientation = VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
         style(attrs)

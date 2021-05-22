@@ -14,7 +14,7 @@
         android:padding="@dimen/default_padding">
 
         <EditText
-            android:id="@+id/weightEditText"
+            android:id="@+id/weight_edit_text"
             android:text="@={vm.weight}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weightEditText"
+            app:layout_constraintTop_toBottomOf="@+id/weight_edit_text"
             app:layout_constraintVertical_bias="0.5" />
 
         <Button
