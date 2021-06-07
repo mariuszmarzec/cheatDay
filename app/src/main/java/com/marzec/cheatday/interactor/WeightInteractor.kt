@@ -52,7 +52,7 @@ class WeightInteractorImpl @Inject constructor(
 
     override fun observeMinWeight(): Flow<WeightResult?> {
         return userRepository.observeCurrentUser().flatMapLatest { user ->
-            weightResultRepository.observeMinWeight(user.uuid)
+            weightResultRepository.observeMinWeight()
         }
     }
 
@@ -64,17 +64,17 @@ class WeightInteractorImpl @Inject constructor(
 
     override fun observeWeights(): Flow<Content<List<WeightResult>>> {
         return userRepository.observeCurrentUser().map { user ->
-            weightResultRepository.observeWeights(user.uuid)
+            weightResultRepository.observeWeights()
         }
     }
 
     override suspend fun addWeight(weight: WeightResult): Content<Unit> {
         val userId = userRepository.getCurrentUser().uuid
-        val lastValue = weightResultRepository.observeLastWeight(userId).first()?.value
+        val lastValue = weightResultRepository.observeLastWeight().first()?.value
 
-        val minBeforeNewAdded = weightResultRepository.observeMinWeight(userId).first()?.value
+        val minBeforeNewAdded = weightResultRepository.observeMinWeight().first()?.value
 
-        val result = weightResultRepository.putWeight(userId, weight)
+        val result = weightResultRepository.putWeight(weight)
 
         if (result is Content.Data) {
             if (weight.date.withTimeAtStartOfDay() == DateTime.now().withTimeAtStartOfDay()) {
@@ -110,7 +110,7 @@ class WeightInteractorImpl @Inject constructor(
     }
 
     override suspend fun updateWeight(weight: WeightResult) {
-        weightResultRepository.updateWeight(userRepository.getCurrentUser().uuid, weight)
+        weightResultRepository.updateWeight(weight)
     }
 
     override suspend fun getWeight(id: Long): WeightResult? {

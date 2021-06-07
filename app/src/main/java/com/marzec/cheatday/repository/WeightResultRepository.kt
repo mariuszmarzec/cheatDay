@@ -5,37 +5,37 @@ import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.api.asContent
 import com.marzec.cheatday.api.request.PutWeightRequest
-import com.marzec.cheatday.api.response.WeightDto
 import com.marzec.cheatday.api.response.toDomain
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.model.domain.toDto
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
-class WeightResultRepositoryImpl @Inject constructor(
-    private val weightApi: WeightApi
-) : WeightResultRepository {
-    override suspend fun observeWeights(userId: String): Content<List<WeightResult>> =
-        withContext(Dispatchers.IO) {
+class WeightResultRepository @Inject constructor(
+    private val weightApi: WeightApi,
+    private val dispatcher: CoroutineDispatcher
+) {
+    suspend fun observeWeights(): Content<List<WeightResult>> =
+        withContext(dispatcher) {
             asContent { weightApi.getAll().map { it.toDomain() }.sortedByDescending { it.date } }
         }
 
-    override fun observeMinWeight(userId: String): Flow<WeightResult?> =
+    fun observeMinWeight(): Flow<WeightResult?> =
         flow {
             emit(weightApi.getAll().map { it.toDomain() }.minByOrNull { it.value })
         }
 
-    override fun observeLastWeight(userId: String): Flow<WeightResult?> =
-         flow {
-             emit(weightApi.getAll().map { it.toDomain() }.maxByOrNull { it.date })
-         }.flowOn(Dispatchers.IO)
+    fun observeLastWeight(): Flow<WeightResult?> =
+        flow {
+            emit(weightApi.getAll().map { it.toDomain() }.maxByOrNull { it.date })
+        }.flowOn(dispatcher)
 
-    override suspend fun putWeight(userId: String, weightResult: WeightResult) =
-        withContext(Dispatchers.IO) {
+    suspend fun putWeight(weightResult: WeightResult): Content<Unit> =
+        withContext(dispatcher) {
             asContent {
                 weightApi.put(
                     PutWeightRequest(
@@ -46,33 +46,17 @@ class WeightResultRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun updateWeight(userId: String, weightResult: WeightResult) =
-        withContext(Dispatchers.IO) {
+    suspend fun updateWeight(weightResult: WeightResult): Content<Unit> = withContext(dispatcher) {
+        asContent {
             weightApi.update(weightResult.toDto())
         }
+    }
 
-    override suspend fun getWeight(id: Long): WeightResult? = withContext(Dispatchers.IO) {
+    suspend fun getWeight(id: Long): WeightResult? = withContext(dispatcher) {
         weightApi.getAll().map { it.toDomain() }.find { it.id == id }
     }
 
-    override suspend fun removeWeight(id: Long): Unit = withContext(Dispatchers.IO) {
+    suspend fun removeWeight(id: Long): Content<Unit> = withContext(dispatcher) {
         asContent { weightApi.remove(id) }
     }
-}
-
-interface WeightResultRepository {
-
-    suspend fun observeWeights(userId: String): Content<List<WeightResult>>
-
-    fun observeMinWeight(userId: String): Flow<WeightResult?>
-
-    fun observeLastWeight(userId: String): Flow<WeightResult?>
-
-    suspend fun putWeight(userId: String, weightResult: WeightResult): Content<Unit>
-
-    suspend fun updateWeight(userId: String, weightResult: WeightResult)
-
-    suspend fun getWeight(id: Long): WeightResult?
-
-    suspend fun removeWeight(id: Long)
 }
