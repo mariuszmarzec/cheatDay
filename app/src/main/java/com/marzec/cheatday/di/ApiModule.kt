@@ -29,7 +29,7 @@ class ApiModule {
         .readTimeout(Duration.ofMillis(10_000))
         .addNetworkInterceptor(Interceptor { chain ->
             var request = chain.request()
-            runBlocking { userRepository.getCurrentUserWithAuth() }?.let { user ->
+            runBlocking { userRepository.getCurrentUserWithAuthToken() }?.let { user ->
                 request = request.newBuilder()
                     .addHeader(Api.Headers.AUTHORIZATION, user.auth)
                     .build()

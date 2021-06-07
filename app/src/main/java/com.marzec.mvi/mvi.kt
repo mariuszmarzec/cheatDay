@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.runningReduce
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
+
 open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewModel() {
 
     private val sideEffectsInternal = SingleLiveEvent<SideEffect>()

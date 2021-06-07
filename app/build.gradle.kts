@@ -175,6 +175,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:${Dependency.mockito_version}")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependency.mockito_kotlin_version}")
     testImplementation("joda-time:joda-time:${Dependency.joda_version}")
+    testImplementation("com.google.truth:truth:${Dependency.truth_version}")
     kaptAndroidTest("com.airbnb.android:epoxy-processor:${Dependency.epoxy_version}")
     kaptAndroidTest("androidx.room:room-compiler:${Dependency.room_version}")
     kaptAndroidTest("com.airbnb.android:paris-processor:${Dependency.paris_version}")

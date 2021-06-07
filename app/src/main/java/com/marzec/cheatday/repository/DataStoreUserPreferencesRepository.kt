@@ -7,18 +7,15 @@ import androidx.datastore.preferences.core.toMutablePreferences
 import com.marzec.cheatday.model.domain.Day
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 
-@FlowPreview
-@ExperimentalCoroutinesApi
+
+
 class DataStoreUserPreferencesRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>,
     private val userRepository: UserRepository
@@ -33,7 +30,7 @@ class DataStoreUserPreferencesRepository @Inject constructor(
     }
 
     override fun observeMaxPossibleWeight(): Flow<Float> =
-        userRepository.getCurrentUserFlow().flatMapMerge { user ->
+        userRepository.observeCurrentUser().flatMapMerge { user ->
             dataStore.data.mapLatest { prefs ->
                 val key = preferencesKey<Float>("${user.uuid}_max_possible_weight")
                 prefs[key] ?: .0f
@@ -49,7 +46,7 @@ class DataStoreUserPreferencesRepository @Inject constructor(
     }
 
     override fun observeTargetWeight(): Flow<Float> =
-        userRepository.getCurrentUserFlow().flatMapMerge { user ->
+        userRepository.observeCurrentUser().flatMapMerge { user ->
             dataStore.data.mapLatest { prefs ->
                 val key = preferencesKey<Float>("${user.uuid}_weight")
                 prefs[key] ?: .0f
@@ -58,7 +55,7 @@ class DataStoreUserPreferencesRepository @Inject constructor(
 
 
     override fun observeWasClickToday(day: Day.Type): Flow<Boolean> =
-        userRepository.getCurrentUserFlow()
+        userRepository.observeCurrentUser()
             .flatMapMerge { user ->
                 dataStore.data.mapLatest { prefs ->
                     prefs[preferencesKey<Long>("${user.uuid}_$day")] ?: 0

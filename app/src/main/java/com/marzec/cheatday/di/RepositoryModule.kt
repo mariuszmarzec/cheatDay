@@ -17,8 +17,5 @@ interface RepositoryModule {
     fun bindTargetWeightRepository(repository: DataStoreUserPreferencesRepository): UserPreferencesRepository
 
     @Binds
-    fun bindUserRepository(repository: UserRepositoryImpl): UserRepository
-
-    @Binds
     fun bindWeightResultRepository(repository: WeightResultRepositoryImpl): WeightResultRepository
 }

@@ -7,7 +7,6 @@ import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.repository.WeightResultRepository
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -38,7 +37,7 @@ interface WeightInteractor {
     suspend fun removeWeight(id: Long)
 }
 
-@ExperimentalCoroutinesApi
+
 class WeightInteractorImpl @Inject constructor(
     private val userRepository: UserRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
@@ -52,7 +51,7 @@ class WeightInteractorImpl @Inject constructor(
         userPreferencesRepository.observeMaxPossibleWeight()
 
     override fun observeMinWeight(): Flow<WeightResult?> {
-        return userRepository.getCurrentUserFlow().flatMapLatest { user ->
+        return userRepository.observeCurrentUser().flatMapLatest { user ->
             weightResultRepository.observeMinWeight(user.uuid)
         }
     }
@@ -64,7 +63,7 @@ class WeightInteractorImpl @Inject constructor(
     }
 
     override fun observeWeights(): Flow<Content<List<WeightResult>>> {
-        return userRepository.getCurrentUserFlow().map { user ->
+        return userRepository.observeCurrentUser().map { user ->
             weightResultRepository.observeWeights(user.uuid)
         }
     }

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-//@ExperimentalCoroutinesApi
+//
 //class WeightInteractorTest {
 //
 //    private val userRepository: UserRepository = mock()

@@ -9,7 +9,6 @@ import com.marzec.cheatday.repository.DayRepository
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.UserRepository
 import javax.inject.Inject
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapMerge
@@ -20,9 +19,9 @@ class DaysInteractorImpl @Inject constructor(
     private val daysRepository: DayRepository,
     private val preferencesRepository: UserPreferencesRepository
 ): DaysInteractor {
-    @FlowPreview
+
     override fun observeDays(): Flow<DaysGroup> {
-        return userRepository.getCurrentUserFlow().flatMapMerge { user ->
+        return userRepository.observeCurrentUser().flatMapMerge { user ->
             daysRepository.observeDaysByUser(user.uuid)
         }
     }

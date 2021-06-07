@@ -17,7 +17,7 @@ interface InteractorModule {
     @Binds
     fun bindDaysInteractor(interactor: DaysInteractorImpl): DaysInteractor
 
-    @ExperimentalCoroutinesApi
+
     @Binds
     fun bindWeightInteractor(interactor: WeightInteractorImpl): WeightInteractor
 }

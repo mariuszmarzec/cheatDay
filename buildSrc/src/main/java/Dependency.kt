@@ -19,6 +19,7 @@ object Dependency {
     val mockito_version = "3.3.3"
     val mockito_kotlin_version = "2.1.0"
     val joda_version = "2.10.3"
+    val truth_version = "1.1.3"
     val viewmodel_version = "1.1.1"
     val livedata_version = "2.2.0-rc03"
     val room_version = "2.2.5"

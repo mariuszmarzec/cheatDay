@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-//@ExperimentalCoroutinesApi
+//
 //internal class WeightResultRepositoryImplTest {
 //
 //    val weightDao: WeightDao = mock()

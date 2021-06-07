@@ -20,7 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-@ExperimentalCoroutinesApi
+
 class WeightDaoTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
