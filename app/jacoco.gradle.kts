@@ -3,6 +3,7 @@ val fileFilter = listOf<String>()
 val kotlinTree = fileTree("${project.buildDir}/tmp/kotlin-classes/debug") {
     exclude(*excludes.toTypedArray())
 }
+val kotlinSrc = "${project.projectDir}/src/main/java"
 
 tasks.create("jacocoUnitTestReport", JacocoReport::class) {
     dependsOn("testDebugUnitTest")
@@ -37,6 +38,7 @@ tasks.create("jacocoTestReport", JacocoReport::class) {
     }
 
     classDirectories.setFrom(files(kotlinTree))
+    sourceDirectories.setFrom(files(kotlinSrc))
     executionData.setFrom(
         fileTree(
             baseDir = project.projectDir
