@@ -19,6 +19,10 @@ plugins {
     jacoco
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 apply(from = "jacoco.gradle.kts")
 
 android {
