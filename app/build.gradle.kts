@@ -177,6 +177,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:${Dependency.junit5_version}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Dependency.junit5_version}")
     testImplementation("org.mockito:mockito-core:${Dependency.mockito_version}")
+    testImplementation("io.mockk:mockk:${Dependency.mockk_version}")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependency.mockito_kotlin_version}")
     testImplementation("joda-time:joda-time:${Dependency.joda_version}")
     testImplementation("com.google.truth:truth:${Dependency.truth_version}")

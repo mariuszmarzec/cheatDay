@@ -1,21 +1,5 @@
 package com.marzec.cheatday.interactor
 
-import com.marzec.cheatday.model.domain.User
-import com.marzec.cheatday.repository.UserPreferencesRepository
-import com.marzec.cheatday.repository.UserRepository
-import com.marzec.cheatday.repository.WeightResultRepository
-import com.marzec.cheatday.stubs.stubWeightResult
-import com.nhaarman.mockitokotlin2.*
-import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.test.runBlockingTest
-import org.joda.time.DateTimeUtils
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
-
 //
 //class WeightInteractorTest {
 //

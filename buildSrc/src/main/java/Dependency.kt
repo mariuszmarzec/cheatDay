@@ -41,6 +41,7 @@ object Dependency {
     val google_service_version = "4.3.4"
     val protobuf_version = "0.8.14"
     val hilt_version = "2.35"
+    val mockk_version = "1.11.0"
 
     object BuildPlugins {
         val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"
