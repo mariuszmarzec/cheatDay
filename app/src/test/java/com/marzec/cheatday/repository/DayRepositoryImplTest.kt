@@ -16,14 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith
 //
 //    val dayDao: DayDao = mock()
 //
-//    lateinit var repository: DayRepositoryImpl
+//    lateinit var repository: DayRepository
 //
 //    @BeforeEach
 //    fun setUp() {
 //        whenever(dayDao.createOrUpdateCompletable(any())).thenReturn(Completable.complete())
 //        whenever(dayDao.getDay(any(), any())).thenReturn(null)
 //        whenever(dayDao.observeDay(any(), any())).thenReturn(Observable.empty())
-//        repository = DayRepositoryImpl(dayDao)
+//        repository = DayRepository(dayDao)
 //    }
 //
 //    @Test
