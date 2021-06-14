@@ -38,17 +38,16 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = arguments + mapOf(
-                    "room.schemaLocation" to "$projectDir/schemas",
-                    "room.incremental" to "true",
-                    "room.expandProjection" to "true"
-                )
+
+                argument("room.schemaLocation", "$projectDir/schemas")
+                argument("room.incremental", "true")
+                argument("room.expandProjection", "true")
             }
         }
 
         compileOptions {
-            setSourceCompatibility(JavaVersion.VERSION_1_8)
-            setTargetCompatibility(JavaVersion.VERSION_1_8)
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
         }
 
         kotlinOptions {
