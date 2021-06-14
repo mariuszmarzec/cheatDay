@@ -97,15 +97,15 @@ android {
     flavorDimensions("api")
 
     productFlavors {
-        create("test") {
-            buildConfigField("String", "HOST", "http://fiteo-env-1.eba-cba76vkj.us-east-2.elasticbeanstalk.com/test")
-            buildConfigField("String", "AUTHORIZATION", "Authorization-Test")
+        create("stage") {
+            buildConfigField("String", "HOST", "\"http://fiteo-env-1.eba-cba76vkj.us-east-2.elasticbeanstalk.com/test\"")
+            buildConfigField("String", "AUTHORIZATION", "\"Authorization-Test\"")
             setDimension("api")
         }
 
         create("prod") {
-            buildConfigField("String", "HOST", "http://fiteo-env-1.eba-cba76vkj.us-east-2.elasticbeanstalk.com")
-            buildConfigField("String", "AUTHORIZATION", "Authorization")
+            buildConfigField("String", "HOST", "\"http://fiteo-env-1.eba-cba76vkj.us-east-2.elasticbeanstalk.com\"")
+            buildConfigField("String", "AUTHORIZATION", "\"Authorization\"")
             setDimension("api")
         }
     }
