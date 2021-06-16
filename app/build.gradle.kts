@@ -139,79 +139,120 @@ allOpen {
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
+    // leakcanary
     debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependency.leak_canary_version}")
+    androidTestImplementation("com.squareup.leakcanary:leakcanary-android-instrumentation:${Dependency.leak_canary_version}")
+
+    // kotlin
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Dependency.kotlin_version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependency.coroutines_version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Dependency.coroutines_version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
+
+    // anko
+    implementation("org.jetbrains.anko:anko-commons:${Dependency.anko_version}")
+
+    // androidx
     implementation("androidx.appcompat:appcompat:${Dependency.appcompat_version}")
     implementation("androidx.core:core-ktx:${Dependency.core_ktx_version}")
-    implementation("androidx.constraintlayout:constraintlayout:${Dependency.constraint_layout_version}")
-    implementation("com.squareup.retrofit2:retrofit:${Dependency.retrofit_version}")
-    implementation("com.google.code.gson:gson:${Dependency.gson_version}")
-    implementation("com.squareup.okhttp3:okhttp:${Dependency.okhttp_version}")
-    implementation("com.squareup.retrofit2:converter-gson:${Dependency.retrofit_version}")
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
-    implementation("org.jetbrains.anko:anko-commons:${Dependency.anko_version}")
-    implementation("net.danlew:android.joda:${Dependency.joda_version}")
     implementation("android.arch.lifecycle:viewmodel:${Dependency.viewmodel_version}")
     implementation("androidx.lifecycle:lifecycle-livedata:${Dependency.livedata_version}")
-    implementation("androidx.room:room-runtime:${Dependency.room_version}")
-    implementation("androidx.room:room-ktx:${Dependency.room_version}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Dependency.ktx_version}")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Dependency.ktx_version}")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Dependency.ktx_version}")
     implementation("com.google.android.material:material:${Dependency.material_version}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependency.coroutines_version}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Dependency.coroutines_version}")
-    implementation("com.airbnb.android:paris:${Dependency.paris_version}")
-    implementation("com.airbnb.android:epoxy:${Dependency.epoxy_version}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
     implementation("androidx.fragment:fragment:${Dependency.fragment_version}")
+    debugImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
     implementation("androidx.activity:activity:${Dependency.activity_version}")
+    androidTestImplementation("androidx.test:rules:${Dependency.android_test_version}")
+    androidTestImplementation("androidx.arch.core:core-testing:${Dependency.arch_testing_version}")
+
+    // room
+    implementation("androidx.room:room-runtime:${Dependency.room_version}")
+    implementation("androidx.room:room-ktx:${Dependency.room_version}")
+    kapt("androidx.room:room-compiler:${Dependency.room_version}")
+    androidTestImplementation("androidx.room:room-testing:${Dependency.room_version}")
+
+    // android views
+    implementation("androidx.constraintlayout:constraintlayout:${Dependency.constraint_layout_version}")
+    implementation("androidx.recyclerview:recyclerview:1.1.0")
+
+    // http client
+    implementation("com.squareup.retrofit2:retrofit:${Dependency.retrofit_version}")
+    implementation("com.google.code.gson:gson:${Dependency.gson_version}")
+    implementation("com.squareup.okhttp3:okhttp:${Dependency.okhttp_version}")
+    implementation("com.squareup.retrofit2:converter-gson:${Dependency.retrofit_version}")
+
+    // joda time
+    implementation("net.danlew:android.joda:${Dependency.joda_version}")
+    testImplementation("joda-time:joda-time:${Dependency.joda_version}")
+
+    // paris
+    implementation("com.airbnb.android:paris:${Dependency.paris_version}")
+    kapt("com.airbnb.android:paris-processor:${Dependency.paris_version}")
+
+    // epoxy
+    implementation("com.airbnb.android:epoxy:${Dependency.epoxy_version}")
+    kapt("com.airbnb.android:epoxy-processor:${Dependency.epoxy_version}")
+
+    // navigation
     implementation("androidx.navigation:navigation-fragment-ktx:${Dependency.nav_version}")
     implementation("androidx.navigation:navigation-ui-ktx:${Dependency.nav_version}")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:${Dependency.nav_version}")
+    androidTestImplementation("androidx.navigation:navigation-testing:${Dependency.nav_version}")
+
+    // charts
     implementation("com.github.PhilJay:MPAndroidChart:${Dependency.chart_version}")
+
+    // data store
     implementation("androidx.datastore:datastore-preferences:${Dependency.datastore_version}")
     implementation("androidx.datastore:datastore:${Dependency.datastore_version}")
+
+    // protobuf
     implementation("com.google.protobuf:protobuf-lite:3.0.0")
+
+    // firebase
     implementation(platform("com.google.firebase:firebase-bom:${Dependency.firebase_version}"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
-    debugImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
-    androidTestImplementation("androidx.navigation:navigation-testing:${Dependency.nav_version}")
 
+    // hilt
     implementation("com.google.dagger:hilt-android:${Dependency.hilt_version}")
     kapt("com.google.dagger:hilt-compiler:${Dependency.hilt_version}")
 
     androidTestImplementation("com.google.dagger:hilt-android-testing:${Dependency.hilt_version}")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:${Dependency.hilt_version}")
 
-    kapt("com.airbnb.android:epoxy-processor:${Dependency.epoxy_version}")
-    kapt("androidx.room:room-compiler:${Dependency.room_version}")
-    kapt("com.airbnb.android:paris-processor:${Dependency.paris_version}")
+    // junit4
     testImplementation("junit:junit:${Dependency.junit4_version}")
+    androidTestImplementation("androidx.test.ext:junit:${Dependency.android_test_runner_version}")
+    androidTestImplementation("junit:junit:${Dependency.junit4_version}")
+
+    // test5
     testImplementation("org.junit.jupiter:junit-jupiter-api:${Dependency.junit5_version}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Dependency.junit5_version}")
-    testImplementation("org.mockito:mockito-core:${Dependency.mockito_version}")
-    testImplementation("io.mockk:mockk:${Dependency.mockk_version}")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependency.mockito_kotlin_version}")
-    testImplementation("joda-time:joda-time:${Dependency.joda_version}")
-    testImplementation("com.google.truth:truth:${Dependency.truth_version}")
-    kaptAndroidTest("com.airbnb.android:epoxy-processor:${Dependency.epoxy_version}")
-    kaptAndroidTest("androidx.room:room-compiler:${Dependency.room_version}")
-    kaptAndroidTest("com.airbnb.android:paris-processor:${Dependency.paris_version}")
-    androidTestImplementation("com.squareup.leakcanary:leakcanary-android-instrumentation:${Dependency.leak_canary_version}")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
+
+    // mocking
     androidTestImplementation("org.mockito:mockito-android:${Dependency.mockito_version}")
     androidTestImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependency.mockito_kotlin_version}")
-    androidTestImplementation("androidx.test.ext:junit:${Dependency.android_test_runner_version}")
-    androidTestImplementation("androidx.test:rules:${Dependency.android_test_version}")
-    androidTestImplementation("androidx.arch.core:core-testing:${Dependency.arch_testing_version}")
-    androidTestImplementation("junit:junit:${Dependency.junit4_version}")
-    androidTestImplementation("androidx.room:room-testing:${Dependency.room_version}")
+    testImplementation("org.mockito:mockito-core:${Dependency.mockito_version}")
+    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependency.mockito_kotlin_version}")
+    testImplementation("io.mockk:mockk:${Dependency.mockk_version}")
+
+    // truth
+    testImplementation("com.google.truth:truth:${Dependency.truth_version}")
+
+    // test runner
     androidTestImplementation("androidx.test:runner:${Dependency.android_test_version}")
+    androidTestImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
+
+    // espresso
     androidTestImplementation("androidx.test.espresso:espresso-core:${Dependency.espresso_core}")
     androidTestImplementation("androidx.test.espresso:espresso-contrib:${Dependency.espresso_core}")
-    androidTestImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
+
+    // kakao
     androidTestImplementation("com.agoda.kakao:kakao:${Dependency.kakao_version}")
 }
 
