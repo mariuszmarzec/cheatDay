@@ -24,3 +24,4 @@ class InstantExecutorExtension : BeforeEachCallback, AfterEachCallback {
     }
 
 }
+
