@@ -1,62 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/default_padding">
 
-    <data>
-        <variable
-            name="vm"
-            type="com.marzec.cheatday.screen.addnewresult.model.AddNewWeightResultViewModel" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/default_padding">
-
-        <EditText
-            android:id="@+id/weight_edit_text"
-            android:text="@={vm.weight}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autofillHints="@string/weight_hint"
-            android:hint="@string/weight_hint"
-            android:ems="10"
-            android:inputType="numberDecimal"
-            app:layout_constraintBottom_toTopOf="@+id/dateEditText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <EditText
+        android:id="@+id/weight_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/weight_hint"
+        android:ems="10"
+        android:hint="@string/weight_hint"
+        android:inputType="numberDecimal"
+        app:layout_constraintBottom_toTopOf="@+id/date_edit_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-        <EditText
-            android:id="@+id/dateEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autofillHints="@string/date_hint"
-            android:clickable="true"
-            android:ems="10"
-            android:focusable="false"
-            android:hint="@string/date_hint"
-            android:text="@{vm.date}"
-            android:inputType="date"
-            app:layout_constraintBottom_toTopOf="@+id/button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/weight_edit_text"
-            app:layout_constraintVertical_bias="0.5" />
+    <EditText
+        android:id="@+id/date_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autofillHints="@string/date_hint"
+        android:clickable="true"
+        android:ems="10"
+        android:focusable="false"
+        android:hint="@string/date_hint"
+        android:inputType="date"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weight_edit_text"
+        app:layout_constraintVertical_bias="0.5" />
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/common_add"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dateEditText" />
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/common_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_edit_text" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

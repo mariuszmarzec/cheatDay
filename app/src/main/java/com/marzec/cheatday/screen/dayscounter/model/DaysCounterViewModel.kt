@@ -3,7 +3,6 @@ package com.marzec.cheatday.screen.dayscounter.model
 import androidx.lifecycle.*
 import com.marzec.cheatday.OpenForTesting
 import com.marzec.cheatday.extensions.map
-import com.marzec.cheatday.screen.weights.model.DaysSideEffects
 import com.marzec.cheatday.interactor.DaysInteractor
 import com.marzec.cheatday.model.domain.ClickedStates
 import com.marzec.cheatday.model.domain.DaysGroup
@@ -22,11 +21,6 @@ class DaysCounterViewModel @Inject constructor(
     private val preferencesRepository: UserPreferencesRepository,
     private val loginRepository: LoginRepository
 ) : ViewModel() {
-
-    private val sideEffectsInternal = MutableLiveData<DaysSideEffects>()
-
-    val sideEffects: LiveData<DaysSideEffects>
-        get() = sideEffectsInternal
 
     val days: LiveData<Pair<DaysGroup, ClickedStates>> by lazy {
         val days = daysInteractor.observeDays()

@@ -110,8 +110,6 @@ android {
         }
     }
 
-    buildFeatures.dataBinding = true
-
     testOptions.animationsDisabled = true
     testOptions.unitTests.isIncludeAndroidResources = true
 

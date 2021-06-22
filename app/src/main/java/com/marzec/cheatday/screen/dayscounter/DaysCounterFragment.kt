@@ -5,14 +5,12 @@ import android.view.*
 import androidx.fragment.app.viewModels
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
-import com.marzec.cheatday.databinding.FragmentDaysCounterBinding
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterViewModel
-import com.marzec.cheatday.screen.weights.model.DaysSideEffects
 import com.marzec.cheatday.view.CounterView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DaysCounterFragment : BaseFragment() {
+class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
 
     private val viewModel: DaysCounterViewModel by viewModels()
 
@@ -20,25 +18,13 @@ class DaysCounterFragment : BaseFragment() {
     private lateinit var dietCounter: CounterView
     private lateinit var workoutCounter: CounterView
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val binding = FragmentDaysCounterBinding.inflate(inflater, container, false)
-        cheatCounter = binding.root.findViewById(R.id.cheat_counter)
-        dietCounter = binding.root.findViewById(R.id.diet_counter)
-        workoutCounter = binding.root.findViewById(R.id.workout_counter)
-
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+
+        cheatCounter = view.findViewById(R.id.cheat_counter)
+        dietCounter = view.findViewById(R.id.diet_counter)
+        workoutCounter = view.findViewById(R.id.workout_counter)
 
         cheatCounter.onDecreaseButtonClickListener = {
             viewModel.onCheatDecreaseClick()
@@ -50,15 +36,27 @@ class DaysCounterFragment : BaseFragment() {
             viewModel.onWorkoutIncreaseClick()
         }
 
-        viewModel.sideEffects.observeNonNull { effect ->
-            when (effect) {
-                DaysSideEffects.GoToLogin -> goToLogin()
-            }
+        viewModel.dietDays.observeNonNull {
+            dietCounter.setDay(it.day)
+            setClickedState(dietCounter, it.clicked)
+        }
+
+        viewModel.cheatDays.observeNonNull {
+            cheatCounter.setDay(it.day)
+            setClickedState(cheatCounter, it.clicked)
+        }
+
+        viewModel.workoutDays.observeNonNull {
+            workoutCounter.setDay(it.day)
+            setClickedState(workoutCounter, it.clicked)
         }
     }
 
-    private fun goToLogin() {
-
+    fun setClickedState(counterView: CounterView, isClicked: Boolean) {
+        val context = counterView.context
+        counterView.setButtonColor(context.getColor(
+            if (isClicked) R.color.colorPrimary else R.color.colorAccent)
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
