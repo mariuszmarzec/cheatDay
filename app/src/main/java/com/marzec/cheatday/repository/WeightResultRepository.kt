@@ -48,7 +48,7 @@ class WeightResultRepository @Inject constructor(
 
     suspend fun updateWeight(weightResult: WeightResult): Content<Unit> = withContext(dispatcher) {
         asContent {
-            weightApi.update(weightResult.toDto())
+            weightApi.update(weightResult.id, weightResult.toDto())
         }
     }
 
