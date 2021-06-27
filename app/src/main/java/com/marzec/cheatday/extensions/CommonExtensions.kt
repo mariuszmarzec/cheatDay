@@ -58,6 +58,12 @@ fun String.toDateTime() = try {
     DateTime.parse(this, DateTimeFormat.forPattern(Api.DATE_FORMAT.dropLast(3)))
 }
 
+@Suppress("unchecked_cast")
+inline fun <reified T: Any> Any.asInstance(action: T.() -> Unit) = (this as? T)?.action()
+
+@Suppress("unchecked_cast")
+inline fun <reified T: Any, R> Any.asInstanceAndReturn(action: T.() -> R) = (this as? T)?.action()
+
 data class Quadruple<T1, T2, T3, T4>(
     val ob1: T1,
     val ob2: T2,

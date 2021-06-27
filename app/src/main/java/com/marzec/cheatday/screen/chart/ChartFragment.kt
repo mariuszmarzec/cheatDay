@@ -14,6 +14,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate.rgb
 import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.common.Constants
+import com.marzec.cheatday.extensions.showErrorDialog
+import com.marzec.cheatday.screen.chart.model.ChartsSideEffect
 import com.marzec.cheatday.screen.chart.model.ChartsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -40,10 +42,14 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart) {
         chart.axisLeft.textColor = color
         chart.axisRight.textColor = color
 
-        viewModel.weights.observe { weights ->
-            val idToWeight = weights.mapIndexed { index, weight -> index to weight.date.toString(Constants.DATE_PICKER_PATTERN) }.toMap()
+        viewModel.state.observe { state ->
+            val weights = state.weights
+            val idToWeight = weights.mapIndexed { index, weight ->
+                index to weight.date.toString(Constants.DATE_PICKER_PATTERN)
+            }.toMap()
 
-            val values = weights.mapIndexed { index, weight -> Entry(index.toFloat(), weight.value) }
+            val values =
+                weights.mapIndexed { index, weight -> Entry(index.toFloat(), weight.value) }
             val lineDataSet = LineDataSet(values, "")
 
             lineDataSet.setColors(rgb("#2ecc71"))
@@ -57,10 +63,15 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart) {
             }
             chart.invalidate()
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
+        viewModel.sideEffects.observeNonNull { sideEffect ->
+            when (sideEffect) {
+                ChartsSideEffect.ShowErrorDialog -> {
+                    requireContext().showErrorDialog()
+                }
+            }
+        }
+
         viewModel.load()
     }
 }

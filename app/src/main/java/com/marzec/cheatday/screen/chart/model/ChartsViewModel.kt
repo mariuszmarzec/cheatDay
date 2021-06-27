@@ -1,41 +1,34 @@
 package com.marzec.cheatday.screen.chart.model
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.marzec.cheatday.api.Content
+import com.marzec.cheatday.api.asErrorAndReturn
+import com.marzec.cheatday.api.getMessage
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.model.domain.WeightResult
+import com.marzec.mvi.StoreViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
-import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ChartsViewModel @Inject constructor(
     private val weightInteractor: WeightInteractor,
-    ) : ViewModel() {
+    defaultState: ChartsState
+) : StoreViewModel<ChartsState, ChartsSideEffect>(defaultState) {
 
-    private val _weights = MutableLiveData<List<WeightResult>>()
+    fun load() = intent<Content<List<WeightResult>>> {
+        onTrigger { weightInteractor.observeWeights() }
 
-    val weights: LiveData<List<WeightResult>>
-    get() = _weights
-
-    fun load() {
-        viewModelScope.launch {
-            weightInteractor.observeWeights().collect { content ->
-                when (content) {
-                    is Content.Data -> {
-                        _weights.postValue(content.data.sortedBy { it.date })
-                    }
-                    is Content.Error -> {
-                        Log.e(this.javaClass.simpleName, content.exception.toString(), content.exception)
-                    }
+        reducer {
+            when (val content = resultNonNull()) {
+                is Content.Data -> {
+                    // TODO Backend: send weight sorted by date DESC
+                    state.copy(weights = content.data.sortedBy { it.date })
                 }
+                else -> state
             }
-
+        }
+        emitSideEffect {
+            resultNonNull().asErrorAndReturn { ChartsSideEffect.ShowErrorDialog }
         }
     }
 }
