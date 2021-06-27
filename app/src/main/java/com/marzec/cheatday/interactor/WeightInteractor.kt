@@ -14,62 +14,37 @@ import org.joda.time.DateTime
 import javax.inject.Inject
 import kotlinx.coroutines.flow.map
 
-interface WeightInteractor {
-
-    fun observeTargetWeight(): Flow<Float>
-
-    fun observeMaxPossibleWeight(): Flow<Float>
-
-    fun observeMinWeight(): Flow<WeightResult?>
-
-    suspend fun setTargetWeight(weight: Float)
-
-    suspend fun setMaxPossibleWeight(weight: Float)
-
-    fun observeWeights(): Flow<Content<List<WeightResult>>>
-
-    suspend fun addWeight(weight: WeightResult): Content<Unit>
-
-    suspend fun updateWeight(weight: WeightResult)
-
-    suspend fun getWeight(id: Long): WeightResult?
-
-    suspend fun removeWeight(id: Long)
-}
-
-
-class WeightInteractorImpl @Inject constructor(
+class WeightInteractor @Inject constructor(
     private val userRepository: UserRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
     private val weightResultRepository: WeightResultRepository,
     private val daysInteractor: DaysInteractor
-) : WeightInteractor {
+) {
 
-    override fun observeTargetWeight() = userPreferencesRepository.observeTargetWeight()
+    fun observeTargetWeight() = userPreferencesRepository.observeTargetWeight()
 
-    override fun observeMaxPossibleWeight(): Flow<Float> =
+    fun observeMaxPossibleWeight(): Flow<Float> =
         userPreferencesRepository.observeMaxPossibleWeight()
 
-    override fun observeMinWeight(): Flow<WeightResult?> {
+    fun observeMinWeight(): Flow<WeightResult?> {
         return userRepository.observeCurrentUser().flatMapLatest { user ->
             weightResultRepository.observeMinWeight()
         }
     }
 
-    override suspend fun setTargetWeight(weight: Float) = userPreferencesRepository.setTargetWeight(weight)
+    suspend fun setTargetWeight(weight: Float) = userPreferencesRepository.setTargetWeight(weight)
 
-    override suspend fun setMaxPossibleWeight(weight: Float) {
+    suspend fun setMaxPossibleWeight(weight: Float) {
         userPreferencesRepository.setMaxPossibleWeight(weight)
     }
 
-    override fun observeWeights(): Flow<Content<List<WeightResult>>> {
+    fun observeWeights(): Flow<Content<List<WeightResult>>> {
         return userRepository.observeCurrentUser().map { user ->
             weightResultRepository.observeWeights()
         }
     }
 
-    override suspend fun addWeight(weight: WeightResult): Content<Unit> {
-        val userId = userRepository.getCurrentUser().uuid
+    suspend fun addWeight(weight: WeightResult): Content<Unit> {
         val lastValue = weightResultRepository.observeLastWeight().first()?.value
 
         val minBeforeNewAdded = weightResultRepository.observeMinWeight().first()?.value
@@ -109,15 +84,15 @@ class WeightInteractorImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateWeight(weight: WeightResult) {
+    suspend fun updateWeight(weight: WeightResult) {
         weightResultRepository.updateWeight(weight)
     }
 
-    override suspend fun getWeight(id: Long): WeightResult? {
+    suspend fun getWeight(id: Long): WeightResult? {
         return weightResultRepository.getWeight(id)
     }
 
-    override suspend fun removeWeight(id: Long) {
+    suspend fun removeWeight(id: Long) {
         weightResultRepository.removeWeight(id)
     }
 }

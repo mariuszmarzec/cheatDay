@@ -14,19 +14,19 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.map
 
-class DaysInteractorImpl @Inject constructor(
+class DaysInteractor @Inject constructor(
     private val userRepository: UserRepository,
     private val daysRepository: DayRepository,
     private val preferencesRepository: UserPreferencesRepository
-): DaysInteractor {
+) {
 
-    override fun observeDays(): Flow<DaysGroup> {
+    fun observeDays(): Flow<DaysGroup> {
         return userRepository.observeCurrentUser().flatMapMerge { user ->
             daysRepository.observeDaysByUser(user.uuid)
         }
     }
 
-    override suspend fun updateDay(day: Day) {
+    suspend fun updateDay(day: Day) {
         val user = userRepository.getCurrentUser()
         when (day.type) {
             Day.Type.CHEAT -> {
@@ -48,18 +48,18 @@ class DaysInteractorImpl @Inject constructor(
         daysRepository.update(userId, day)
     }
 
-    override suspend fun getMaxDietDays(): Int = Constants.MAX_DIET_DAYS
+    suspend fun getMaxDietDays(): Int = Constants.MAX_DIET_DAYS
 
-    override suspend fun getMaxWorkoutDays(): Int = Constants.MAX_WORKOUT_DAYS
+    suspend fun getMaxWorkoutDays(): Int = Constants.MAX_WORKOUT_DAYS
 
-    override suspend fun incrementCheatDays(daysCount: Int) {
+    suspend fun incrementCheatDays(daysCount: Int) {
         observeDays().first().let {
             val cheatDays = it.cheat.copy(count = it.cheat.count + daysCount)
             updateDay(cheatDays)
         }
     }
 
-    override fun observeClickedStates(): Flow<ClickedStates> {
+    fun observeClickedStates(): Flow<ClickedStates> {
         val cheatFlow = preferencesRepository.observeWasClickToday(Day.Type.CHEAT)
         val workoutFlow = preferencesRepository.observeWasClickToday(Day.Type.WORKOUT)
         val dietFlow = preferencesRepository.observeWasClickToday(Day.Type.DIET)
@@ -68,7 +68,7 @@ class DaysInteractorImpl @Inject constructor(
         }
     }
 
-    override suspend fun isStateSettled(): Boolean {
+    suspend fun isStateSettled(): Boolean {
         val cheatClicked = preferencesRepository.observeWasClickToday(Day.Type.CHEAT).first()
         val workoutClicked = preferencesRepository.observeWasClickToday(Day.Type.WORKOUT).first()
         val dietClicked = preferencesRepository.observeWasClickToday(Day.Type.DIET).first()
@@ -78,21 +78,4 @@ class DaysInteractorImpl @Inject constructor(
             else -> false
         }
     }
-}
-
-interface DaysInteractor {
-
-    fun observeDays(): Flow<DaysGroup>
-
-    suspend fun updateDay(day: Day)
-
-    suspend fun getMaxDietDays(): Int
-
-    suspend fun getMaxWorkoutDays(): Int
-
-    suspend fun incrementCheatDays(daysCount: Int)
-
-    fun observeClickedStates(): Flow<ClickedStates>
-
-    suspend fun isStateSettled(): Boolean
 }

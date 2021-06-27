@@ -1,129 +1,135 @@
 package com.marzec.cheatday.interactor
 
+import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.common.Constants
+import com.marzec.cheatday.core.values
 import com.marzec.cheatday.model.domain.Day
-import com.marzec.cheatday.model.domain.DaysGroup
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.DayRepository
+import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.stubs.stubDay
 import com.marzec.cheatday.stubs.stubDaysGroup
-import com.nhaarman.mockitokotlin2.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-//internal class DaysInteractorImplTest {
-//
-//    private val userRepository: UserRepository = mock()
-//    private val daysRepository: DayRepository = mock()
-//
-//    lateinit var interactor: DaysInteractorImpl
-//
-//    @BeforeEach
-//    fun setUp() {
-//        whenever(userRepository.getCurrentUser()) doReturn Single.just(User("user_id", "user@email.com"))
-//        whenever(daysRepository.getDaysByUser("user_id")) doReturn Observable.empty()
-//        whenever(daysRepository.update(any(), any())) doReturn Completable.complete()
-//
-//        interactor = DaysInteractorImpl(
-//            userRepository,
-//            daysRepository
-//        )
-//    }
-//
-//    @Test
-//    fun getDays() {
-//        val subject = BehaviorSubject.create<DaysGroup>()
-//        whenever(daysRepository.getDaysByUser("user_id")) doReturn subject
-//
-//        val days = interactor.observeDays().test()
-//
-//        subject.onNext(stubDaysGroup())
-//        subject.onNext(stubDaysGroup(stubDay(count = 10)))
-//
-//        days.assertValueCount(2)
-//            .assertValueAt(0, stubDaysGroup())
-//            .assertValueAt(1, stubDaysGroup(stubDay(count = 10)))
-//
-//        verify(userRepository).getCurrentUser()
-//        verify(daysRepository).getDaysByUser("user_id")
-//    }
-//
-//    @Test
-//    fun updateDay_cheatDay() {
-//        interactor.updateDay(stubDay(type = Day.Type.CHEAT)).test().assertComplete()
-//
-//        verify(userRepository).getCurrentUser()
-//        verify(daysRepository).update("user_id", stubDay(type = Day.Type.CHEAT))
-//    }
-//
-//    @Test
-//    fun updateDay_workoutDay_withoutCheatUpdate() {
-//        interactor.updateDay(stubDay(type = Day.Type.WORKOUT)).test().assertComplete()
-//
-//        verify(userRepository).getCurrentUser()
-//        verify(daysRepository).update("user_id", stubDay(type = Day.Type.WORKOUT))
-//    }
-//
-//    @Test
-//    fun updateDay_workoutDay_withCheatUpdate() {
-//        whenever(daysRepository.getDaysByUser("user_id")) doReturn Observable.just(
-//            stubDaysGroup()
-//        )
-//
-//        interactor.updateDay(stubDay(type = Day.Type.WORKOUT, count = 3L)).test().assertComplete()
-//
-//        verify(userRepository, times(3)).getCurrentUser()
-//        verify(daysRepository).update("user_id", stubDay(type = Day.Type.WORKOUT, count = 3L))
-//        verify(daysRepository).update("user_id", stubDay(type = Day.Type.CHEAT, count = 1))
-//    }
-//
-//    @Test
-//    fun updateDay_dietDay_withCheatUpdate() {
-//        whenever(daysRepository.getDaysByUser("user_id")) doReturn Observable.just(
-//            stubDaysGroup()
-//        )
-//
-//        interactor.updateDay(stubDay(type = Day.Type.DIET, count = 5L)).test().assertComplete()
-//
-//        verify(userRepository, times(3)).getCurrentUser()
-//        verify(daysRepository).update("user_id", stubDay(type = Day.Type.DIET, count = 5L))
-//        verify(daysRepository).update("user_id", stubDay(type = Day.Type.CHEAT, count = 1))
-//    }
-//
-//    @Test
-//    fun updateDay_workoutDay_withoutDietUpdate() {
-//        interactor.updateDay(stubDay(type = Day.Type.DIET)).test().assertComplete()
-//
-//        verify(userRepository).getCurrentUser()
-//        verify(daysRepository).update("user_id", stubDay(type = Day.Type.DIET))
-//    }
-//
-//    @Test
-//    fun getMaxDietDays() {
-//        interactor.getMaxDietDays().test().assertValue(Constants.MAX_DIET_DAYS)
-//    }
-//
-//    @Test
-//    fun getMaxWorkoutDays() {
-//        interactor.getMaxWorkoutDays().test().assertValue(Constants.MAX_WORKOUT_DAYS)
-//    }
-//
-//    @Test
-//    fun incrementCheatDays_plusDaysCount() {
-//        whenever(daysRepository.getDaysByUser("user_id")) doReturn Observable.just(stubDaysGroup())
-//
-//        interactor.incrementCheatDays(7).test().assertComplete()
-//
-//        verify(daysRepository).update("user_id", stubDay(count = 7))
-//    }
-//
-//    @Test
-//    fun incrementCheatDays_minusDaysCount() {
-//        whenever(daysRepository.getDaysByUser("user_id")) doReturn Observable.just(stubDaysGroup())
-//
-//        interactor.incrementCheatDays(-7).test().assertComplete()
-//
-//        verify(daysRepository).update("user_id", stubDay(count = -7))
-//    }
-//}
+internal class DaysInteractorTest {
+
+    private val userRepository: UserRepository = mockk()
+    private val daysRepository: DayRepository = mockk(relaxed = true)
+    private val userPreferencesRepository: UserPreferencesRepository = mockk()
+
+    lateinit var interactor: DaysInteractor
+
+    @BeforeEach
+    fun setUp() = runBlockingTest {
+        coEvery { userRepository.getCurrentUser() } returns User("user_id", "user@email.com")
+        coEvery { userRepository.observeCurrentUser() } returns flowOf(
+            User(
+                "user_id",
+                "user@email.com"
+            )
+        )
+        coEvery { daysRepository.observeDaysByUser("user_id") } returns flowOf()
+
+        interactor = DaysInteractor(
+            userRepository,
+            daysRepository,
+            userPreferencesRepository
+        )
+    }
+
+    @Test
+    fun getDays() = runBlockingTest {
+        coEvery { daysRepository.observeDaysByUser("user_id") } returns flowOf(
+            stubDaysGroup(),
+            stubDaysGroup(stubDay(count = 10))
+        )
+
+        assertThat(interactor.observeDays().values(this)).isEqualTo(
+            listOf(
+                stubDaysGroup(),
+                stubDaysGroup(stubDay(count = 10))
+            )
+        )
+    }
+
+    @Test
+    fun updateDay_cheatDay() = runBlockingTest {
+        interactor.updateDay(stubDay(type = Day.Type.CHEAT))
+
+        coVerify { userRepository.getCurrentUser() }
+        coVerify { daysRepository.update("user_id", stubDay(type = Day.Type.CHEAT)) }
+    }
+
+    @Test
+    fun updateDay_workoutDay_withoutCheatUpdate() = runBlockingTest {
+        interactor.updateDay(stubDay(type = Day.Type.WORKOUT))
+
+        coVerify { userRepository.getCurrentUser() }
+        coVerify { daysRepository.update("user_id", stubDay(type = Day.Type.WORKOUT)) }
+    }
+
+    @Test
+    fun updateDay_workoutDay_withCheatUpdate() = runBlockingTest {
+        coEvery { daysRepository.observeDaysByUser("user_id") } returns flowOf(stubDaysGroup())
+
+        interactor.updateDay(stubDay(type = Day.Type.WORKOUT, count = 3L))
+
+        coVerify { daysRepository.update("user_id", stubDay(type = Day.Type.WORKOUT, count = 3L)) }
+        coVerify { daysRepository.update("user_id", stubDay(type = Day.Type.CHEAT, count = 1)) }
+    }
+
+    @Test
+    fun updateDay_dietDay_withCheatUpdate() = runBlockingTest {
+        coEvery { daysRepository.observeDaysByUser("user_id") } returns flowOf(stubDaysGroup())
+
+        interactor.updateDay(stubDay(type = Day.Type.DIET, count = 5L))
+
+        coVerify {
+            daysRepository.update("user_id", stubDay(type = Day.Type.CHEAT, count = 1))
+            daysRepository.update("user_id", stubDay(type = Day.Type.DIET, count = 5L))
+        }
+    }
+
+    @Test
+    fun updateDay_workoutDay_withoutDietUpdate() = runBlockingTest {
+        interactor.updateDay(stubDay(type = Day.Type.DIET))
+
+        coVerify { userRepository.getCurrentUser() }
+        coVerify { daysRepository.update("user_id", stubDay(type = Day.Type.DIET)) }
+    }
+
+    @Test
+    fun getMaxDietDays() = runBlockingTest {
+        assertThat(interactor.getMaxDietDays()).isEqualTo(Constants.MAX_DIET_DAYS)
+    }
+
+    @Test
+    fun getMaxWorkoutDays() = runBlockingTest {
+        assertThat(interactor.getMaxWorkoutDays()).isEqualTo(Constants.MAX_WORKOUT_DAYS)
+    }
+
+    @Test
+    fun incrementCheatDays_plusDaysCount() = runBlockingTest {
+        coEvery { daysRepository.observeDaysByUser("user_id") } returns flowOf(stubDaysGroup())
+
+        interactor.incrementCheatDays(7)
+
+        coVerify { daysRepository.update("user_id", stubDay(count = 7)) }
+    }
+
+    @Test
+    fun incrementCheatDays_minusDaysCount() = runBlockingTest {
+        coEvery { daysRepository.observeDaysByUser("user_id") } returns flowOf(stubDaysGroup())
+
+        interactor.incrementCheatDays(-7)
+
+        coVerify { daysRepository.update("user_id", stubDay(count = -7)) }
+    }
+}
