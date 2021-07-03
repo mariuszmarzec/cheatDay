@@ -6,13 +6,10 @@ import androidx.datastore.createDataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.createDataStore
 import com.marzec.cheatday.common.CurrentUserProtoSerializer
-import com.marzec.cheatday.App
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.dao.WeightDao
-import com.marzec.cheatday.screen.weights.model.WeightsMapper
-import com.marzec.cheatday.screen.weights.model.WeightsMapperImpl
 import com.marzec.cheatday.model.domain.CurrentUserProto
 import com.marzec.cheatday.notifications.NotificationHelper
 import com.marzec.cheatday.notifications.NotificationHelperImpl
@@ -22,9 +19,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import javax.inject.Singleton
 
 
 @Module
@@ -34,9 +31,6 @@ interface AppModule {
     @Binds
     @Singleton
     fun bindNotificationHelper(notificationHelper: NotificationHelperImpl): NotificationHelper
-
-    @Binds
-    fun bindWeightsMapper(mapper: WeightsMapperImpl): WeightsMapper
 
     companion object {
 

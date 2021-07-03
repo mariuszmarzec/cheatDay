@@ -9,66 +9,70 @@ import com.marzec.cheatday.view.model.ListItem
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-interface WeightsMapper {
+class WeightsMapper @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
+    @OptIn(ExperimentalStdlibApi::class)
     fun mapWeights(
         minWeight: WeightResult?,
         maxPossibleValue: Float,
         targetWeight: Float,
         weights: List<WeightResult>
-    ): List<ListItem>
-
-    companion object {
-        const val MIN_ID = "MIN_ID"
-        const val TARGET_ID = "TARGET_ID"
-        const val MAX_POSSIBLE_ID = "MAX_POSSIBLE_ID"
+    ): List<ListItem> = buildList<ListItem> {
+        minWeight?.let { add(minWeightItem(it)) }
+        add(maxPossibleWeightItem(maxPossibleValue))
+        add(targetWeightItem(targetWeight))
+        addAll(weightsItems(weights))
     }
-}
 
-class WeightsMapperImpl @Inject constructor(
-    @ApplicationContext private val context: Context
-) : WeightsMapper {
-    override fun mapWeights(
-        minWeight: WeightResult?,
-        maxPossibleValue: Float,
-        targetWeight: Float,
-        weights: List<WeightResult>
-    ): List<ListItem> {
-        val minWeightItem = minWeight?.let {
-            LabeledRowItem(
-                id = WeightsMapper.MIN_ID,
-                data = this,
-                value = "${it.value} ${context.getString(R.string.unit_kg_short)}",
-                label = "${context.getString(R.string.weights_min_label)} ${context.getString(R.string.weight_row_date_label)} ${it.date.toString(
-                    "dd MMM yyyy"
-                )}"
-            )
-        }
-        val maxPossibleWeightItem = LabeledRowItem(
-            id = WeightsMapper.MAX_POSSIBLE_ID,
-            data = this,
-            value = "$maxPossibleValue ${context.getString(R.string.unit_kg_short)}",
-            label = context.getString(R.string.weights_max_possible_label)
+    private fun minWeightItem(minWeight: WeightResult): LabeledRowItem {
+        val label = context.getString(R.string.weights_min_label)
+        val dateLabel = context.getString(R.string.weight_row_date_label)
+        val date = minWeight.date.toString(
+            DATE_PATTERN
         )
-        val targetWeightItem = LabeledRowItem(
-            id = WeightsMapper.TARGET_ID,
-            data = this,
-            value = "$targetWeight ${context.getString(R.string.unit_kg_short)}",
-            label = context.getString(R.string.weights_target_label)
+        return LabeledRowItem(
+            id = MIN_ID,
+            data = Unit,
+            value = "${minWeight.value} ${context.getString(R.string.unit_kg_short)}",
+            label = "$label $dateLabel $date"
         )
-        val weightsList = weights.map { weightResult ->
+    }
+
+    private fun maxPossibleWeightItem(maxPossibleValue: Float) = LabeledRowItem(
+        id = MAX_POSSIBLE_ID,
+        data = Unit,
+        value = "$maxPossibleValue ${context.getString(R.string.unit_kg_short)}",
+        label = context.getString(R.string.weights_max_possible_label)
+    )
+
+    private fun targetWeightItem(targetWeight: Float) = LabeledRowItem(
+        id = TARGET_ID,
+        data = Unit,
+        value = "$targetWeight ${context.getString(R.string.unit_kg_short)}",
+        label = context.getString(R.string.weights_target_label)
+    )
+
+    private fun weightsItems(weights: List<WeightResult>) =
+        weights.map { weightResult ->
             with(weightResult) {
                 LabeledRowItem(
                     id = this.id.toString(),
                     data = this,
                     value = "$value ${context.getString(R.string.unit_kg_short)}",
-                    label = "${context.getString(R.string.weight_row_date_label)} ${date.toString("dd MMM yyyy")}"
+                    label = "${context.getString(R.string.weight_row_date_label)} ${
+                        date.toString(
+                            DATE_PATTERN
+                        )
+                    }"
                 )
             }
         }
-        return if (minWeightItem != null) {
-            minWeightItem + maxPossibleWeightItem + targetWeightItem + weightsList
-        } else {
-            maxPossibleWeightItem + targetWeightItem + weightsList
-        }
+
+    companion object {
+        const val MIN_ID = "MIN_ID"
+        const val TARGET_ID = "TARGET_ID"
+        const val MAX_POSSIBLE_ID = "MAX_POSSIBLE_ID"
+        private const val DATE_PATTERN = "dd MMM yyyy"
     }
 }
