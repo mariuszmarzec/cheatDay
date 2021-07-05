@@ -1,4 +1,4 @@
- package com.marzec.cheatday.screen.weights
+package com.marzec.cheatday.screen.weights
 
 import android.os.Bundle
 import android.text.InputType
@@ -17,12 +17,13 @@ import com.marzec.cheatday.extensions.DialogOptions
 import com.marzec.cheatday.extensions.showAnswerDialog
 import com.marzec.cheatday.extensions.showErrorDialog
 import com.marzec.cheatday.extensions.showInputDialog
+import com.marzec.cheatday.screen.weights.model.WeightsSideEffects
 import com.marzec.cheatday.screen.weights.model.WeightsViewModel
 import com.marzec.cheatday.view.labeledRowView
 import com.marzec.cheatday.view.model.LabeledRowItem
 import dagger.hilt.android.AndroidEntryPoint
 
- @AndroidEntryPoint
+@AndroidEntryPoint
 class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
 
     private val viewModel: WeightsViewModel by viewModels()
@@ -34,9 +35,9 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
         val recyclerView = view.findViewById<EpoxyRecyclerView>(R.id.recycler_view)
         val floatingButton = view.findViewById<FloatingActionButton>(R.id.floating_button)
 
-        viewModel.list.observeNonNull { items ->
+        viewModel.state.observeNonNull { state ->
             recyclerView.withModels {
-                items.forEach { item ->
+                state.list.forEach { item ->
                     when (item) {
                         is LabeledRowItem -> {
                             labeledRowView {
@@ -57,35 +58,38 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
             }
         }
 
-        viewModel.goToAddResultScreen.observe {
-            findNavController().navigate(WeightsFragmentDirections.actionWeightsToAddWeight(null))
+        viewModel.sideEffects.observeNonNull { effect ->
+            when (effect) {
+                WeightsSideEffects.GoToAddResultScreen -> {
+                    findNavController().navigate(
+                        WeightsFragmentDirections.actionWeightsToAddWeight(
+                            null
+                        )
+                    )
+                }
+                WeightsSideEffects.GoToChartAction -> {
+                    findNavController().navigate(R.id.action_weights_to_chart)
+                }
+                is WeightsSideEffects.OpenWeightAction -> {
+                    findNavController().navigate(
+                        WeightsFragmentDirections.actionWeightsToAddWeight(effect.id)
+                    )
+                }
+                WeightsSideEffects.ShowError -> {
+                    requireActivity().showErrorDialog()
+                }
+                WeightsSideEffects.ShowMaxPossibleWeightDialog -> {
+                    showMaxPossibleWeightDialog()
+                }
+                is WeightsSideEffects.ShowRemoveDialog -> {
+                    showIfRemoveDialog(effect.id)
+                }
+                WeightsSideEffects.ShowTargetWeightDialog -> {
+                    showTargetWeightDialog()
+                }
+            }
         }
 
-        viewModel.showTargetWeightDialog.observe {
-            showTargetWeightDialog()
-        }
-
-        viewModel.showMaxPossibleWeightDialog.observe {
-            showMaxPossibleWeightDialog()
-        }
-
-        viewModel.showError.observe {
-            requireActivity().showErrorDialog()
-        }
-
-        viewModel.openWeightAction.observe {
-            findNavController().navigate(
-                WeightsFragmentDirections.actionWeightsToAddWeight(it)
-            )
-        }
-
-        viewModel.showRemoveDialog.observe {
-            showIfRemoveDialog(it)
-        }
-
-        viewModel.goToChartAction.observe {
-            findNavController().navigate(R.id.action_weights_to_chart)
-        }
 
         floatingButton.setOnClickListener {
             viewModel.onFloatingButtonClick()

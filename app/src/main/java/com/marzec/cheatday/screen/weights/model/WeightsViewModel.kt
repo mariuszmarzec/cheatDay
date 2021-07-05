@@ -1,114 +1,139 @@
 package com.marzec.cheatday.screen.weights.model
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.marzec.cheatday.OpenForTesting
 import com.marzec.cheatday.api.Content
-import com.marzec.cheatday.common.SingleLiveEvent
+import com.marzec.cheatday.api.asErrorAndReturn
+import com.marzec.cheatday.extensions.Quadruple
 import com.marzec.cheatday.extensions.combine
-import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.TARGET_ID
 import com.marzec.cheatday.interactor.WeightInteractor
+import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.MAX_POSSIBLE_ID
-import com.marzec.cheatday.view.model.ListItem
+import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.TARGET_ID
+import com.marzec.mvi.IntentBuilder
+import com.marzec.mvi.StoreViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+
+typealias WeightsData = Quadruple<WeightResult?, Float, Float, Content<List<WeightResult>>>
 
 @OpenForTesting
 @HiltViewModel
 class WeightsViewModel @Inject constructor(
     private val weightInteractor: WeightInteractor,
     private val mapper: WeightsMapper
-) : ViewModel() {
+) : StoreViewModel<WeightsViewState, WeightsSideEffects>(WeightsViewState(emptyList())) {
 
-    val goToAddResultScreen = SingleLiveEvent<Unit>()
+    fun load() = intent<WeightsData> {
+        onTrigger {
+            loadData()
+        }
 
-    val showTargetWeightDialog = SingleLiveEvent<Unit>()
+        reducer {
+            reduceData()
+        }
 
-    val showMaxPossibleWeightDialog = SingleLiveEvent<Unit>()
+        emitSideEffect {
+            resultNonNull().ob4.asErrorAndReturn { WeightsSideEffects.ShowError }
+        }
+    }
 
-    val goToChartAction = SingleLiveEvent<Unit>()
-
-    val showError = SingleLiveEvent<Unit>()
-
-    val openWeightAction = SingleLiveEvent<String>()
-
-    val showRemoveDialog = SingleLiveEvent<String>()
-
-    private val _list = MutableLiveData<List<ListItem>>()
-    val list: LiveData<List<ListItem>>
-        get() = _list
-
-    fun load() {
-        viewModelScope.launch {
-            combine(
-                weightInteractor.observeMinWeight(),
-                weightInteractor.observeMaxPossibleWeight(),
-                weightInteractor.observeTargetWeight(),
-                weightInteractor.observeWeights()
-            ).collect { (min, maxPossible, target, content) ->
-                when (content) {
-                    is Content.Data -> {
-                        _list.postValue(mapper.mapWeights(min, maxPossible, target, content.data))
-                    }
-                    is Content.Error -> {
-                        Log.e(this.javaClass.simpleName, content.exception.toString(), content.exception)
-                    }
+    fun onClick(listId: String) = intent<Unit> {
+        emitSideEffect {
+            when (listId) {
+                TARGET_ID -> {
+                    WeightsSideEffects.ShowTargetWeightDialog
+                }
+                MAX_POSSIBLE_ID -> {
+                    WeightsSideEffects.ShowMaxPossibleWeightDialog
+                }
+                else -> {
+                    WeightsSideEffects.OpenWeightAction(listId)
                 }
             }
         }
     }
 
-    fun onClick(listId: String) {
-        when (listId) {
-            TARGET_ID -> {
-                showTargetWeightDialog.call()
+    fun onLongClick(listId: String) = intent<Unit> {
+        emitSideEffect { WeightsSideEffects.ShowRemoveDialog(listId) }
+    }
+
+    fun onFloatingButtonClick() = intent<Unit> {
+        emitSideEffect { WeightsSideEffects.GoToAddResultScreen }
+    }
+
+    fun changeTargetWeight(newTargetWeight: String) = intent<Unit> {
+        onTrigger {
+            flow {
+                emit(
+                    newTargetWeight.toFloatOrNull()?.let { weight ->
+                        weightInteractor.setTargetWeight(weight)
+                    }                )
             }
-            MAX_POSSIBLE_ID -> {
-                showMaxPossibleWeightDialog.call()
-            }
-            else -> {
-                openWeightAction.postValue(listId)
-            }
+        }
+
+        emitSideEffect {
+            if (result == null) WeightsSideEffects.ShowError else null
         }
     }
 
-    fun onLongClick(listId: String) {
-        showRemoveDialog.value = listId
-    }
 
-    fun onFloatingButtonClick() {
-        goToAddResultScreen.call()
-    }
+    fun changeMaxWeight(maxWeight: String) = intent<Unit> {
+        onTrigger {
+            flow {
+                emit(
+                    maxWeight.toFloatOrNull()?.let { weight ->
+                        weightInteractor.setMaxPossibleWeight(weight)
+                    }
+                )
+            }
+        }
 
-    fun changeTargetWeight(newTargetWeight: String) {
-        viewModelScope.launch {
-            newTargetWeight.toFloatOrNull()?.let { weight ->
-                weightInteractor.setTargetWeight(weight)
-            } ?: showError.call()
+        emitSideEffect {
+            if (result == null) WeightsSideEffects.ShowError else null
         }
     }
 
-    fun changeMaxWeight(maxWeight: String) {
-        viewModelScope.launch {
-            maxWeight.toFloatOrNull()?.let { weight ->
-                weightInteractor.setMaxPossibleWeight(weight)
-            } ?: showError.call()
-        }
+    fun goToChart() = intent<Unit> {
+        emitSideEffect { WeightsSideEffects.GoToChartAction }
     }
 
-    fun goToChart() {
-        goToChartAction.call()
-    }
-
-    fun removeWeight(id: String) {
-        viewModelScope.launch {
+    fun removeWeight(id: String) = intent<WeightsData> {
+        onTrigger {
             weightInteractor.removeWeight(id.toLong())
-            load()
+            loadData()
+        }
+
+        reducer {
+            reduceData()
+        }
+
+        emitSideEffect {
+            resultNonNull().ob4.asErrorAndReturn { WeightsSideEffects.ShowError }
+        }
+    }
+
+    // TODO Extract flow content
+    private fun loadData(): Flow<WeightsData> = combine(
+        weightInteractor.observeMinWeight(),
+        weightInteractor.observeMaxPossibleWeight(),
+        weightInteractor.observeTargetWeight(),
+        weightInteractor.observeWeights()
+    )
+
+    private fun IntentBuilder.IntentContext<WeightsViewState, WeightsData>.reduceData(): WeightsViewState {
+        val (min, maxPossible, target, content) = resultNonNull()
+        return when (content) {
+            is Content.Data -> {
+                state.copy(list = mapper.mapWeights(min, maxPossible, target, content.data))
+            }
+            is Content.Error -> {
+                state.copy()
+            }
+            is Content.Loading -> {
+                state.copy()
+            }
         }
     }
 }
