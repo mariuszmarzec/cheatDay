@@ -16,6 +16,7 @@ class ChartRenderer @Inject constructor() {
     lateinit var chart: LineChart
 
     fun init(chart: LineChart) {
+        this.chart = chart
         val color = chart.context.getColor(R.color.colorPrimaryDark)
         chart.xAxis.run {
             setDrawGridLines(false)
