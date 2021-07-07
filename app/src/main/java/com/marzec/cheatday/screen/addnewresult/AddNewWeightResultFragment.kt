@@ -88,10 +88,6 @@ class AddNewWeightResultFragment :
             datePickerDialog.show()
         }
 
-        weightEditText.setOnClickListener {
-            viewModel.onDatePickerClick()
-        }
-
         button.setOnClickListener {
             viewModel.save()
         }
