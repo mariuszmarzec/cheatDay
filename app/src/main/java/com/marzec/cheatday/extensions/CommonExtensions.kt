@@ -52,7 +52,7 @@ fun <T1, T2, T3, T4> combine(
             Quadruple(a, b, c, d)
         }
 
-fun String.toDateTime() = try {
+fun String.toDateTime(): DateTime = try {
     DateTime.parse(this, Api.DATE_FORMATTER)
 } catch (ex: IllegalArgumentException) {
     DateTime.parse(this, DateTimeFormat.forPattern(Api.DATE_FORMAT.dropLast(3)))
