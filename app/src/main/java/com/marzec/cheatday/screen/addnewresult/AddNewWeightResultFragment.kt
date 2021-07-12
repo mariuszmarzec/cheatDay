@@ -11,7 +11,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
+import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.screen.addnewresult.model.AddNewWeightResultViewModel
+import com.marzec.cheatday.screen.addnewresult.model.AddWeightSideEffect
 import dagger.hilt.android.AndroidEntryPoint
 import org.jetbrains.anko.alert
 import org.joda.time.DateTime
@@ -45,51 +47,49 @@ class AddNewWeightResultFragment :
 
         viewModel.load(args.weightId)
 
-        viewModel.weight.observeNonNull { newText ->
+        viewModel.state.observeNonNull { state ->
+            val newText = state.weight
+            val newDate = state.date.toString(Constants.DATE_PICKER_PATTERN)
             if (weightEditText.text.toString() != newText) {
                 weightEditText.setText(newText)
             }
-        }
-
-        viewModel.date.observeNonNull { newText ->
-            if (dateEditText.text.toString() != newText) {
-                dateEditText.setText(newText)
+            if (dateEditText.text.toString() != newDate) {
+                dateEditText.setText(newDate)
             }
         }
 
         weightEditText.doOnTextChanged { text, _, _, _ ->
-            viewModel.weight.value = text.toString()
+            viewModel.setNewWeight(text.toString())
         }
 
-        viewModel.saveSuccess.observe {
-            findNavController().popBackStack()
-        }
+        viewModel.sideEffects.observeNonNull { sideEffect ->
+            when (sideEffect) {
+                AddWeightSideEffect.SaveSuccess -> findNavController().popBackStack()
+                is AddWeightSideEffect.ShowDatePicker -> showPicker(sideEffect.date)
+                AddWeightSideEffect.ShowError -> activity?.alert {
+                    titleResource = R.string.dialog_error_title_common
+                    messageResource = R.string.dialog_error_message_try_later
+                    isCancelable = true
+                    show()
+                }
 
-        viewModel.error.observe {
-            activity?.alert {
-                titleResource = R.string.dialog_error_title_common
-                messageResource = R.string.dialog_error_message_try_later
-                isCancelable = true
-                show()
             }
-        }
-
-        viewModel.showDatePickerEvent.observeNonNull { date ->
-            val datePickerDialog = DatePickerDialog(
-                requireContext(),
-                { _, year, monthOfYear, dayOfMonth ->
-                    viewModel.setDate(DateTime(year, monthOfYear + 1, dayOfMonth, 0, 0))
-                },
-                date.year,
-                date.monthOfYear - 1,
-                date.dayOfMonth
-            )
-
-            datePickerDialog.show()
         }
 
         button.setOnClickListener {
             viewModel.save()
         }
+    }
+
+    private fun showPicker(date: DateTime) {
+        DatePickerDialog(
+            requireContext(),
+            { _, year, monthOfYear, dayOfMonth ->
+                viewModel.setDate(DateTime(year, monthOfYear + 1, dayOfMonth, 0, 0))
+            },
+            date.year,
+            date.monthOfYear - 1,
+            date.dayOfMonth
+        ).apply { show() }
     }
 }

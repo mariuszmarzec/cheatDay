@@ -51,11 +51,10 @@ open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewMo
 
 open class Store<State : Any>(defaultState: State) {
 
-    private val actions =
-        MutableStateFlow<Intent<State, Any>>(Intent(state = defaultState, result = null))
+    private val actions = MutableStateFlow<Intent2<State, Any>>(Intent2(state = defaultState, result = null))
 
     private val _intentContextFlow =
-        MutableStateFlow<Intent<State, Any>>(Intent(state = defaultState, result = null))
+        MutableStateFlow<Intent2<State, Any>>(Intent2(state = defaultState, result = null))
 
     private var _state = MutableStateFlow(defaultState)
 
@@ -66,7 +65,7 @@ open class Store<State : Any>(defaultState: State) {
         scope.launch {
             actions.flatMapMerge { intent ->
                 debug("actions flatMapMerge intent: $intent")
-                intent.onTrigger(_state.value).map {
+                (intent.onTrigger(_state.value) ?: flowOf(null)).map {
                     debug("actions onTrigger state: ${intent.state} result: $it")
                     intent.copy(result = it, sideEffect = intent.sideEffect)
                 }
@@ -92,8 +91,12 @@ open class Store<State : Any>(defaultState: State) {
         }
     }
 
-    suspend fun <Result : Any> intent(buildFun: IntentBuilder<State, Result>.() -> Unit) {
+    suspend fun <Result: Any> intent(buildFun: IntentBuilder<State, Result>.() -> Unit) {
         actions.emit(IntentBuilder<State, Result>().apply { buildFun() }.build())
+    }
+
+    suspend fun sideEffectIntent(func: suspend IntentBuilder.IntentContext<State, Unit>.() -> Unit) {
+        actions.emit(IntentBuilder<State, Unit>().apply { sideEffect(func) }.build())
     }
 
     open suspend fun onNewState(newState: State) = Unit
@@ -105,8 +108,8 @@ open class Store<State : Any>(defaultState: State) {
     }
 }
 
-data class Intent<State, out Result : Any>(
-    val onTrigger: suspend (stateParam: State) -> Flow<Result?> = { _ -> flowOf(null) },
+data class Intent2<State, out Result : Any>(
+    val onTrigger: suspend (stateParam: State) -> Flow<Result>? = { _ -> null },
     val reducer: suspend (result: Any?, stateParam: State) -> State = { _, stateParam -> stateParam },
     val sideEffect: (suspend (result: Any?, state: State) -> Unit)? = null,
     val state: State?,
@@ -116,20 +119,18 @@ data class Intent<State, out Result : Any>(
 }
 
 @Suppress("UNCHECKED_CAST")
-class IntentBuilder<State : Any, Result : Any> {
+class IntentBuilder<State: Any, Result: Any> {
 
-    private var onTrigger: suspend (stateParam: State) -> Flow<Result?> = { _ -> flowOf(null) }
-    private var reducer: suspend (result: Any?, stateParam: State) -> State =
-        { _, stateParam -> stateParam }
+    private var onTrigger: suspend (stateParam: State) -> Flow<Result>? = { _ -> null }
+    private var reducer: suspend (result: Any?, stateParam: State) -> State = { _, stateParam -> stateParam }
     private var sideEffect: (suspend (result: Any?, state: State) -> Unit)? = null
 
-    fun onTrigger(func: suspend IntentContext<State, Result>.() -> Flow<Result?>): IntentBuilder<State, Result> {
+    fun onTrigger(func: suspend IntentContext<State, Result>.() -> Flow<Result>? = { null }): IntentBuilder<State, Result> {
         onTrigger = { state ->
             IntentContext<State, Result>(state, null).func()
         }
         return this
     }
-
     fun reducer(func: suspend IntentContext<State, Result>.() -> State): IntentBuilder<State, Result> {
         reducer = { result: Any?, state ->
             val res = result as? Result
@@ -146,7 +147,7 @@ class IntentBuilder<State : Any, Result : Any> {
         return this
     }
 
-    fun build(): Intent<State, Result> = Intent(onTrigger, reducer, sideEffect, null, null)
+    fun build(): Intent2<State, Result> = Intent2(onTrigger, reducer, sideEffect, null, null)
 
     data class IntentContext<State, Result>(
         val state: State,

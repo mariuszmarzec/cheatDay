@@ -65,11 +65,10 @@ class WeightsViewModel @Inject constructor(
 
     fun changeTargetWeight(newTargetWeight: String) = intent<Unit> {
         onTrigger {
-            flow {
-                emit(
-                    newTargetWeight.toFloatOrNull()?.let { weight ->
-                        weightInteractor.setTargetWeight(weight)
-                    }                )
+            newTargetWeight.toFloatOrNull()?.let { weight ->
+                flow {
+                    emit(weightInteractor.setTargetWeight(weight))
+                }
             }
         }
 
@@ -81,12 +80,10 @@ class WeightsViewModel @Inject constructor(
 
     fun changeMaxWeight(maxWeight: String) = intent<Unit> {
         onTrigger {
-            flow {
-                emit(
-                    maxWeight.toFloatOrNull()?.let { weight ->
-                        weightInteractor.setMaxPossibleWeight(weight)
-                    }
-                )
+            maxWeight.toFloatOrNull()?.let { weight ->
+                flow {
+                    emit(weightInteractor.setMaxPossibleWeight(weight))
+                }
             }
         }
 

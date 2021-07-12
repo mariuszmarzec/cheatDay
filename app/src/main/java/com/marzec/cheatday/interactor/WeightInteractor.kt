@@ -1,18 +1,17 @@
 package com.marzec.cheatday.interactor
 
 import com.marzec.cheatday.api.Content
-import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.extensions.incIf
+import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.repository.WeightResultRepository
-
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import org.joda.time.DateTime
-import javax.inject.Inject
 import kotlinx.coroutines.flow.map
+import org.joda.time.DateTime
 
 class WeightInteractor @Inject constructor(
     private val userRepository: UserRepository,
@@ -84,9 +83,8 @@ class WeightInteractor @Inject constructor(
         }
     }
 
-    suspend fun updateWeight(weight: WeightResult) {
+    suspend fun updateWeight(weight: WeightResult): Content<Unit> =
         weightResultRepository.updateWeight(weight)
-    }
 
     suspend fun getWeight(id: Long): WeightResult? {
         return weightResultRepository.getWeight(id)
