@@ -7,7 +7,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
-    id("kotlin-android-extensions")
+    id("kotlin-parcelize")
     id("kotlin-allopen")
     id("de.mannodermaus.android-junit5")
     id("com.facebook.testing.screenshot")

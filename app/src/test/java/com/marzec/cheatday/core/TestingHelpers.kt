@@ -2,6 +2,7 @@ package com.marzec.cheatday.core
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.marzec.mvi.StoreViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
@@ -26,3 +27,6 @@ fun <T, R> LiveData<T>.values(sideEffects: LiveData<R>): List<Any> =
             addSource(sideEffects, ::setValue)
         }.observeForever { add(it) }
     }
+
+fun <State: Any, SideEffect> StoreViewModel<State, SideEffect>.values() =
+    state.values(sideEffects)
