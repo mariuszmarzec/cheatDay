@@ -33,7 +33,8 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        viewModel.isUserLogged.observe(this) { isUserLogged ->
+        viewModel.state.observe(this) { state ->
+            val isUserLogged = state.isUserLogged
             bottomNavigationView.isVisible = isUserLogged
             if (!isUserLogged) {
                 navHostFragment?.findNavController()?.let { controller ->
@@ -48,5 +49,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        viewModel.loadState()
     }
 }
