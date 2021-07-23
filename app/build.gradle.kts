@@ -238,6 +238,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:${Dependency.mockito_version}")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependency.mockito_kotlin_version}")
     testImplementation("io.mockk:mockk:${Dependency.mockk_version}")
+    testImplementation("io.mockk:mockk-agent-jvm:${Dependency.mockk_version}")
 
     // truth
     testImplementation("com.google.truth:truth:${Dependency.truth_version}")
