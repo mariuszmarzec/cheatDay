@@ -8,7 +8,6 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("kotlin-parcelize")
-    id("kotlin-allopen")
     id("de.mannodermaus.android-junit5")
     id("com.facebook.testing.screenshot")
     id("androidx.navigation.safeargs.kotlin")
@@ -129,10 +128,6 @@ kapt {
 
 hilt {
     enableTransformForLocalTests = true
-}
-
-allOpen {
-    annotation("com.marzec.cheatday.OpenClass")
 }
 
 dependencies {

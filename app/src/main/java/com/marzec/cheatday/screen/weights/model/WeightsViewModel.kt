@@ -1,6 +1,5 @@
 package com.marzec.cheatday.screen.weights.model
 
-import com.marzec.cheatday.OpenForTesting
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.asErrorAndReturn
 import com.marzec.cheatday.extensions.Quadruple
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.flow
 
 typealias WeightsData = Quadruple<WeightResult?, Float, Float, Content<List<WeightResult>>>
 
-@OpenForTesting
 @HiltViewModel
 class WeightsViewModel @Inject constructor(
     private val weightInteractor: WeightInteractor,

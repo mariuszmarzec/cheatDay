@@ -1,78 +1,89 @@
 package com.marzec.cheatday.screen.dayscounter.model
 
-import androidx.lifecycle.*
-import com.marzec.cheatday.OpenForTesting
-import com.marzec.cheatday.extensions.map
 import com.marzec.cheatday.interactor.DaysInteractor
 import com.marzec.cheatday.model.domain.ClickedStates
 import com.marzec.cheatday.model.domain.DaysGroup
-import com.marzec.cheatday.model.ui.DayState
 import com.marzec.cheatday.repository.LoginRepository
 import com.marzec.cheatday.repository.UserPreferencesRepository
+import com.marzec.mvi.StoreViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 
 @HiltViewModel
-@OpenForTesting
 class DaysCounterViewModel @Inject constructor(
     private val daysInteractor: DaysInteractor,
     private val preferencesRepository: UserPreferencesRepository,
-    private val loginRepository: LoginRepository
-) : ViewModel() {
+    private val loginRepository: LoginRepository,
+    defaultState: DaysCounterState
+) : StoreViewModel<DaysCounterState, Unit>(defaultState) {
 
-    val days: LiveData<Pair<DaysGroup, ClickedStates>> by lazy {
-        val days = daysInteractor.observeDays()
-        val clickedStates = daysInteractor.observeClickedStates()
-        days.combine(clickedStates) { daysGroup, states ->
-            daysGroup to states
-        }.asLiveData(viewModelScope.coroutineContext)
-    }
-
-    val cheatDays = days.map { (days, states) ->
-        DayState(days.cheat, states.isCheatDayClicked)
-    }
-
-    val workoutDays =
-        days.map { (days, states) ->
-            DayState(days.workout, states.isWorkoutDayClicked)
+    fun loading() = intent<Pair<DaysGroup, ClickedStates>> {
+        onTrigger {
+            val days = daysInteractor.observeDays()
+            val clickedStates = daysInteractor.observeClickedStates()
+            days.combine(clickedStates) { daysGroup, states ->
+                daysGroup to states
+            }
         }
-
-    val dietDays = days.map { (days, states) ->
-        DayState(days.diet, states.isDietDayClicked)
+        reducer {
+            val (days, clickedState) = resultNonNull()
+            state.copy(
+                diet = state.diet.copy(
+                    day = days.diet,
+                    clicked = clickedState.isDietDayClicked
+                ),
+                cheat = state.cheat.copy(
+                    day = days.cheat,
+                    clicked = clickedState.isCheatDayClicked
+                ),
+                workout = state.workout.copy(
+                    day = days.workout,
+                    clicked = clickedState.isWorkoutDayClicked
+                )
+            )
+        }
     }
 
-    fun onCheatDecreaseClick() {
-        days.value?.first?.cheat?.let { day ->
-            viewModelScope.launch {
+    fun onCheatDecreaseClick() = intent<Unit> {
+        onTrigger {
+            flow {
+                val day = state.cheat.day
                 preferencesRepository.setWasClickedToday(day.type)
                 daysInteractor.updateDay(day.copy(count = day.count.dec()))
+                emit(Unit)
             }
         }
     }
 
-    fun onDietIncreaseClick() {
-        days.value?.first?.diet?.let { day ->
-            viewModelScope.launch {
+    fun onDietIncreaseClick() = intent<Unit> {
+        onTrigger {
+            flow {
+                val day = state.diet.day
                 preferencesRepository.setWasClickedToday(day.type)
                 daysInteractor.updateDay(day.copy(count = day.count.inc()))
+                emit(Unit)
             }
         }
     }
 
-    fun onWorkoutIncreaseClick() {
-        days.value?.first?.workout?.let { day ->
-            viewModelScope.launch {
+    fun onWorkoutIncreaseClick() = intent<Unit> {
+        onTrigger {
+            flow {
+                val day = state.workout.day
                 preferencesRepository.setWasClickedToday(day.type)
                 daysInteractor.updateDay(day.copy(count = day.count.inc()))
+                emit(Unit)
             }
         }
     }
 
-    fun onLogoutClick() {
-        viewModelScope.launch {
-            loginRepository.logout()
+    fun onLogoutClick() = intent<Unit> {
+        onTrigger {
+            flow {
+                loginRepository.logout()
+            }
         }
     }
 }

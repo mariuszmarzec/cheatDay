@@ -36,23 +36,20 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
             viewModel.onWorkoutIncreaseClick()
         }
 
-        viewModel.dietDays.observeNonNull {
-            dietCounter.setDay(it.day)
-            setClickedState(dietCounter, it.clicked)
-        }
+        viewModel.state.observeNonNull { state ->
+            dietCounter.setDay(state.diet.day)
+            setClickedState(dietCounter, state.diet.clicked)
 
-        viewModel.cheatDays.observeNonNull {
-            cheatCounter.setDay(it.day)
-            setClickedState(cheatCounter, it.clicked)
-        }
+            cheatCounter.setDay(state.cheat.day)
+            setClickedState(cheatCounter, state.cheat.clicked)
 
-        viewModel.workoutDays.observeNonNull {
-            workoutCounter.setDay(it.day)
-            setClickedState(workoutCounter, it.clicked)
+            workoutCounter.setDay(state.workout.day)
+            setClickedState(workoutCounter, state.workout.clicked)
         }
+        viewModel.loading()
     }
 
-    fun setClickedState(counterView: CounterView, isClicked: Boolean) {
+    private fun setClickedState(counterView: CounterView, isClicked: Boolean) {
         val context = counterView.context
         counterView.setButtonColor(context.getColor(
             if (isClicked) R.color.colorPrimary else R.color.colorAccent)

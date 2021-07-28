@@ -1,4 +1,4 @@
-package com.marzec.cheatday.screen.dayscounter.di
+package com.marzec.cheatday.screen.chart.di
 
 import com.marzec.cheatday.screen.chart.model.ChartsState
 import dagger.Module
