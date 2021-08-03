@@ -6,7 +6,7 @@ val kotlinTree = fileTree("${project.buildDir}/tmp/kotlin-classes/debug") {
 val kotlinSrc = "${project.projectDir}/src/main/java"
 
 tasks.create("jacocoUnitTestReport", JacocoReport::class) {
-    dependsOn("testDebugUnitTest")
+    dependsOn("testStageDebugUnitTest")
     reports {
         xml.isEnabled = false
         csv.isEnabled = false
@@ -14,7 +14,7 @@ tasks.create("jacocoUnitTestReport", JacocoReport::class) {
 }
 
 tasks.create("jacocoMergeTestReport", JacocoMerge::class) {
-    dependsOn("connectedDebugAndroidTest")
+    dependsOn("connectedStageDebugAndroidTest")
     dependsOn("jacocoUnitTestReport")
 
     executionData = fileTree(

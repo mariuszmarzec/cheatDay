@@ -2,7 +2,7 @@ object Dependency {
 
     val crashlytics_version = "2.4.1"
     val firebase_version = "26.3.0"
-    val kotlin_version = "1.5.0"
+    val kotlin_version = "1.5.21"
     val junit4_version = "4.13"
     val leak_canary_version = "2.5"
     val coroutines_version = "1.5.0"
@@ -36,11 +36,11 @@ object Dependency {
     val nav_version = "2.3.0"
     val chart_version = "v3.1.0"
     val junit5_plugin_version = "1.7.1.1"
-    val android_gradle_plugin = "4.2.0"
+    val android_gradle_plugin = "7.0.0"
     val datastore_version = "1.0.0-alpha05"
     val google_service_version = "4.3.4"
     val protobuf_version = "0.8.14"
-    val hilt_version = "2.35"
+    val hilt_version = "2.38.1"
     val mockk_version = "1.11.0"
 
     object BuildPlugins {
