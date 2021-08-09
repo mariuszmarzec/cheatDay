@@ -20,8 +20,9 @@ typealias WeightsData = Quadruple<WeightResult?, Float, Float, Content<List<Weig
 @HiltViewModel
 class WeightsViewModel @Inject constructor(
     private val weightInteractor: WeightInteractor,
-    private val mapper: WeightsMapper
-) : StoreViewModel<WeightsViewState, WeightsSideEffects>(WeightsViewState(emptyList())) {
+    private val mapper: WeightsMapper,
+    defaultState: WeightsViewState
+) : StoreViewModel<WeightsViewState, WeightsSideEffects>(defaultState) {
 
     fun load() = intent<WeightsData> {
         onTrigger {
@@ -117,6 +118,7 @@ class WeightsViewModel @Inject constructor(
         weightInteractor.observeWeights()
     )
 
+    // TODO mapper should be use in renderer
     private fun IntentBuilder.IntentContext<WeightsViewState, WeightsData>.reduceData(): WeightsViewState {
         val (min, maxPossible, target, content) = resultNonNull()
         return when (content) {
