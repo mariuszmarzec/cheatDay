@@ -11,5 +11,5 @@ import dagger.hilt.android.components.ViewModelComponent
 class MainModel {
 
     @Provides
-    fun provideMainState(): MainState = MainState(isUserLogged = false)
+    fun provideMainState(): MainState = MainState.INITIAL
 }

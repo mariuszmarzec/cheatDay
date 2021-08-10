@@ -17,5 +17,3 @@ class MainViewModel @Inject constructor(
     }
 }
 
-data class MainState(val isUserLogged: Boolean)
-
