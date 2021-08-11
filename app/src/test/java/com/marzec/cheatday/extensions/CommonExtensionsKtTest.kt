@@ -110,42 +110,4 @@ internal class CommonExtensionsKtTest {
             DateTime(2021, 7, 8, 9, 31)
         )
     }
-
-    @Test
-    fun asInstance() {
-        val any: Any = ""
-        val action = spyk<String.() -> Unit> { }
-
-        any.asInstance(action)
-
-        verify { action("") }
-    }
-
-    @Test
-    fun asInstanceNotCalled() {
-        val any: Any = ""
-        val action = mockk<Int.() ->Unit>()
-
-        any.asInstance(action)
-
-        verify(exactly = 0) { action.invoke(any()) }
-    }
-
-    @Test
-    fun asInstanceAndReturn() {
-        val any: Any = ""
-
-        val asInstanceAndReturn = any.asInstanceAndReturn<String, Unit> { }
-
-        assertThat(asInstanceAndReturn).isEqualTo(Unit)
-    }
-
-    @Test
-    fun asInstanceAndReturnNotCalled() {
-        val any: Any = ""
-
-        val asInstanceAndReturn = any.asInstanceAndReturn<Int, Boolean> { true }
-
-        assertThat(asInstanceAndReturn).isNull()
-    }
 }
