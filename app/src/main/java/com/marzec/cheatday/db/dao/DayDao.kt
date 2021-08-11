@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class DayDao : BaseDao<DayEntity> {
 
     @Query("SELECT * FROM ${DayEntity.NAME} WHERE type = :type AND user_id = :userId")
-    abstract fun observeDay(userId: String, type: String): Flow<DayEntity>
+    abstract fun observeDay(userId: String, type: String): Flow<DayEntity?>
 
     @Query("SELECT * FROM ${DayEntity.NAME} WHERE type = :type AND user_id = :userId")
     abstract fun getDay(userId: String, type: String): DayEntity?
