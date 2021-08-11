@@ -1,8 +1,8 @@
 
-val fileFilter = listOf<String>()
-val kotlinTree = fileTree("${project.buildDir}/tmp/kotlin-classes/debug") {
-    exclude(*excludes.toTypedArray())
+val kotlinTree = fileTree("${project.buildDir}/tmp/kotlin-classes/stageDebug") {
+    exclude("**/com/paris/**")
 }
+
 val kotlinSrc = "${project.projectDir}/src/main/java"
 
 tasks.create("jacocoUnitTestReport", JacocoReport::class) {

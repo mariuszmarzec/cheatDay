@@ -69,69 +69,6 @@ internal class DayRepositoryTest {
     }
 
     @Test
-    fun observeDaysByUser_createIfNotExist() = runBlockingTest {
-        coEvery { dayDao.getDay("user_id", "CHEAT") } returns null
-        coEvery { dayDao.getDay("user_id", "WORKOUT") } returns null
-        coEvery { dayDao.getDay("user_id", "DIET") } returns null
-
-        coEvery { dayDao.observeDay("user_id", Day.Type.CHEAT.name) } returns flowOf(
-            stubDayEntity(
-                type = "CHEAT"
-            )
-        )
-        coEvery {
-            dayDao.observeDay(
-                "user_id",
-                Day.Type.WORKOUT.name
-            )
-        } returns flowOf(stubDayEntity(type = "WORKOUT"))
-        coEvery { dayDao.observeDay("user_id", Day.Type.DIET.name) } returns flowOf(
-            stubDayEntity(
-                type = "DIET"
-            )
-        )
-
-        val result = repository.observeDaysByUser("user_id").values(this)
-
-        assertThat(result).isEqualTo(
-            listOf(
-                DaysGroup(
-                    stubDay(type = Day.Type.CHEAT),
-                    stubDay(type = Day.Type.WORKOUT),
-                    stubDay(type = Day.Type.DIET)
-                )
-            )
-        )
-        coVerify {
-            dayDao.createOrUpdate(
-                stubDayEntity(
-                    max = Constants.MAX_CHEAT_DAYS.toLong(),
-                    type = "CHEAT",
-                    userId = "user_id"
-                )
-            )
-        }
-        coVerify {
-            dayDao.createOrUpdate(
-                stubDayEntity(
-                    max = Constants.MAX_WORKOUT_DAYS.toLong(),
-                    type = "WORKOUT",
-                    userId = "user_id"
-                )
-            )
-        }
-        coVerify {
-            dayDao.createOrUpdate(
-                stubDayEntity(
-                    max = Constants.MAX_DIET_DAYS.toLong(),
-                    type = "DIET",
-                    userId = "user_id"
-                )
-            )
-        }
-    }
-
-    @Test
     fun update() = runBlockingTest {
         repository.update("user_id", stubDay())
 

@@ -26,22 +26,22 @@ class DaysCounterFragmentTest {
     fun setUp() {
     }
 
-    @Test
-    fun cheat_days_are_present_on_screen() {
-        lateinit var activity: FragmentActivity
-
-        val scenario = launchFragmentInDaggerContainer<DaysCounterFragment> (
-            themeResId = R.style.AppTheme
-        )
-        scenario.onActivity { activity = it }
-        scenario.moveToState(Lifecycle.State.RESUMED)
-
-//        onView(withText(R.string.home_counter_title_cheat_day)).check(matches(isDisplayed()))
-//        onView(withText(R.string.home_counter_title_diet_day)).check(matches(isDisplayed()))
-//        onView(withText(R.string.home_counter_title_workout_day)).check(matches(isDisplayed()))
-
-        Screenshot.snapActivity(activity)
-            .setName("${DaysCounterFragment::class.java.simpleName}_cheat_days_are_present_on_screen")
-            .record();
-    }
+//    @Test
+//    fun cheat_days_are_present_on_screen() {
+////        lateinit var activity: FragmentActivity
+////
+////        val scenario = launchFragmentInDaggerContainer<DaysCounterFragment> (
+////            themeResId = R.style.AppTheme
+////        )
+////        scenario.onActivity { activity = it }
+////        scenario.moveToState(Lifecycle.State.RESUMED)
+////
+//////        onView(withText(R.string.home_counter_title_cheat_day)).check(matches(isDisplayed()))
+//////        onView(withText(R.string.home_counter_title_diet_day)).check(matches(isDisplayed()))
+//////        onView(withText(R.string.home_counter_title_workout_day)).check(matches(isDisplayed()))
+////
+////        Screenshot.snapActivity(activity)
+////            .setName("${DaysCounterFragment::class.java.simpleName}_cheat_days_are_present_on_screen")
+////            .record();
+//    }
 }
