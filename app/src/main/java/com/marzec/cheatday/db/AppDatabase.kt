@@ -1,24 +1,20 @@
 package com.marzec.cheatday.db
 
-import android.content.ContentValues
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.sqlite.db.SupportSQLiteQueryBuilder
-import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.db.converters.DateTimeConverter
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.db.migrations.MIGRATION_1_TO_2
+import com.marzec.cheatday.db.migrations.MIGRATION_2_TO_3
 import com.marzec.cheatday.db.model.db.DayEntity
 import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.db.model.db.WeightResultEntity
-import java.util.*
 
 @Database(
     entities = [
@@ -26,7 +22,7 @@ import java.util.*
         DayEntity::class,
         WeightResultEntity::class
     ],
-    version = 2
+    version = 3
 )
 @TypeConverters(DateTimeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -48,7 +44,8 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "database"
                 ).addMigrations(
-                    MIGRATION_1_TO_2
+                    MIGRATION_1_TO_2,
+                    MIGRATION_2_TO_3
                 ).build()
             }
             return db

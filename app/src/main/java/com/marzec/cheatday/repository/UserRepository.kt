@@ -1,7 +1,6 @@
 package com.marzec.cheatday.repository
 
 import androidx.datastore.core.DataStore
-import com.marzec.cheatday.common.UuidProvider
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.extensions.emptyString
@@ -9,7 +8,6 @@ import com.marzec.cheatday.model.domain.CurrentUserDomain
 import com.marzec.cheatday.model.domain.CurrentUserProto
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.model.domain.toDomain
-import java.util.UUID
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -24,8 +22,7 @@ import kotlinx.coroutines.withContext
 class UserRepository @Inject constructor(
     private val userDao: UserDao,
     private val currentUserStore: DataStore<CurrentUserProto>,
-    private val dispatcher: CoroutineDispatcher,
-    private val uuidProvider: UuidProvider
+    private val dispatcher: CoroutineDispatcher
 ) {
     suspend fun getCurrentUser(): User = withContext(dispatcher) {
         val currentUserEmail = currentUserStore.data.first().email
@@ -62,7 +59,7 @@ class UserRepository @Inject constructor(
     suspend fun addUserToDbIfNeeded(user: User) {
         val userExist = userDao.observeUser(user.email).firstOrNull() != null
         if (!userExist) {
-            userDao.insert(UserEntity(uuidProvider.create(), user.email))
+            userDao.insert(UserEntity(0, user.email))
         }
     }
 

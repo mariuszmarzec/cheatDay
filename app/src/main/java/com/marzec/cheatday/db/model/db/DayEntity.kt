@@ -9,7 +9,7 @@ import com.marzec.cheatday.model.domain.Day
     foreignKeys = [
         ForeignKey(
             entity = UserEntity::class,
-            parentColumns = [UserEntity.COLUMN_UUID],
+            parentColumns = [UserEntity.COLUMN_ID],
             childColumns = [DayEntity.COLUMN_USER_ID],
             onDelete = CASCADE
         )
@@ -21,7 +21,7 @@ data class DayEntity(
     @ColumnInfo(name = COLUMN_TYPE) val type: String,
     @ColumnInfo(name = COLUMN_COUNT) val count: Long,
     @ColumnInfo(name = COLUMN_MAX) val max: Long,
-    @ColumnInfo(name = COLUMN_USER_ID) val userId: String
+    @ColumnInfo(name = COLUMN_USER_ID) val userId: Long
 ) {
     companion object {
         const val NAME = "days"

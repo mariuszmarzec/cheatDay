@@ -20,7 +20,7 @@ fun stubDayEntity(
     type: String = "CHEAT",
     count: Long = 0,
     max: Long = Long.MAX_VALUE,
-    userId: String = ""
+    userId: Long = ""
 ) = DayEntity(
     id = id,
     type = type,

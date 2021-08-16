@@ -16,11 +16,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.BeforeEach
@@ -61,7 +57,7 @@ internal class UserRepositoryTest {
 
     @BeforeEach
     fun setUp() {
-        repository = UserRepository(userDao, currentUserStore, dispatcher, uuidProvider)
+        repository = UserRepository(userDao, currentUserStore, dispatcher)
 
         whenever(currentUserStore.data).thenReturn(flowOf(currentUserProto))
     }

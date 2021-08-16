@@ -32,8 +32,10 @@ class WeightDaoTest {
     private lateinit var weightDao: WeightDao
     private lateinit var db: AppDatabase
 
-    private val userEntity = UserEntity("uuid", "email")
-    private val otherUser = UserEntity("other_user_uuid", "email")
+    private val userId = 1L
+    private val otherUserId = 2L
+    private val userEntity = UserEntity(userId, "email")
+    private val otherUser = UserEntity(otherUserId, "email")
 
     @Before
     fun setUp() {
@@ -55,7 +57,7 @@ class WeightDaoTest {
                 0,
                 1f,
                 1,
-                userEntity.uuid
+                userEntity.id
             )
         )
         weightDao.insert(
@@ -63,7 +65,7 @@ class WeightDaoTest {
                 0,
                 1f,
                 0,
-                userEntity.uuid
+                userEntity.id
             )
         )
         weightDao.insert(
@@ -71,10 +73,10 @@ class WeightDaoTest {
                 0,
                 1f,
                 0,
-                otherUser.uuid
+                otherUser.id
             )
         )
-        val actualItems = weightDao.observeWeights(userEntity.uuid).first()
+        val actualItems = weightDao.observeWeights(userEntity.id).first()
             .toList()
         Assert.assertEquals(
             listOf(
@@ -82,13 +84,13 @@ class WeightDaoTest {
                     1,
                     1f,
                     1,
-                    userEntity.uuid
+                    userEntity.id
                 ),
                 WeightResultEntity(
                     2,
                     1f,
                     0,
-                    userEntity.uuid
+                    userEntity.id
                 )
             ),
             actualItems

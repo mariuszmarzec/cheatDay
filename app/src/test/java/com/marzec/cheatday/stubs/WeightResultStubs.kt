@@ -30,7 +30,7 @@ fun stubWeightResultEntity(
     id: Long = 0,
     value: Float = 0f,
     date: Long = 0,
-    userId: String = ""
+    userId: Long = ""
 ) = WeightResultEntity(
     id,
     value,

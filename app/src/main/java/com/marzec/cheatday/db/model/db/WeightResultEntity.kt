@@ -10,7 +10,7 @@ import org.joda.time.DateTime
     foreignKeys = [
         ForeignKey(
             entity = UserEntity::class,
-            parentColumns = [UserEntity.COLUMN_UUID],
+            parentColumns = [UserEntity.COLUMN_ID],
             childColumns = [DayEntity.COLUMN_USER_ID],
             onDelete = CASCADE
         )
@@ -20,7 +20,7 @@ data class WeightResultEntity(
     @PrimaryKey(autoGenerate = true) val id: Long,
     @ColumnInfo(name = COLUMN_VALUE) val value: Float,
     @ColumnInfo(name = COLUMN_DATE) val date: Long,
-    @ColumnInfo(name = COLUMN_USER_ID) val userId: String
+    @ColumnInfo(name = COLUMN_USER_ID) val userId: Long
 ) {
     companion object {
         const val NAME = "weights"

@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.Flow
 interface WeightDao : BaseDao<WeightResultEntity> {
 
     @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE user_id = :userId ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
-    fun observeWeights(userId: String): Flow<List<WeightResultEntity>>
+    fun observeWeights(userId: Long): Flow<List<WeightResultEntity>>
 
     @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE user_id = :userId AND value == (SELECT MIN(value) FROM ${WeightResultEntity.NAME} WHERE user_id = :userId) ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
-    fun observeMinWeight(userId: String): Flow<WeightResultEntity?>
+    fun observeMinWeight(userId: Long): Flow<WeightResultEntity?>
 
     @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE user_id = :userId ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
-    fun observeLastWeight(userId: String): Flow<WeightResultEntity?>
+    fun observeLastWeight(userId: Long): Flow<WeightResultEntity?>
 
     @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE id = :id")
     suspend fun getWeight(id: Long): WeightResultEntity?

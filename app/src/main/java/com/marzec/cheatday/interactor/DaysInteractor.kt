@@ -22,7 +22,7 @@ class DaysInteractor @Inject constructor(
 
     fun observeDays(): Flow<DaysGroup> {
         return userRepository.observeCurrentUser().flatMapMerge { user ->
-            daysRepository.observeDaysByUser(user.uuid)
+            daysRepository.observeDaysByUser(user.id)
         }
     }
 
@@ -30,18 +30,18 @@ class DaysInteractor @Inject constructor(
         val user = userRepository.getCurrentUser()
         when (day.type) {
             Day.Type.CHEAT -> {
-                daysRepository.update(user.uuid, day)
+                daysRepository.update(user.id, day)
             }
             Day.Type.WORKOUT -> {
-                updateDayWithCheatIfNeeded(user.uuid, day, Constants.MAX_WORKOUT_DAYS.toLong())
+                updateDayWithCheatIfNeeded(user.id, day, Constants.MAX_WORKOUT_DAYS.toLong())
             }
             Day.Type.DIET -> {
-                updateDayWithCheatIfNeeded(user.uuid, day, Constants.MAX_DIET_DAYS.toLong())
+                updateDayWithCheatIfNeeded(user.id, day, Constants.MAX_DIET_DAYS.toLong())
             }
         }
     }
 
-    private suspend fun updateDayWithCheatIfNeeded(userId: String, day: Day, maxCount: Long) {
+    private suspend fun updateDayWithCheatIfNeeded(userId: Long, day: Day, maxCount: Long) {
         if (day.count > 0 && day.count.rem(maxCount) == 0L) {
             incrementCheatDays(daysCount = 1)
         }

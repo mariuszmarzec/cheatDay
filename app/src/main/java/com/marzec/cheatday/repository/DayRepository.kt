@@ -21,7 +21,7 @@ class DayRepository @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ) {
 
-    suspend fun observeDaysByUser(userId: String): Flow<DaysGroup> = withContext(dispatcher) {
+    suspend fun observeDaysByUser(userId: Long): Flow<DaysGroup> = withContext(dispatcher) {
         combine(
             observeDay(userId, Day.Type.CHEAT, Constants.MAX_CHEAT_DAYS),
             observeDay(userId, Day.Type.WORKOUT, Constants.MAX_WORKOUT_DAYS),
@@ -31,14 +31,14 @@ class DayRepository @Inject constructor(
         }.flowOn(dispatcher)
     }
 
-    private fun observeDay(userId: String, day: Day.Type, max: Int) =
+    private fun observeDay(userId: Long, day: Day.Type, max: Int) =
         dayDao.observeDay(userId, day.name)
             .map {
                 (it ?: DayEntity(0, day.name, 0, max.toLong(), userId)).toDomain()
             }
             .filterNotNull()
 
-    suspend fun update(userId: String, day: Day) = withContext(dispatcher) {
+    suspend fun update(userId: Long, day: Day) = withContext(dispatcher) {
         dayDao.createOrUpdate(day.toDb(userId))
     }
 }

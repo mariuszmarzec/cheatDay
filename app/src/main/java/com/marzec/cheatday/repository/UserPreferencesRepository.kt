@@ -22,7 +22,7 @@ class UserPreferencesRepository @Inject constructor(
 ) {
 
     suspend fun setMaxPossibleWeight(weight: Float): Unit = withContext(dispatcher) {
-        val userId = userRepository.getCurrentUser().uuid
+        val userId = userRepository.getCurrentUser().id
         val preferencesKey = preferencesKey<Float>("${userId}_max_possible_weight")
         dataStore.updateData { prefs ->
             prefs.toMutablePreferences().apply { this[preferencesKey] = weight }
@@ -32,13 +32,13 @@ class UserPreferencesRepository @Inject constructor(
     fun observeMaxPossibleWeight(): Flow<Float> =
         userRepository.observeCurrentUser().flatMapMerge { user ->
             dataStore.data.mapLatest { prefs ->
-                val key = preferencesKey<Float>("${user.uuid}_max_possible_weight")
+                val key = preferencesKey<Float>("${user.id}_max_possible_weight")
                 prefs[key] ?: .0f
             }
         }.flowOn(dispatcher)
 
     suspend fun setTargetWeight(weight: Float): Unit = withContext(dispatcher) {
-        val userId = userRepository.getCurrentUser().uuid
+        val userId = userRepository.getCurrentUser().id
         val preferencesKey = preferencesKey<Float>("${userId}_weight")
         dataStore.updateData { prefs ->
             prefs.toMutablePreferences().apply { this[preferencesKey] = weight }
@@ -48,7 +48,7 @@ class UserPreferencesRepository @Inject constructor(
     fun observeTargetWeight(): Flow<Float> =
         userRepository.observeCurrentUser().flatMapMerge { user ->
             dataStore.data.mapLatest { prefs ->
-                val key = preferencesKey<Float>("${user.uuid}_weight")
+                val key = preferencesKey<Float>("${user.id}_weight")
                 prefs[key] ?: .0f
             }
         }.flowOn(dispatcher)
@@ -58,7 +58,7 @@ class UserPreferencesRepository @Inject constructor(
         userRepository.observeCurrentUser()
             .flatMapMerge { user ->
                 dataStore.data.mapLatest { prefs ->
-                    prefs[preferencesKey<Long>("${user.uuid}_$day")] ?: 0
+                    prefs[preferencesKey<Long>("${user.id}_$day")] ?: 0
                 }.mapLatest { savedTime ->
                     val today = DateTime.now().withTimeAtStartOfDay()
                     today == DateTime(savedTime)
@@ -66,7 +66,7 @@ class UserPreferencesRepository @Inject constructor(
             }
 
     suspend fun setWasClickedToday(day: Day.Type): Unit = withContext(dispatcher) {
-        val userId = userRepository.getCurrentUser().uuid
+        val userId = userRepository.getCurrentUser().id
         val timeInMillis = DateTime.now().withTimeAtStartOfDay().millis
         dataStore.updateData { prefs ->
             val preferencesKey = preferencesKey<Long>("${userId}_$day")

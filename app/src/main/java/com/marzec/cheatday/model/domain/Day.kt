@@ -21,7 +21,7 @@ data class DaysGroup(
     val diet: Day
 )
 
-fun Day.toDb(userId: String): DayEntity {
+fun Day.toDb(userId: Long): DayEntity {
     return DayEntity(
         id = this.id,
         type = this.type.name,
