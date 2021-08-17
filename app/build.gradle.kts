@@ -237,6 +237,7 @@ dependencies {
 
     // truth
     testImplementation("com.google.truth:truth:${Dependency.truth_version}")
+    androidTestImplementation("com.google.truth:truth:${Dependency.truth_version}")
 
     // test runner
     androidTestImplementation("androidx.test:runner:${Dependency.android_test_version}")
