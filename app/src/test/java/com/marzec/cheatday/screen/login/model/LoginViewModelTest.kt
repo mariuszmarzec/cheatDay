@@ -4,12 +4,11 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.LoginRepository
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlin.math.log
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -25,13 +24,13 @@ internal class LoginViewModelTest {
     val defaultState = LoginViewState.Data(defaultData)
 
     private val user = User(
-        "uuid", "email"
+        0, "email"
     )
 
     @Test
     fun onLoginButtonClicked() = runBlockingTest {
         val viewModel = viewModel(defaultState)
-        val states = viewModel.state.values(viewModel.sideEffects)
+        val states = viewModel.test(this)
 
         coEvery {
             loginRepository.login(
@@ -42,7 +41,7 @@ internal class LoginViewModelTest {
 
         viewModel.onLoginButtonClicked()
 
-        assertThat(states).isEqualTo(
+        assertThat(states.values()).isEqualTo(
             listOf(
                 defaultState,
                 LoginViewState.Pending(defaultData),
@@ -53,13 +52,13 @@ internal class LoginViewModelTest {
     }
 
     @Test
-    fun onLoginChanged() {
+    fun onLoginChanged() = runBlockingTest {
         val viewModel = viewModel(defaultState)
-        val states = viewModel.state.values()
+        val states = viewModel.test(this)
 
         viewModel.onLoginChanged("changed")
 
-        assertThat(states).isEqualTo(
+        assertThat(states.values()).isEqualTo(
             listOf(
                 defaultState,
                 defaultState.copy(defaultData.copy(login = "changed"))
@@ -68,13 +67,13 @@ internal class LoginViewModelTest {
     }
 
     @Test
-    fun onPasswordChanged() {
+    fun onPasswordChanged() = runBlockingTest {
         val viewModel = viewModel(defaultState)
-        val states = viewModel.state.values()
+        val states = viewModel.test(this)
 
         viewModel.onPasswordChanged("changed")
 
-        assertThat(states).isEqualTo(
+        assertThat(states.values()).isEqualTo(
             listOf(
                 defaultState,
                 defaultState.copy(defaultData.copy(password = "changed"))

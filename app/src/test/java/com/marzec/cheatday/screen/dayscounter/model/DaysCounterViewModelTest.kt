@@ -3,20 +3,17 @@ package com.marzec.cheatday.screen.dayscounter.model
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestCoroutineExecutorExtension
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.interactor.DaysInteractor
 import com.marzec.cheatday.model.domain.ClickedStates
-import com.marzec.cheatday.model.domain.Day
 import com.marzec.cheatday.repository.LoginRepository
 import com.marzec.cheatday.repository.UserPreferencesRepository
-import com.marzec.cheatday.stubs.stubDay
-import com.marzec.cheatday.stubs.stubDayState
 import com.marzec.cheatday.stubs.stubDaysGroup
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
-import org.junit.jupiter.api.BeforeEach
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -29,7 +26,7 @@ class DaysCounterViewModelTest {
     val defaultState: DaysCounterState = DaysCounterState.DEFAULT_STATE
 
     @Test
-    fun loading() {
+    fun loading() = runBlockingTest {
         coEvery { daysInteractor.observeDays() } returns flowOf(
             stubDaysGroup(
                 cheat = defaultState.cheat.day.copy(
@@ -48,11 +45,11 @@ class DaysCounterViewModelTest {
             )
         )
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.loading()
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 defaultState.copy(
@@ -63,7 +60,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onCheatDecreaseClick() {
+    fun onCheatDecreaseClick() = runBlockingTest {
         val viewModel = viewModel()
 
         viewModel.onCheatDecreaseClick()
@@ -72,7 +69,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onDietIncreaseClick() {
+    fun onDietIncreaseClick() = runBlockingTest {
         val viewModel = viewModel()
 
         viewModel.onDietIncreaseClick()
@@ -81,7 +78,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onWorkoutIncreaseClick() {
+    fun onWorkoutIncreaseClick() = runBlockingTest {
         val viewModel = viewModel()
 
         viewModel.onWorkoutIncreaseClick()

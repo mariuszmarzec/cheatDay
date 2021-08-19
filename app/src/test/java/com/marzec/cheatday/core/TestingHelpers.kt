@@ -1,32 +1,36 @@
 package com.marzec.cheatday.core
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import com.marzec.mvi.StoreViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 
-fun <T> Flow<T>.values(scope: CoroutineScope): MutableList<T> {
-    val values = mutableListOf<T>()
-    val job = scope.launch {
-        collect { values.add(it) }
-    }
-    job.cancel()
-    return values
+fun <T> Flow<T>.test(scope: CoroutineScope): TestCollector<T> {
+    return TestCollector(scope, this).test()
 }
 
-fun <T> LiveData<T>.values(): List<T> = mutableListOf<T>()
-    .apply { observeForever { add(it) } }
+fun <State : Any, SideEffect> StoreViewModel<State, SideEffect>.test(scope: CoroutineScope) =
+    merge(state, sideEffects).test(scope)
 
-fun <T, R> LiveData<T>.values(sideEffects: LiveData<R>): List<Any> =
-    mutableListOf<Any>().apply {
-        MediatorLiveData<Any>().apply {
-            addSource(this@values, ::setValue)
-            addSource(sideEffects, ::setValue)
-        }.observeForever { add(it) }
+class TestCollector<T>(
+    private val scope: CoroutineScope,
+    private val flow: Flow<T>
+) {
+    private val values = mutableListOf<T>()
+    private lateinit var job: Job
+
+    fun test(): TestCollector<T> {
+        job = scope.launch {
+            flow.collect { values.add(it) }
+        }
+        return this
     }
 
-fun <State: Any, SideEffect> StoreViewModel<State, SideEffect>.values() =
-    state.values(sideEffects)
+    fun values(): List<T> {
+        job.cancel()
+        return values
+    }
+}

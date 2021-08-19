@@ -4,11 +4,10 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import java.lang.Exception
@@ -50,11 +49,11 @@ class WeightsViewModelTest {
         coEvery {  weightInteractor.observeWeights() } returns flowOf(Content.Data(weights))
 
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.load()
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState
             )
@@ -66,11 +65,11 @@ class WeightsViewModelTest {
         coEvery {  weightInteractor.observeWeights() } returns flowOf(Content.Loading(weights))
 
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.load()
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState
             )
@@ -82,11 +81,11 @@ class WeightsViewModelTest {
         coEvery {  weightInteractor.observeWeights() } returns flowOf(Content.Error(Exception()))
 
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.load()
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 WeightsSideEffects.ShowError
@@ -97,11 +96,11 @@ class WeightsViewModelTest {
     @Test
     fun onClick_targetId() = runBlockingTest {
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.onClick(WeightsMapper.TARGET_ID)
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 WeightsSideEffects.ShowTargetWeightDialog
@@ -112,11 +111,11 @@ class WeightsViewModelTest {
     @Test
     fun onClick_maxPossibleId() = runBlockingTest {
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.onClick(WeightsMapper.MAX_POSSIBLE_ID)
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 WeightsSideEffects.ShowMaxPossibleWeightDialog
@@ -127,11 +126,11 @@ class WeightsViewModelTest {
     @Test
     fun onClick_openWeight() = runBlockingTest {
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.onClick("0")
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 WeightsSideEffects.OpenWeightAction("0")
@@ -142,11 +141,11 @@ class WeightsViewModelTest {
     @Test
     fun onLongClick() = runBlockingTest {
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.onLongClick("0")
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 WeightsSideEffects.ShowRemoveDialog("0")
@@ -157,11 +156,11 @@ class WeightsViewModelTest {
     @Test
     fun onFloatingButtonClick() = runBlockingTest {
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.onFloatingButtonClick()
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 WeightsSideEffects.GoToAddResultScreen
@@ -173,11 +172,11 @@ class WeightsViewModelTest {
     fun changeTargetWeight() = runBlockingTest {
         coEvery { weightInteractor.setTargetWeight(5.0f) } returns Unit
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.changeTargetWeight("5.0f")
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState
             )
@@ -187,11 +186,11 @@ class WeightsViewModelTest {
     @Test
     fun changeTargetWeight_Error() = runBlockingTest {
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.changeTargetWeight("")
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 WeightsSideEffects.ShowError
@@ -203,11 +202,11 @@ class WeightsViewModelTest {
     fun changeMaxWeight() = runBlockingTest {
         coEvery { weightInteractor.setMaxPossibleWeight(5.0f) } returns Unit
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.changeMaxWeight("5.0f")
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState
             )
@@ -218,11 +217,11 @@ class WeightsViewModelTest {
     fun changeMaxWeight_Error() = runBlockingTest {
         coEvery { weightInteractor.setMaxPossibleWeight(5.0f) } returns Unit
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.changeMaxWeight("")
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 WeightsSideEffects.ShowError
@@ -233,11 +232,11 @@ class WeightsViewModelTest {
     @Test
     fun goToChart() = runBlockingTest {
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.goToChart()
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 WeightsSideEffects.GoToChartAction
@@ -248,11 +247,11 @@ class WeightsViewModelTest {
     @Test
     fun removeWeight() = runBlockingTest {
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.removeWeight("0")
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState
             )

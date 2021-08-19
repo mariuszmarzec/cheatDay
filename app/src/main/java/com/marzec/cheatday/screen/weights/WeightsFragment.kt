@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -22,6 +23,7 @@ import com.marzec.cheatday.screen.weights.model.WeightsViewModel
 import com.marzec.cheatday.view.labeledRowView
 import com.marzec.cheatday.view.model.LabeledRowItem
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
@@ -35,57 +37,60 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
         val recyclerView = view.findViewById<EpoxyRecyclerView>(R.id.recycler_view)
         val floatingButton = view.findViewById<FloatingActionButton>(R.id.floating_button)
 
-        viewModel.state.observeNonNull { state ->
-            recyclerView.withModels {
-                state.list.forEach { item ->
-                    when (item) {
-                        is LabeledRowItem -> {
-                            labeledRowView {
-                                id(item.id)
-                                label(item.label)
-                                value(item.value)
-                                onClickListener { _, _, _, _ ->
-                                    viewModel.onClick(item.id)
-                                }
-                                onLongClickListener { _, _, _, _ ->
-                                    viewModel.onLongClick(item.id)
-                                    true
+        lifecycleScope.launchWhenResumed {
+
+            viewModel.state.collect { state ->
+                recyclerView.withModels {
+                    state.list.forEach { item ->
+                        when (item) {
+                            is LabeledRowItem -> {
+                                labeledRowView {
+                                    id(item.id)
+                                    label(item.label)
+                                    value(item.value)
+                                    onClickListener { _, _, _, _ ->
+                                        viewModel.onClick(item.id)
+                                    }
+                                    onLongClickListener { _, _, _, _ ->
+                                        viewModel.onLongClick(item.id)
+                                        true
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
 
-        viewModel.sideEffects.observeNonNull { effect ->
-            when (effect) {
-                WeightsSideEffects.GoToAddResultScreen -> {
-                    findNavController().navigate(
-                        WeightsFragmentDirections.actionWeightsToAddWeight(
-                            null
+            viewModel.sideEffects.collect { effect ->
+                when (effect) {
+                    WeightsSideEffects.GoToAddResultScreen -> {
+                        findNavController().navigate(
+                            WeightsFragmentDirections.actionWeightsToAddWeight(
+                                null
+                            )
                         )
-                    )
-                }
-                WeightsSideEffects.GoToChartAction -> {
-                    findNavController().navigate(R.id.action_weights_to_chart)
-                }
-                is WeightsSideEffects.OpenWeightAction -> {
-                    findNavController().navigate(
-                        WeightsFragmentDirections.actionWeightsToAddWeight(effect.id)
-                    )
-                }
-                WeightsSideEffects.ShowError -> {
-                    requireActivity().showErrorDialog()
-                }
-                WeightsSideEffects.ShowMaxPossibleWeightDialog -> {
-                    showMaxPossibleWeightDialog()
-                }
-                is WeightsSideEffects.ShowRemoveDialog -> {
-                    showIfRemoveDialog(effect.id)
-                }
-                WeightsSideEffects.ShowTargetWeightDialog -> {
-                    showTargetWeightDialog()
+                    }
+                    WeightsSideEffects.GoToChartAction -> {
+                        findNavController().navigate(R.id.action_weights_to_chart)
+                    }
+                    is WeightsSideEffects.OpenWeightAction -> {
+                        findNavController().navigate(
+                            WeightsFragmentDirections.actionWeightsToAddWeight(effect.id)
+                        )
+                    }
+                    WeightsSideEffects.ShowError -> {
+                        requireActivity().showErrorDialog()
+                    }
+                    WeightsSideEffects.ShowMaxPossibleWeightDialog -> {
+                        showMaxPossibleWeightDialog()
+                    }
+                    is WeightsSideEffects.ShowRemoveDialog -> {
+                        showIfRemoveDialog(effect.id)
+                    }
+                    WeightsSideEffects.ShowTargetWeightDialog -> {
+                        showTargetWeightDialog()
+                    }
                 }
             }
         }

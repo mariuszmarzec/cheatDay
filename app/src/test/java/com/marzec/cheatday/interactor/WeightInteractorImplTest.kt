@@ -2,16 +2,14 @@ package com.marzec.cheatday.interactor
 
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.api.Content
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.repository.WeightResultRepository
 import com.marzec.cheatday.stubs.stubWeightResult
-import io.mockk.called
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.coVerifyAll
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
@@ -52,7 +50,7 @@ class WeightInteractorTest {
     fun observeTargetWeight() = runBlockingTest {
         coEvery { targetRepository.observeTargetWeight() } returns flowOf(1f, 2f)
 
-        assertThat(interactor.observeTargetWeight().values(this)).isEqualTo(
+        assertThat(interactor.observeTargetWeight().test(this).values()).isEqualTo(
             listOf(1f, 2f)
         )
     }
@@ -68,7 +66,7 @@ class WeightInteractorTest {
 
     @Test
     fun observeWeights() = runBlockingTest {
-        coEvery { userRepository.observeCurrentUser() } returns flowOf(User("user_id", "mail"))
+        coEvery { userRepository.observeCurrentUser() } returns flowOf(User(0, "mail"))
         coEvery { weightResultRepository.observeWeights() } returns
                 Content.Data(
                     listOf(
@@ -77,7 +75,7 @@ class WeightInteractorTest {
                     )
                 )
 
-        assertThat(interactor.observeWeights().values(this)).isEqualTo(
+        assertThat(interactor.observeWeights().test(this).values()).isEqualTo(
             listOf(
                 Content.Data(
                     listOf(
@@ -92,7 +90,7 @@ class WeightInteractorTest {
     @Test
     fun addWeight() = runBlockingTest {
         coEvery { weightResultRepository.putWeight(stubWeightResult()) } returns Content.Data(Unit)
-        coEvery { userRepository.getCurrentUser() } returns (User("user_id", "mail"))
+        coEvery { userRepository.getCurrentUser() } returns (User(0, "mail"))
 
         interactor.addWeight(stubWeightResult())
 
@@ -102,7 +100,7 @@ class WeightInteractorTest {
     @Test
     fun updateWeight() = runBlockingTest {
         coEvery { weightResultRepository.putWeight(stubWeightResult()) } returns Content.Data(Unit)
-        coEvery { userRepository.getCurrentUser() } returns (User("user_id", "mail"))
+        coEvery { userRepository.getCurrentUser() } returns (User(0, "mail"))
 
         interactor.updateWeight(stubWeightResult())
 
@@ -114,7 +112,7 @@ class WeightInteractorTest {
         coEvery { weightResultRepository.putWeight(stubWeightResult(value = 90.5f)) } returns Content.Data(
             Unit
         )
-        coEvery { userRepository.getCurrentUser() } returns (User("user_id", "mail"))
+        coEvery { userRepository.getCurrentUser() } returns (User(0, "mail"))
 
         interactor.addWeight(
             stubWeightResult(value = 90.5f)
@@ -135,7 +133,7 @@ class WeightInteractorTest {
         @Test
         fun `if new weight is greater than older and target weight, then decrease cheat day, and additionally decrease cheat day with diff from integers values of weights`() =
             runBlockingTest {
-                coEvery { userRepository.getCurrentUser() } returns (User("user_id", "mail"))
+                coEvery { userRepository.getCurrentUser() } returns (User(0, "mail"))
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     stubWeightResult(value = 93.4f)
                 )
@@ -154,7 +152,7 @@ class WeightInteractorTest {
         @Test
         fun `if new weight is greater than older with diff smaller than 1 kg than and then target weight, then decrease cheat day`() =
             runBlockingTest {
-                coEvery { userRepository.getCurrentUser() } returns (User("user_id", "mail"))
+                coEvery { userRepository.getCurrentUser() } returns (User(0, "mail"))
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     stubWeightResult(value = 93.4f)
                 )
@@ -173,7 +171,7 @@ class WeightInteractorTest {
         @Test
         fun `if new weight is greater than older, but not than target weight, then don't change cheat days count`() =
             runBlockingTest {
-                coEvery { userRepository.getCurrentUser() } returns (User("user_id", "mail"))
+                coEvery { userRepository.getCurrentUser() } returns (User(0, "mail"))
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     stubWeightResult(value = 93.4f)
                 )
@@ -192,7 +190,7 @@ class WeightInteractorTest {
         @Test
         fun `if new weight is smaller than older, then increase cheat day, and additionally increase cheat day with diff from integers values of weights`() =
             runBlockingTest {
-                coEvery { userRepository.getCurrentUser() } returns (User("user_id", "mail"))
+                coEvery { userRepository.getCurrentUser() } returns (User(0, "mail"))
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     stubWeightResult(value = 93.4f)
                 )
@@ -212,7 +210,7 @@ class WeightInteractorTest {
         @Test
         fun `if new weight is smaller than older with diff smaller than 1 kg, then increase cheat day`() =
             runBlockingTest {
-                coEvery { userRepository.getCurrentUser() } returns (User("user_id", "mail"))
+                coEvery { userRepository.getCurrentUser() } returns (User(0, "mail"))
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     stubWeightResult(value = 93.4f)
                 )
@@ -232,7 +230,7 @@ class WeightInteractorTest {
         @Test
         fun `if new weight is smaller than min weight, then increase cheat day with one extra day`() =
             runBlockingTest {
-                coEvery { userRepository.getCurrentUser() } returns (User("user_id", "mail"))
+                coEvery { userRepository.getCurrentUser() } returns (User(0, "mail"))
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     stubWeightResult(value = 91.1f)
                 )
@@ -253,7 +251,7 @@ class WeightInteractorTest {
             coEvery { weightResultRepository.putWeight(stubWeightResult(value = 90.5f)) } returns Content.Data(
                 Unit
             )
-            coEvery { userRepository.getCurrentUser() } returns (User("user_id", "mail"))
+            coEvery { userRepository.getCurrentUser() } returns (User(0, "mail"))
             coEvery { weightResultRepository.observeLastWeight() } returns (flowOf(null))
             coEvery { targetRepository.observeTargetWeight() } returns (flowOf(90f))
             coEvery { weightResultRepository.observeMinWeight() } returns (flowOf(null))

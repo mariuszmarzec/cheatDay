@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -19,13 +20,14 @@ import kotlinx.coroutines.launch
 
 open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewModel() {
 
-    private val sideEffectsInternal = SingleLiveEvent<SideEffect>()
-    val sideEffects: LiveData<SideEffect>
-        get() = sideEffectsInternal
+    private val sideEffectsInternal = MutableStateFlow<SideEffect?>(null)
+    val sideEffects: Flow<SideEffect?>
+        get() = sideEffectsInternal.filter { it != null }
 
     private val store = Store(defaultState)
 
-    val state = store.state.asLiveData()
+    val state
+        get() = store.state
 
     init {
         viewModelScope.launch { store.init(viewModelScope) }
@@ -42,7 +44,7 @@ open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewMo
     ): IntentBuilder<State, Result> {
         this.sideEffect {
             func()?.let {
-                sideEffectsInternal.postValue(it)
+                sideEffectsInternal.emit(it)
             }
         }
         return this

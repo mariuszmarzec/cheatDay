@@ -3,7 +3,7 @@ package com.marzec.cheatday.screen.home.model
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestCoroutineExecutorExtension
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
@@ -22,13 +22,14 @@ internal class MainViewModelTest {
     fun loadState() = runBlockingTest {
         every { mainInteractor.observeIfUserLogged() } returns flowOf(false, true)
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.loadState()
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defualtState,
+                defualtState.copy(isUserLogged = false),
                 defualtState.copy(isUserLogged = true)
             )
         )

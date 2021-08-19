@@ -4,12 +4,13 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -21,17 +22,17 @@ internal class ChartsViewModelTest {
     val defaultState = ChartsState(emptyList())
 
     @Test
-    fun loadData() {
+    fun loadData() = runBlockingTest {
         every { weightInteractor.observeWeights() } returns flowOf(
             Content.Data(listOf(stubWeightResult()))
         )
 
         val viewModel = viewModel()
-        val values = viewModel.values()
+        val values = viewModel.test(this)
 
         viewModel.load()
 
-        assertThat(values).isEqualTo(
+        assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
                 defaultState.copy(listOf(stubWeightResult()))
@@ -40,7 +41,7 @@ internal class ChartsViewModelTest {
     }
 
     @Test
-    fun loadData_error() {
+    fun loadData_error() = runBlockingTest {
         every { weightInteractor.observeWeights() }returns flowOf(
             Content.Error(Exception())
         )
@@ -49,7 +50,7 @@ internal class ChartsViewModelTest {
 
         viewModel.load()
 
-        assertThat(viewModel.values()).isEqualTo(
+        assertThat(viewModel.test(this).values()).isEqualTo(
             listOf(
                 defaultState,
                 ChartsSideEffect.ShowErrorDialog

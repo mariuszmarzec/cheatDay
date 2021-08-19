@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.core.toMutablePreferences
 import com.google.common.truth.Truth.assertThat
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.model.domain.Day
 import com.marzec.cheatday.model.domain.User
 import io.mockk.coEvery
@@ -39,7 +39,7 @@ internal class UserPreferencesRepositoryTest {
     )
 
     private val user = User(
-        "uuid", "email"
+        1, "email"
     )
 
     @BeforeEach
@@ -62,53 +62,53 @@ internal class UserPreferencesRepositoryTest {
     fun setMaxPossibleWeight() = runBlockingTest {
         repository.setMaxPossibleWeight(10f)
 
-        verify { mutablePreferences[preferencesKey<Float>("uuid_max_possible_weight")] = eq(10f) }
+        verify { mutablePreferences[preferencesKey<Float>("1_max_possible_weight")] = eq(10f) }
     }
 
     @Test
     fun observeMaxPossibleWeight() = runBlockingTest {
-        every { preferences[preferencesKey<Float>("uuid_max_possible_weight")] } returns 5f
+        every { preferences[preferencesKey<Float>("1_max_possible_weight")] } returns 5f
 
-        val result = repository.observeMaxPossibleWeight().values(this)
+        val result = repository.observeMaxPossibleWeight().test(this)
 
-        assertThat(result).isEqualTo(listOf(5f))
+        assertThat(result.values()).isEqualTo(listOf(5f))
     }
 
     @Test
     fun setTargetWeight() = runBlockingTest {
         repository.setTargetWeight(10f)
 
-        verify { mutablePreferences[preferencesKey<Float>("uuid_weight")] = eq(10f) }
+        verify { mutablePreferences[preferencesKey<Float>("1_weight")] = eq(10f) }
     }
 
     @Test
     fun observeTargetWeight() = runBlockingTest {
-        every { preferences[preferencesKey<Float>("uuid_weight")] } returns 5f
+        every { preferences[preferencesKey<Float>("1_weight")] } returns 5f
 
-        val result = repository.observeTargetWeight().values(this)
+        val result = repository.observeTargetWeight().test(this)
 
-        assertThat(result).isEqualTo(listOf(5f))
+        assertThat(result.values()).isEqualTo(listOf(5f))
     }
 
     @Test
     fun observeWasClickToday() = runBlockingTest {
         DateTimeUtils.setCurrentMillisFixed(0)
-        every { preferences[preferencesKey<Long>("uuid_CHEAT")] } returns DateTime.now()
+        every { preferences[preferencesKey<Long>("1_CHEAT")] } returns DateTime.now()
             .withTimeAtStartOfDay().millis
 
-        val result = repository.observeWasClickToday(Day.Type.CHEAT).values(this)
+        val result = repository.observeWasClickToday(Day.Type.CHEAT).test(this)
 
-        assertThat(result).isEqualTo(listOf(true))
+        assertThat(result.values()).isEqualTo(listOf(true))
     }
 
     @Test
     fun observeWasClickToday_returnsFalse() = runBlockingTest {
         DateTimeUtils.setCurrentMillisFixed(0)
-        every { preferences[preferencesKey<Long>("uuid_CHEAT")] } returns 123
+        every { preferences[preferencesKey<Long>("1_CHEAT")] } returns 123
 
-        val result = repository.observeWasClickToday(Day.Type.CHEAT).values(this)
+        val result = repository.observeWasClickToday(Day.Type.CHEAT).test(this)
 
-        assertThat(result).isEqualTo(listOf(false))
+        assertThat(result.values()).isEqualTo(listOf(false))
     }
 
     @Test
@@ -118,7 +118,7 @@ internal class UserPreferencesRepositoryTest {
         repository.setWasClickedToday(Day.Type.CHEAT)
 
         verify {
-            mutablePreferences[preferencesKey<Long>("uuid_CHEAT")] =
+            mutablePreferences[preferencesKey<Long>("1_CHEAT")] =
                 DateTime.now().withTimeAtStartOfDay().millis
         }
     }

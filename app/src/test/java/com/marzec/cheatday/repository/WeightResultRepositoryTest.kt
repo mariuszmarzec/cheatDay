@@ -1,17 +1,14 @@
 package com.marzec.cheatday.repository
 
 import com.google.common.truth.Truth.assertThat
-import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.api.request.PutWeightRequest
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.extensions.toDateTime
 import com.marzec.cheatday.stubs.stubWeightDto
 import com.marzec.cheatday.stubs.stubWeightResult
-import com.marzec.cheatday.stubs.stubWeightResultEntity
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -51,7 +48,7 @@ internal class WeightResultRepositoryTest {
             )
         )
 
-        assertThat(repository.observeMinWeight().values(this)).isEqualTo(
+        assertThat(repository.observeMinWeight().test(this).values()).isEqualTo(
             listOf(stubWeightResult(value = 5f))
         )
     }
@@ -65,7 +62,7 @@ internal class WeightResultRepositoryTest {
             )
         )
 
-        assertThat(repository.observeLastWeight().values(this)).isEqualTo(
+        assertThat(repository.observeLastWeight().test(this).values()).isEqualTo(
             listOf(stubWeightResult(value = 5f, date = "2021-06-07T00:00:00".toDateTime()))
         )
     }

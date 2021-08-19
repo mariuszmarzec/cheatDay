@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.marzec.cheatday.R
@@ -15,6 +16,7 @@ import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.screen.addnewresult.model.AddNewWeightResultViewModel
 import com.marzec.cheatday.screen.addnewresult.model.AddWeightSideEffect
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import org.jetbrains.anko.alert
 import org.joda.time.DateTime
 
@@ -47,33 +49,35 @@ class AddNewWeightResultFragment :
 
         viewModel.load(args.weightId)
 
-        viewModel.state.observeNonNull { state ->
-            val newText = state.weight
-            val newDate = state.date.toString(Constants.DATE_PICKER_PATTERN)
-            if (weightEditText.text.toString() != newText) {
-                weightEditText.setText(newText)
+        lifecycleScope.launchWhenResumed {
+            viewModel.state.collect { state ->
+                val newText = state.weight
+                val newDate = state.date.toString(Constants.DATE_PICKER_PATTERN)
+                if (weightEditText.text.toString() != newText) {
+                    weightEditText.setText(newText)
+                }
+                if (dateEditText.text.toString() != newDate) {
+                    dateEditText.setText(newDate)
+                }
             }
-            if (dateEditText.text.toString() != newDate) {
-                dateEditText.setText(newDate)
+
+            viewModel.sideEffects.collect { sideEffect ->
+                when (sideEffect) {
+                    AddWeightSideEffect.SaveSuccess -> findNavController().popBackStack()
+                    is AddWeightSideEffect.ShowDatePicker -> showPicker(sideEffect.date)
+                    AddWeightSideEffect.ShowError -> activity?.alert {
+                        titleResource = R.string.dialog_error_title_common
+                        messageResource = R.string.dialog_error_message_try_later
+                        isCancelable = true
+                        show()
+                    }
+
+                }
             }
         }
 
         weightEditText.doOnTextChanged { text, _, _, _ ->
             viewModel.setNewWeight(text.toString())
-        }
-
-        viewModel.sideEffects.observeNonNull { sideEffect ->
-            when (sideEffect) {
-                AddWeightSideEffect.SaveSuccess -> findNavController().popBackStack()
-                is AddWeightSideEffect.ShowDatePicker -> showPicker(sideEffect.date)
-                AddWeightSideEffect.ShowError -> activity?.alert {
-                    titleResource = R.string.dialog_error_title_common
-                    messageResource = R.string.dialog_error_message_try_later
-                    isCancelable = true
-                    show()
-                }
-
-            }
         }
 
         button.setOnClickListener {

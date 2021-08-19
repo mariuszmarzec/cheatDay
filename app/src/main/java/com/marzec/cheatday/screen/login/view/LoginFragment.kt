@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
@@ -13,6 +14,7 @@ import com.marzec.cheatday.screen.login.model.LoginViewModel
 import com.marzec.cheatday.screen.login.render.LoginRender
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment(R.layout.fragment_login) {
@@ -36,14 +38,16 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.sideEffects.observeNonNull { effect ->
-            when (effect) {
-                LoginSideEffects.OnLoginSuccessful -> onLoginSuccessful()
+        lifecycleScope.launchWhenResumed {
+            viewModel.sideEffects.collect { effect ->
+                when (effect) {
+                    LoginSideEffects.OnLoginSuccessful -> onLoginSuccessful()
+                }
             }
-        }
 
-        viewModel.state.observeNonNull {
-            loginRender.render(it)
+            viewModel.state.collect {
+                loginRender.render(it)
+            }
         }
     }
 

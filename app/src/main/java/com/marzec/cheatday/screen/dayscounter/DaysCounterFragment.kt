@@ -3,11 +3,13 @@ package com.marzec.cheatday.screen.dayscounter
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterViewModel
 import com.marzec.cheatday.view.CounterView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
@@ -36,15 +38,17 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
             viewModel.onWorkoutIncreaseClick()
         }
 
-        viewModel.state.observeNonNull { state ->
-            dietCounter.setDay(state.diet.day)
-            setClickedState(dietCounter, state.diet.clicked)
+        lifecycleScope.launchWhenResumed {
+            viewModel.state.collect { state ->
+                dietCounter.setDay(state.diet.day)
+                setClickedState(dietCounter, state.diet.clicked)
 
-            cheatCounter.setDay(state.cheat.day)
-            setClickedState(cheatCounter, state.cheat.clicked)
+                cheatCounter.setDay(state.cheat.day)
+                setClickedState(cheatCounter, state.cheat.clicked)
 
-            workoutCounter.setDay(state.workout.day)
-            setClickedState(workoutCounter, state.workout.clicked)
+                workoutCounter.setDay(state.workout.day)
+                setClickedState(workoutCounter, state.workout.clicked)
+            }
         }
         viewModel.loading()
     }

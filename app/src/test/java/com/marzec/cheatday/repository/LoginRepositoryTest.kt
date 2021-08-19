@@ -33,7 +33,7 @@ class LoginRepositoryTest {
     private val request = LoginRequest("email", "password")
 
     private val user = User(
-        "1", "email"
+        1, "email"
     )
 
     private val userDto = UserDto(

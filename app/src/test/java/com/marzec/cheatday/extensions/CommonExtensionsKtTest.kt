@@ -1,19 +1,13 @@
 package com.marzec.cheatday.extensions
 
 import com.google.common.truth.Truth.assertThat
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.view.model.ListItem
-import io.mockk.mockk
-import io.mockk.spyk
-import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.joda.time.DateTime
 import org.junit.Assert.assertThrows
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 internal class CommonExtensionsKtTest {
 
@@ -70,13 +64,13 @@ internal class CommonExtensionsKtTest {
     @Test
     fun combinePair() = runBlockingTest {
         val combine = combine(flowOf(1), flowOf("a"))
-        assertThat(combine.values(this)).isEqualTo(listOf(Pair(1, "a")))
+        assertThat(combine.test(this).values()).isEqualTo(listOf(Pair(1, "a")))
     }
 
     @Test
     fun combineTriple() = runBlockingTest {
         val combine = combine(flowOf(1), flowOf("a"), flowOf(1L))
-        assertThat(combine.values(this)).isEqualTo(listOf(Triple(1, "a", 1L)))
+        assertThat(combine.test(this).values()).isEqualTo(listOf(Triple(1, "a", 1L)))
     }
 
     @Test
@@ -87,7 +81,7 @@ internal class CommonExtensionsKtTest {
             flowOf(1L),
             flowOf(1f)
         )
-        assertThat(combine.values(this))
+        assertThat(combine.test(this).values())
             .isEqualTo(listOf(Quadruple(1, "a", 1L, 1f)))
     }
 

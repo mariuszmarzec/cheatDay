@@ -1,26 +1,20 @@
 package com.marzec.cheatday.repository
 
 import com.google.common.truth.Truth.assertThat
-import com.marzec.cheatday.common.Constants
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.model.domain.Day
 import com.marzec.cheatday.model.domain.DaysGroup
-import com.marzec.cheatday.model.domain.toDb
 import com.marzec.cheatday.stubs.stubDay
 import com.marzec.cheatday.stubs.stubDayEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 internal class DayRepositoryTest {
 
@@ -33,30 +27,30 @@ internal class DayRepositoryTest {
 
     @Test
     fun observeDaysByUser() = runBlockingTest {
-        coEvery { dayDao.getDay("user_id", "CHEAT") } returns stubDayEntity(type = "CHEAT")
-        coEvery { dayDao.getDay("user_id", "WORKOUT") } returns stubDayEntity(type = "WORKOUT")
-        coEvery { dayDao.getDay("user_id", "DIET") } returns stubDayEntity(type = "DIET")
+        coEvery { dayDao.getDay(0, "CHEAT") } returns stubDayEntity(type = "CHEAT")
+        coEvery { dayDao.getDay(0, "WORKOUT") } returns stubDayEntity(type = "WORKOUT")
+        coEvery { dayDao.getDay(0, "DIET") } returns stubDayEntity(type = "DIET")
 
-        coEvery { dayDao.observeDay("user_id", Day.Type.CHEAT.name) } returns flowOf(
+        coEvery { dayDao.observeDay(0, Day.Type.CHEAT.name) } returns flowOf(
             stubDayEntity(
                 type = "CHEAT"
             )
         )
         coEvery {
             dayDao.observeDay(
-                "user_id",
+                0,
                 Day.Type.WORKOUT.name
             )
         } returns flowOf(stubDayEntity(type = "WORKOUT"))
-        coEvery { dayDao.observeDay("user_id", Day.Type.DIET.name) } returns flowOf(
+        coEvery { dayDao.observeDay(0, Day.Type.DIET.name) } returns flowOf(
             stubDayEntity(
                 type = "DIET"
             )
         )
 
-        val result = repository.observeDaysByUser("user_id").values(this)
+        val result = repository.observeDaysByUser(0).test(this)
 
-        assertThat(result).isEqualTo(
+        assertThat(result.values()).isEqualTo(
             listOf(
                 DaysGroup(
                     stubDay(type = Day.Type.CHEAT),
@@ -70,8 +64,8 @@ internal class DayRepositoryTest {
 
     @Test
     fun update() = runBlockingTest {
-        repository.update("user_id", stubDay())
+        repository.update(0, stubDay())
 
-        coVerify { dayDao.createOrUpdate(stubDayEntity(userId = "user_id")) }
+        coVerify { dayDao.createOrUpdate(stubDayEntity(userId = 0)) }
     }
 }

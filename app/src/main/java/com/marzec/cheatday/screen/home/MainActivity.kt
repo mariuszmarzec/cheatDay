@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -11,6 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.marzec.cheatday.R
 import com.marzec.cheatday.screen.home.model.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -33,19 +35,21 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        viewModel.state.observe(this) { state ->
-            val isUserLogged = state.isUserLogged
-            bottomNavigationView.isVisible = isUserLogged ?: true
-            if (isUserLogged == false) {
-                navHostFragment?.findNavController()?.let { controller ->
-                    val options = NavOptions.Builder()
-                        .apply {
-                            controller.currentDestination?.id?.let {
-                                setPopUpTo(it, true)
+        lifecycleScope.launchWhenResumed {
+            viewModel.state.collect { state ->
+                val isUserLogged = state.isUserLogged
+                bottomNavigationView.isVisible = isUserLogged ?: true
+                if (isUserLogged == false) {
+                    navHostFragment?.findNavController()?.let { controller ->
+                        val options = NavOptions.Builder()
+                            .apply {
+                                controller.currentDestination?.id?.let {
+                                    setPopUpTo(it, true)
+                                }
                             }
-                        }
-                        .build()
-                    controller.navigate(R.id.login, null, options)
+                            .build()
+                        controller.navigate(R.id.login, null, options)
+                    }
                 }
             }
         }

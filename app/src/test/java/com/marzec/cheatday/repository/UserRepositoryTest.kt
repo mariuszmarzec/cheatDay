@@ -2,8 +2,7 @@ package com.marzec.cheatday.repository
 
 import androidx.datastore.core.DataStore
 import com.google.common.truth.Truth.assertThat
-import com.marzec.cheatday.common.UuidProvider
-import com.marzec.cheatday.core.values
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.extensions.emptyString
@@ -26,7 +25,6 @@ internal class UserRepositoryTest {
 
     private val userDao: UserDao = mock()
     private val currentUserStore: DataStore<CurrentUserProto> = mock()
-    private val uuidProvider: UuidProvider = mock()
     private val dispatcher = TestCoroutineDispatcher()
 
     lateinit var repository: UserRepository
@@ -44,11 +42,11 @@ internal class UserRepositoryTest {
         .build()
 
     private val user = User(
-        "uuid", "email"
+        1, "email"
     )
 
     private val userEntity = UserEntity(
-        "uuid", "email"
+        1, "email"
     )
 
     private val currentUserDomain = CurrentUserDomain(
@@ -88,12 +86,12 @@ internal class UserRepositoryTest {
     fun observeCurrentUser() = runBlockingTest {
         whenever(userDao.observeUser("email")).thenReturn(flowOf(userEntity))
 
-        assertThat(repository.observeCurrentUser().values(this)).isEqualTo(listOf(user))
+        assertThat(repository.observeCurrentUser().test(this).values()).isEqualTo(listOf(user))
     }
 
     @Test
     fun observeIfUserLogged() = runBlockingTest {
-        assertThat(repository.observeIfUserLogged().values(this)).isEqualTo(listOf(true))
+        assertThat(repository.observeIfUserLogged().test(this).values()).isEqualTo(listOf(true))
     }
 
     @Test
@@ -105,7 +103,7 @@ internal class UserRepositoryTest {
             )
         )
 
-        assertThat(repository.observeIfUserLogged().values(this))
+        assertThat(repository.observeIfUserLogged().test(this).values())
             .isEqualTo(
                 listOf(true, false)
             )
@@ -114,11 +112,10 @@ internal class UserRepositoryTest {
     @Test
     fun addUserToDbIfNeeded() = runBlockingTest {
         whenever(userDao.observeUser("email")).thenReturn(flowOf())
-        whenever(uuidProvider.create()).thenReturn("uuid")
 
         repository.addUserToDbIfNeeded(user)
 
-        verify(userDao).insert(userEntity)
+        verify(userDao).insert(UserEntity(0, "email"))
     }
 
     @Test
