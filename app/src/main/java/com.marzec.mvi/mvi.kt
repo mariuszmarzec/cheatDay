@@ -1,11 +1,10 @@
 package com.marzec.mvi
 
-import androidx.lifecycle.*
-import com.marzec.cheatday.common.SingleLiveEvent
-import java.sql.Statement
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
@@ -20,7 +19,7 @@ import kotlinx.coroutines.launch
 
 open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewModel() {
 
-    private val sideEffectsInternal = MutableStateFlow<SideEffect?>(null)
+    private val sideEffectsInternal = MutableSharedFlow<SideEffect?>()
     val sideEffects: Flow<SideEffect?>
         get() = sideEffectsInternal.filter { it != null }
 

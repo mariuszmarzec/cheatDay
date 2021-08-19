@@ -45,12 +45,12 @@ internal class ChartsViewModelTest {
         every { weightInteractor.observeWeights() }returns flowOf(
             Content.Error(Exception())
         )
-
         val viewModel = viewModel()
+        val test = viewModel.test(this)
 
         viewModel.load()
 
-        assertThat(viewModel.test(this).values()).isEqualTo(
+        assertThat(test.values()).isEqualTo(
             listOf(
                 defaultState,
                 ChartsSideEffect.ShowErrorDialog
