@@ -10,7 +10,7 @@ sealed class LoginViewState(open val loginData: LoginData) {
 
     companion object {
 
-        val INITIAL = LoginViewState.Data(
+        val INITIAL = Data(
             loginData = LoginData(
                 login = emptyString(),
                 password = emptyString()

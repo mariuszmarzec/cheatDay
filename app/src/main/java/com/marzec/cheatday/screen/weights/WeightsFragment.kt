@@ -37,60 +37,58 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
         val recyclerView = view.findViewById<EpoxyRecyclerView>(R.id.recycler_view)
         val floatingButton = view.findViewById<FloatingActionButton>(R.id.floating_button)
 
-        lifecycleScope.launchWhenResumed {
 
-            viewModel.state.collect { state ->
-                recyclerView.withModels {
-                    state.list.forEach { item ->
-                        when (item) {
-                            is LabeledRowItem -> {
-                                labeledRowView {
-                                    id(item.id)
-                                    label(item.label)
-                                    value(item.value)
-                                    onClickListener { _, _, _, _ ->
-                                        viewModel.onClick(item.id)
-                                    }
-                                    onLongClickListener { _, _, _, _ ->
-                                        viewModel.onLongClick(item.id)
-                                        true
-                                    }
+        viewModel.state.observe { state ->
+            recyclerView.withModels {
+                state.list.forEach { item ->
+                    when (item) {
+                        is LabeledRowItem -> {
+                            labeledRowView {
+                                id(item.id)
+                                label(item.label)
+                                value(item.value)
+                                onClickListener { _, _, _, _ ->
+                                    viewModel.onClick(item.id)
+                                }
+                                onLongClickListener { _, _, _, _ ->
+                                    viewModel.onLongClick(item.id)
+                                    true
                                 }
                             }
                         }
                     }
                 }
             }
+        }
 
-            viewModel.sideEffects.collect { effect ->
-                when (effect) {
-                    WeightsSideEffects.GoToAddResultScreen -> {
-                        findNavController().navigate(
-                            WeightsFragmentDirections.actionWeightsToAddWeight(
-                                null
-                            )
+        viewModel.sideEffects.observe { effect ->
+            when (effect) {
+                WeightsSideEffects.GoToAddResultScreen -> {
+                    findNavController().navigate(
+                        WeightsFragmentDirections.actionWeightsToAddWeight(
+                            null
                         )
-                    }
-                    WeightsSideEffects.GoToChartAction -> {
-                        findNavController().navigate(R.id.action_weights_to_chart)
-                    }
-                    is WeightsSideEffects.OpenWeightAction -> {
-                        findNavController().navigate(
-                            WeightsFragmentDirections.actionWeightsToAddWeight(effect.id)
-                        )
-                    }
-                    WeightsSideEffects.ShowError -> {
-                        requireActivity().showErrorDialog()
-                    }
-                    WeightsSideEffects.ShowMaxPossibleWeightDialog -> {
-                        showMaxPossibleWeightDialog()
-                    }
-                    is WeightsSideEffects.ShowRemoveDialog -> {
-                        showIfRemoveDialog(effect.id)
-                    }
-                    WeightsSideEffects.ShowTargetWeightDialog -> {
-                        showTargetWeightDialog()
-                    }
+                    )
+                }
+                WeightsSideEffects.GoToChartAction -> {
+                    findNavController().navigate(R.id.action_weights_to_chart)
+                }
+                is WeightsSideEffects.OpenWeightAction -> {
+                    findNavController().navigate(
+                        WeightsFragmentDirections.actionWeightsToAddWeight(effect.id)
+                    )
+                }
+                WeightsSideEffects.ShowError -> {
+                    requireActivity().showErrorDialog()
+                }
+                WeightsSideEffects.ShowMaxPossibleWeightDialog -> {
+                    showMaxPossibleWeightDialog()
+                }
+                is WeightsSideEffects.ShowRemoveDialog -> {
+                    showIfRemoveDialog(effect.id)
+                }
+                WeightsSideEffects.ShowTargetWeightDialog -> {
+                    showTargetWeightDialog()
                 }
             }
         }

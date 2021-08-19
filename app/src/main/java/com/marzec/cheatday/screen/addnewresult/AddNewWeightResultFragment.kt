@@ -49,30 +49,28 @@ class AddNewWeightResultFragment :
 
         viewModel.load(args.weightId)
 
-        lifecycleScope.launchWhenResumed {
-            viewModel.state.collect { state ->
-                val newText = state.weight
-                val newDate = state.date.toString(Constants.DATE_PICKER_PATTERN)
-                if (weightEditText.text.toString() != newText) {
-                    weightEditText.setText(newText)
-                }
-                if (dateEditText.text.toString() != newDate) {
-                    dateEditText.setText(newDate)
-                }
+        viewModel.state.observe { state ->
+            val newText = state.weight
+            val newDate = state.date.toString(Constants.DATE_PICKER_PATTERN)
+            if (weightEditText.text.toString() != newText) {
+                weightEditText.setText(newText)
             }
+            if (dateEditText.text.toString() != newDate) {
+                dateEditText.setText(newDate)
+            }
+        }
 
-            viewModel.sideEffects.collect { sideEffect ->
-                when (sideEffect) {
-                    AddWeightSideEffect.SaveSuccess -> findNavController().popBackStack()
-                    is AddWeightSideEffect.ShowDatePicker -> showPicker(sideEffect.date)
-                    AddWeightSideEffect.ShowError -> activity?.alert {
-                        titleResource = R.string.dialog_error_title_common
-                        messageResource = R.string.dialog_error_message_try_later
-                        isCancelable = true
-                        show()
-                    }
-
+        viewModel.sideEffects.observe { sideEffect ->
+            when (sideEffect) {
+                AddWeightSideEffect.SaveSuccess -> findNavController().popBackStack()
+                is AddWeightSideEffect.ShowDatePicker -> showPicker(sideEffect.date)
+                AddWeightSideEffect.ShowError -> activity?.alert {
+                    titleResource = R.string.dialog_error_title_common
+                    messageResource = R.string.dialog_error_message_try_later
+                    isCancelable = true
+                    show()
                 }
+
             }
         }
 

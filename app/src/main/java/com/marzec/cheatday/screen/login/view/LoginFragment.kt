@@ -38,16 +38,14 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launchWhenResumed {
-            viewModel.sideEffects.collect { effect ->
-                when (effect) {
-                    LoginSideEffects.OnLoginSuccessful -> onLoginSuccessful()
-                }
+        viewModel.sideEffects.observe { effect ->
+            when (effect) {
+                LoginSideEffects.OnLoginSuccessful -> onLoginSuccessful()
             }
+        }
 
-            viewModel.state.collect {
-                loginRender.render(it)
-            }
+        viewModel.state.observe {
+            loginRender.render(it)
         }
     }
 

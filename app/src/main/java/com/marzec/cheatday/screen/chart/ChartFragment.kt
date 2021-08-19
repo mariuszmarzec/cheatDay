@@ -29,17 +29,15 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart) {
 
         chartRenderer.init(view.findViewById(R.id.chart))
 
-        lifecycleScope.launchWhenResumed {
-            viewModel.state.collect { state ->
-                val weights = state.weights
-                chartRenderer.render(weights)
-            }
+        viewModel.state.observe { state ->
+            val weights = state.weights
+            chartRenderer.render(weights)
+        }
 
-            viewModel.sideEffects.collect { sideEffect ->
-                when (sideEffect) {
-                    ChartsSideEffect.ShowErrorDialog -> {
-                        requireContext().showErrorDialog()
-                    }
+        viewModel.sideEffects.observe { sideEffect ->
+            when (sideEffect) {
+                ChartsSideEffect.ShowErrorDialog -> {
+                    requireContext().showErrorDialog()
                 }
             }
         }
