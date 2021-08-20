@@ -1,7 +1,15 @@
 import java.util.Properties
 import java.io.FileInputStream
 import com.google.protobuf.gradle.*
-import org.jetbrains.kotlin.compiler.plugin.parsePluginOption
+
+fun readProperties(): Properties {
+    val properties = Properties()
+    val propertiesFile = File("local.properties")
+    if (propertiesFile.exists()) {
+        properties.load(FileInputStream(propertiesFile))
+    }
+    return properties
+}
 
 plugins {
     id("com.android.application")
@@ -60,15 +68,11 @@ android {
 
     signingConfigs {
         create("release") {
-            val properties = Properties()
-            val propertiesFile = File("local.properties")
-            if (propertiesFile.exists()) {
-                properties.load(FileInputStream(propertiesFile))
-                storeFile = file(properties.getProperty("storeFile"))
-                keyAlias = properties.getProperty("keyAlias")
-                storePassword = properties.getProperty("storePassword")
-                keyPassword = properties.getProperty("keyPassword")
-            }
+            val properties = readProperties()
+            storeFile = file(properties.getProperty("storeFile"))
+            keyAlias = properties.getProperty("keyAlias")
+            storePassword = properties.getProperty("storePassword")
+            keyPassword = properties.getProperty("keyPassword")
         }
     }
 
@@ -96,15 +100,22 @@ android {
     flavorDimensions("api")
 
     productFlavors {
+        val properties = readProperties()
+        val prodApiUrl = properties.getProperty("prod.apiUrl")
+        val prodAuthHeader = properties.getProperty("prod.authHeader")
+        val testApiUrl = properties.getProperty("test.apiUrl")
+        val testAuthHeader = properties.getProperty("test.authHeader")
+
+
         create("stage") {
-            buildConfigField("String", "HOST", "\"http://fiteo-env-1.eba-cba76vkj.us-east-2.elasticbeanstalk.com/test\"")
-            buildConfigField("String", "AUTHORIZATION", "\"Authorization-Test\"")
+            buildConfigField("String", "HOST", "\"$testApiUrl\"")
+            buildConfigField("String", "AUTHORIZATION", "\"$testAuthHeader\"")
             setDimension("api")
         }
 
         create("prod") {
-            buildConfigField("String", "HOST", "\"http://fiteo-env-1.eba-cba76vkj.us-east-2.elasticbeanstalk.com\"")
-            buildConfigField("String", "AUTHORIZATION", "\"Authorization\"")
+            buildConfigField("String", "HOST", "\"$prodApiUrl\"")
+            buildConfigField("String", "AUTHORIZATION", "\"$prodAuthHeader\"")
             setDimension("api")
         }
     }
