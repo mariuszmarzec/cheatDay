@@ -10,11 +10,14 @@ import org.junit.jupiter.api.extension.ExtensionContext
 
 class TestCoroutineExecutorExtension : BeforeEachCallback, AfterEachCallback {
 
+    val dispatcher = TestCoroutineDispatcher()
+
     override fun beforeEach(context: ExtensionContext?) {
-        Dispatchers.setMain(TestCoroutineDispatcher())
+        Dispatchers.setMain(dispatcher)
     }
 
     override fun afterEach(context: ExtensionContext?) {
         Dispatchers.resetMain()
+        dispatcher.cleanupTestCoroutines()
     }
 }
