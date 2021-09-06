@@ -13,7 +13,7 @@ import com.marzec.cheatday.R
 
 inline fun <reified T : Fragment> launchFragmentInDaggerContainer(
     fragmentArgs: Bundle? = null,
-    @StyleRes themeResId: Int = R.style.FragmentScenarioEmptyFragmentActivityTheme,
+    @StyleRes themeResId: Int = R.style.AppTheme,
     crossinline action: Fragment.() -> Unit = {}
 ): ActivityScenario<HiltTestActivity> {
     val themeExtrasKey = "androidx.fragment.app.testing.FragmentScenario" +

@@ -4,20 +4,13 @@ import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.os.StrictMode
-import androidx.test.runner.AndroidJUnitRunner
-import com.facebook.testing.screenshot.ScreenshotRunner
+import com.karumi.shot.ShotTestRunner
 import dagger.hilt.android.testing.HiltTestApplication
 
-class MockTestRunner : AndroidJUnitRunner() {
-    override fun onCreate(arguments: Bundle) {
-        ScreenshotRunner.onCreate(this, arguments);
+class MockTestRunner : ShotTestRunner() {
+    override fun onCreate(args: Bundle) {
         StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder().permitAll().build())
-        super.onCreate(arguments)
-    }
-
-    override fun finish(resultCode: Int, results: Bundle?) {
-        ScreenshotRunner.onDestroy()
-        super.finish(resultCode, results)
+        super.onCreate(args)
     }
 
     @Throws(

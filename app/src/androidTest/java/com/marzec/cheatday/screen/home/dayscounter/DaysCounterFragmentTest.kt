@@ -2,7 +2,6 @@ package com.marzec.cheatday.screen.home.dayscounter
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
-import com.facebook.testing.screenshot.Screenshot
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.launchFragmentInDaggerContainer
 import com.marzec.cheatday.screen.dayscounter.DaysCounterFragment

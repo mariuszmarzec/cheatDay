@@ -17,13 +17,13 @@ plugins {
     kotlin("kapt")
     id("kotlin-parcelize")
     id("de.mannodermaus.android-junit5")
-    id("com.facebook.testing.screenshot")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("com.google.protobuf")
     id("dagger.hilt.android.plugin")
     jacoco
+    id("shot")
 }
 
 jacoco {

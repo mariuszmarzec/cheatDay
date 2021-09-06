@@ -12,9 +12,11 @@ abstract class BaseFragment : Fragment {
 
     constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
 
-    inline fun <T> Flow<T>.observe(crossinline action: suspend (value: T) -> Unit) {
+    inline fun <T> Flow<T>.observe(crossinline action: (value: T) -> Unit) {
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
-            collect(action)
+            collect {
+                action(it)
+            }
         }
     }
 }
