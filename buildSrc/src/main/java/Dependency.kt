@@ -16,8 +16,6 @@ object Dependency {
     val okhttp_version = "4.9.0"
     val anko_version = "0.10.8"
     val junit5_version = "5.7.1"
-    val mockito_version = "3.3.3"
-    val mockito_kotlin_version = "2.1.0"
     val joda_version = "2.10.3"
     val truth_version = "1.1.3"
     val viewmodel_version = "1.1.1"

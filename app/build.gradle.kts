@@ -121,6 +121,7 @@ android {
     }
 
     testOptions.animationsDisabled = true
+    testOptions.unitTests.isReturnDefaultValues = true
     testOptions.unitTests.isIncludeAndroidResources = true
 
     packagingOptions {
@@ -241,10 +242,6 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Dependency.junit5_version}")
 
     // mocking
-    androidTestImplementation("org.mockito:mockito-android:${Dependency.mockito_version}")
-    androidTestImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependency.mockito_kotlin_version}")
-    testImplementation("org.mockito:mockito-core:${Dependency.mockito_version}")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Dependency.mockito_kotlin_version}")
     testImplementation("io.mockk:mockk:${Dependency.mockk_version}")
     testImplementation("io.mockk:mockk-agent-jvm:${Dependency.mockk_version}")
 

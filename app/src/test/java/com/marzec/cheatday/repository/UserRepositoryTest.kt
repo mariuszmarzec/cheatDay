@@ -1,6 +1,8 @@
 package com.marzec.cheatday.repository
 
 import androidx.datastore.core.DataStore
+import com.google.common.base.CharMatcher
+import com.google.common.base.CharMatcher.any
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.db.dao.UserDao
@@ -9,12 +11,12 @@ import com.marzec.cheatday.extensions.emptyString
 import com.marzec.cheatday.model.domain.CurrentUserDomain
 import com.marzec.cheatday.model.domain.CurrentUserProto
 import com.marzec.cheatday.model.domain.User
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
@@ -23,8 +25,8 @@ import org.junit.jupiter.api.Test
 
 internal class UserRepositoryTest {
 
-    private val userDao: UserDao = mock()
-    private val currentUserStore: DataStore<CurrentUserProto> = mock()
+    private val userDao: UserDao = mockk(relaxed = true)
+    private val currentUserStore: DataStore<CurrentUserProto> = mockk()
     private val dispatcher = TestCoroutineDispatcher()
 
     lateinit var repository: UserRepository
@@ -57,12 +59,12 @@ internal class UserRepositoryTest {
     fun setUp() {
         repository = UserRepository(userDao, currentUserStore, dispatcher)
 
-        whenever(currentUserStore.data).thenReturn(flowOf(currentUserProto))
+        every { currentUserStore.data } returns flowOf(currentUserProto)
     }
 
     @Test
     fun getCurrentUser() = runBlockingTest {
-        whenever(userDao.getUser("email")).thenReturn(userEntity)
+        coEvery { userDao.getUser("email") } returns userEntity
 
         assertThat(repository.getCurrentUser()).isEqualTo(user)
     }
@@ -74,17 +76,15 @@ internal class UserRepositoryTest {
 
     @Test
     fun getCurrentUserWithAuth_returnsNull_ifEmailEmpty() = runBlockingTest {
-        whenever(currentUserStore.data).thenReturn(
-            flowOf(
-                currentUserProto.toBuilder().setEmail("").build()
-            )
+        every { currentUserStore.data } returns flowOf(
+            currentUserProto.toBuilder().setEmail("").build()
         )
         assertThat(repository.getCurrentUserWithAuthToken()).isNull()
     }
 
     @Test
     fun observeCurrentUser() = runBlockingTest {
-        whenever(userDao.observeUser("email")).thenReturn(flowOf(userEntity))
+        coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
 
         assertThat(repository.observeCurrentUser().test(this).values()).isEqualTo(listOf(user))
     }
@@ -96,11 +96,9 @@ internal class UserRepositoryTest {
 
     @Test
     fun observeIfUserLogged_returnsFalse_ifNoAuthTokenAndEmail() = runBlockingTest {
-        whenever(currentUserStore.data).thenReturn(
-            flowOf(
-                currentUserProto,
-                currentUserProto.toBuilder().setEmail("").setAuthToken("").build()
-            )
+        every { currentUserStore.data } returns flowOf(
+            currentUserProto,
+            currentUserProto.toBuilder().setEmail("").setAuthToken("").build()
         )
 
         assertThat(repository.observeIfUserLogged().test(this).values())
@@ -111,40 +109,43 @@ internal class UserRepositoryTest {
 
     @Test
     fun addUserToDbIfNeeded() = runBlockingTest {
-        whenever(userDao.observeUser("email")).thenReturn(flowOf())
+        coEvery { userDao.observeUser("email") } returns flowOf()
 
         repository.addUserToDbIfNeeded(user)
 
-        verify(userDao).insert(UserEntity(0, "email"))
+        coVerify { userDao.insert(UserEntity(0, "email")) }
     }
 
     @Test
     fun addUserToDbIfNeeded_doesntCallUserDao_ifUserExists() = runBlockingTest {
-        whenever(userDao.observeUser("email")).thenReturn(flowOf(userEntity))
+        coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
 
         repository.addUserToDbIfNeeded(user)
 
-        verify(userDao, never()).insert(any())
+        verify(inverse = true) { userDao.insert(any()) }
     }
 
     @Test
     fun clearCurrentUser() = runBlockingTest {
-        val captor = argumentCaptor<suspend (CurrentUserProto) -> CurrentUserProto>()
+        val captor = slot<suspend (CurrentUserProto) -> CurrentUserProto>()
+        coEvery { currentUserStore.updateData(capture(captor)) } answers {
+            CurrentUserProto.getDefaultInstance()
+        }
 
         repository.clearCurrentUser()
 
-        verify(currentUserStore).updateData(captor.capture())
-        assertThat(captor.firstValue.invoke(currentUserProto)).isEqualTo(emptyCurrentUserProto)
+        assertThat(captor.captured(currentUserProto)).isEqualTo(emptyCurrentUserProto)
     }
 
     @Test
     fun setCurrentUserWithAuth() = runBlockingTest {
-        val captor = argumentCaptor<suspend (CurrentUserProto) -> CurrentUserProto>()
+        val captor = slot<suspend (CurrentUserProto) -> CurrentUserProto>()
+        coEvery { currentUserStore.updateData(capture(captor)) } answers {
+            CurrentUserProto.getDefaultInstance()
+        }
 
         repository.setCurrentUserWithAuth(currentUserDomain)
 
-
-        verify(currentUserStore).updateData(captor.capture())
-        assertThat(captor.firstValue.invoke(emptyCurrentUserProto)).isEqualTo(currentUserProto)
+        assertThat(captor.captured(emptyCurrentUserProto)).isEqualTo(currentUserProto)
     }
 }

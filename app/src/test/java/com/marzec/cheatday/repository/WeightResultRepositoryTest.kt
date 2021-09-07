@@ -8,8 +8,8 @@ import com.marzec.cheatday.core.test
 import com.marzec.cheatday.extensions.toDateTime
 import com.marzec.cheatday.stubs.stubWeightDto
 import com.marzec.cheatday.stubs.stubWeightResult
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test
 
 internal class WeightResultRepositoryTest {
 
-    val weightApi: WeightApi = mock()
+    val weightApi: WeightApi = mockk()
     val dispatcher: CoroutineDispatcher = TestCoroutineDispatcher()
 
 
@@ -32,7 +32,7 @@ internal class WeightResultRepositoryTest {
 
     @Test
     fun observeWeights() = runBlockingTest {
-        whenever(weightApi.getAll()).thenReturn(listOf(stubWeightDto()))
+        coEvery { weightApi.getAll() } returns listOf(stubWeightDto())
 
         assertThat(repository.observeWeights()).isEqualTo(
             Content.Data(listOf(stubWeightResult()))
@@ -41,11 +41,9 @@ internal class WeightResultRepositoryTest {
 
     @Test
     fun observeMinWeight() = runBlockingTest {
-        whenever(weightApi.getAll()).thenReturn(
-            listOf(
-                stubWeightDto(value = 10f),
-                stubWeightDto(value = 5f)
-            )
+        coEvery { weightApi.getAll() } returns listOf(
+            stubWeightDto(value = 10f),
+            stubWeightDto(value = 5f)
         )
 
         assertThat(repository.observeMinWeight().test(this).values()).isEqualTo(
@@ -55,11 +53,9 @@ internal class WeightResultRepositoryTest {
 
     @Test
     fun observeLastWeight() = runBlockingTest {
-        whenever(weightApi.getAll()).thenReturn(
-            listOf(
-                stubWeightDto(value = 10f),
-                stubWeightDto(value = 5f, date = "2021-06-07T00:00:00")
-            )
+        coEvery { weightApi.getAll() } returns listOf(
+            stubWeightDto(value = 10f),
+            stubWeightDto(value = 5f, date = "2021-06-07T00:00:00")
         )
 
         assertThat(repository.observeLastWeight().test(this).values()).isEqualTo(
@@ -70,9 +66,14 @@ internal class WeightResultRepositoryTest {
 
     @Test
     fun putWeight() = runBlockingTest {
-        whenever(
-            weightApi.put(PutWeightRequest(value = 5f, date = "2021-06-07T00:00:00"))
-        ).thenReturn(Unit)
+        coEvery {
+            weightApi.put(
+                PutWeightRequest(
+                    value = 5f,
+                    date = "2021-06-07T00:00:00"
+                )
+            )
+        } returns Unit
 
         val result = repository.putWeight(
             stubWeightResult(
@@ -86,12 +87,12 @@ internal class WeightResultRepositoryTest {
 
     @Test
     fun updateWeight() = runBlockingTest {
-        whenever(
+        coEvery {
             weightApi.update(
                 0,
                 stubWeightDto(value = 5f, date = "2021-06-07T00:00:00")
             )
-        ).thenReturn(Unit)
+        } returns Unit
 
         val result = repository.updateWeight(
             stubWeightResult(
@@ -105,11 +106,9 @@ internal class WeightResultRepositoryTest {
 
     @Test
     fun getWeight() = runBlockingTest {
-        whenever(weightApi.getAll()).thenReturn(
-            listOf(
-                stubWeightDto(id = 1, value = 10f),
-                stubWeightDto(id = 2, value = 5f)
-            )
+        coEvery { weightApi.getAll() } returns listOf(
+            stubWeightDto(id = 1, value = 10f),
+            stubWeightDto(id = 2, value = 5f)
         )
 
         assertThat(repository.getWeight(1)).isEqualTo(
@@ -119,7 +118,7 @@ internal class WeightResultRepositoryTest {
 
     @Test
     fun removeWeight() = runBlockingTest {
-        whenever(weightApi.remove(1)).thenReturn(Unit)
+        coEvery { weightApi.remove(1) } returns Unit
 
         assertThat(repository.removeWeight(1)).isEqualTo(Content.Data(Unit))
     }
