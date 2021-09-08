@@ -21,8 +21,7 @@ class ChartsViewModel @Inject constructor(
         reducer {
             when (val content = resultNonNull()) {
                 is Content.Data -> {
-                    // TODO Backend: send weight sorted by date DESC
-                    state.copy(weights = content.data.sortedBy { it.date })
+                    state.copy(weights = content.data)
                 }
                 else -> state
             }
