@@ -15,23 +15,27 @@ class AddNewWeightResultViewModel @Inject constructor(
     defaultState: AddWeightState
 ) : StoreViewModel<AddWeightState, AddWeightSideEffect>(defaultState) {
 
-    fun load(id: String?) = intent<WeightResult> {
+    fun load(id: String?) = intent<Content<WeightResult>> {
         onTrigger {
             id?.toLong()?.let {
-                flow {
-                    //TODO asContent
-                    emit(weightInteractor.getWeight(it)!!)
-                }
+                weightInteractor.getWeight(it)
             }
         }
 
         reducer {
-            val weightResult = result ?: WeightResult(0, 0.0f, DateTime.now())
-            state.copy(
-                weightResult = weightResult,
-                weight = weightResult.value.toString(),
-                date = weightResult.date
-            )
+            when (val res = resultNonNull()) {
+                is Content.Data -> {
+                    val weightResult = res.data
+                    state.copy(
+                        weightResult = weightResult,
+                        weight = weightResult.value.toString(),
+                        date = weightResult.date
+                    )
+
+                }
+                is Content.Error -> state
+                is Content.Loading -> state
+            }
         }
     }
 
@@ -49,18 +53,14 @@ class AddNewWeightResultViewModel @Inject constructor(
 
     fun save() = intent<Content<Unit>> {
         onTrigger {
-            flow {
-                val weightResult = state.weightResult.copy(
-                    date = state.date,
-                    value = state.weight.toFloat()
-                )
-                emit(
-                    if (state.weightResult.id != 0L) {
-                        weightInteractor.updateWeight(weightResult)
-                    } else {
-                        weightInteractor.addWeight(weightResult)
-                    }
-                )
+            val weightResult = state.weightResult.copy(
+                date = state.date,
+                value = state.weight.toFloat()
+            )
+            if (state.weightResult.id != 0L) {
+                weightInteractor.updateWeight(weightResult)
+            } else {
+                weightInteractor.addWeight(weightResult)
             }
         }
 

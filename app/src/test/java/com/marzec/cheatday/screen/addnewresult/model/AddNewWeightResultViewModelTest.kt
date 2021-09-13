@@ -4,12 +4,15 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
+import com.marzec.cheatday.api.toContentFlow
 import com.marzec.cheatday.core.test
+import com.marzec.cheatday.extensions.asFlow
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
 import io.mockk.coEvery
 import io.mockk.mockk
-import java.lang.Exception
+import kotlin.Exception
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
@@ -55,7 +58,8 @@ internal class AddNewWeightResultViewModelTest {
         coEvery { weightInteractor.getWeight(1) } returns stubWeightResult(
             value = 10f,
             date = DateTime(10)
-        )
+        ).toContentFlow()
+
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 
@@ -75,7 +79,7 @@ internal class AddNewWeightResultViewModelTest {
 
     @Test
     fun load_withId_failed() = runBlockingTest {
-        coEvery { weightInteractor.getWeight(1) } returns null
+        coEvery { weightInteractor.getWeight(1) } returns flowOf(Content.Error(Exception()))
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 
@@ -122,6 +126,7 @@ internal class AddNewWeightResultViewModelTest {
     @Test
     fun save_addNewResult() = runBlockingTest {
         coEvery { weightInteractor.addWeight(stubWeightResult()) } returns Content.Data(Unit)
+            .asFlow()
         val viewModel = viewModel()
         val states = viewModel.test(this)
 
@@ -137,9 +142,9 @@ internal class AddNewWeightResultViewModelTest {
 
     @Test
     fun save_addNewResult_error() = runBlockingTest {
-        coEvery { weightInteractor.addWeight(stubWeightResult()) } returns Content.Error(
+        coEvery { weightInteractor.addWeight(stubWeightResult()) } returns Content.Error<Unit>(
             Exception()
-        )
+        ).asFlow()
         val viewModel = viewModel()
         val states = viewModel.test(this)
 
@@ -157,7 +162,7 @@ internal class AddNewWeightResultViewModelTest {
     fun save_updateResult() = runBlockingTest {
         coEvery { weightInteractor.updateWeight(stubWeightResult(id = 1)) } returns Content.Data(
             Unit
-        )
+        ).asFlow()
         val viewModel = viewModel(
             defaultState = AddWeightState.INITIAL.copy(weightResult = stubWeightResult(id = 1))
         )
@@ -175,9 +180,9 @@ internal class AddNewWeightResultViewModelTest {
 
     @Test
     fun save_updateResult_error() = runBlockingTest {
-        coEvery { weightInteractor.updateWeight(stubWeightResult(id = 1)) } returns Content.Error(
+        coEvery { weightInteractor.updateWeight(stubWeightResult(id = 1)) } returns Content.Error<Unit>(
             Exception()
-        )
+        ).asFlow()
         val viewModel = viewModel(
             defaultState = AddWeightState.INITIAL.copy(weightResult = stubWeightResult(id = 1))
         )

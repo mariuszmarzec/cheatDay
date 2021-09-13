@@ -47,7 +47,10 @@ internal class WeightResultRepositoryTest {
         )
 
         assertThat(repository.observeMinWeight().test(this).values()).isEqualTo(
-            listOf(stubWeightResult(value = 5f))
+            listOf(
+                Content.Loading(),
+                Content.Data(stubWeightResult(value = 5f))
+            )
         )
     }
 
@@ -58,8 +61,16 @@ internal class WeightResultRepositoryTest {
             stubWeightDto(value = 5f, date = "2021-06-07T00:00:00")
         )
 
-        assertThat(repository.observeLastWeight().test(this).values()).isEqualTo(
-            listOf(stubWeightResult(value = 5f, date = "2021-06-07T00:00:00".toDateTime()))
+        repository.observeLastWeight().test(this).isEqualTo(
+            listOf(
+                Content.Loading(),
+                Content.Data(
+                    stubWeightResult(
+                        value = 5f,
+                        date = "2021-06-07T00:00:00".toDateTime()
+                    )
+                )
+            )
         )
     }
 
@@ -80,9 +91,14 @@ internal class WeightResultRepositoryTest {
                 value = 5f,
                 date = "2021-06-07T00:00:00".toDateTime()
             )
-        )
+        ).test(this).values()
 
-        assertThat(result).isEqualTo(Content.Data(Unit))
+        assertThat(result).isEqualTo(
+            listOf(
+                Content.Loading(),
+                Content.Data(Unit)
+            )
+        )
     }
 
     @Test
@@ -99,9 +115,14 @@ internal class WeightResultRepositoryTest {
                 value = 5f,
                 date = "2021-06-07T00:00:00".toDateTime()
             )
-        )
+        ).test(this).values()
 
-        assertThat(result).isEqualTo(Content.Data(Unit))
+        assertThat(result).isEqualTo(
+            listOf(
+                Content.Loading(),
+                Content.Data(Unit)
+            )
+        )
     }
 
     @Test
@@ -111,8 +132,11 @@ internal class WeightResultRepositoryTest {
             stubWeightDto(id = 2, value = 5f)
         )
 
-        assertThat(repository.getWeight(1)).isEqualTo(
-            stubWeightResult(id = 1, value = 10f)
+        assertThat(repository.getWeight(1).test(this).values()).isEqualTo(
+            listOf(
+                Content.Loading(),
+                Content.Data(stubWeightResult(id = 1, value = 10f))
+            )
         )
     }
 
@@ -120,6 +144,9 @@ internal class WeightResultRepositoryTest {
     fun removeWeight() = runBlockingTest {
         coEvery { weightApi.remove(1) } returns Unit
 
-        assertThat(repository.removeWeight(1)).isEqualTo(Content.Data(Unit))
+        repository.removeWeight(1).test(this).isEqualTo(
+            Content.Loading(),
+            Content.Data(Unit)
+        )
     }
 }

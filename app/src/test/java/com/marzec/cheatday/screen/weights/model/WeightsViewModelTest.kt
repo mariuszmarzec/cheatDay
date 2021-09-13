@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
+import com.marzec.cheatday.api.toContentFlow
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
@@ -37,7 +38,7 @@ class WeightsViewModelTest {
 
     @BeforeEach
     fun before() = runBlockingTest {
-        coEvery {  weightInteractor.observeMinWeight() } returns flowOf(minWeightResult)
+        coEvery {  weightInteractor.observeMinWeight() } returns minWeightResult.toContentFlow()
         coEvery {  weightInteractor.observeMaxPossibleWeight() } returns flowOf(maxPossible)
         coEvery {  weightInteractor.observeTargetWeight() } returns flowOf(target)
         coEvery {  weightInteractor.observeWeights() } returns flowOf(Content.Data(weights))

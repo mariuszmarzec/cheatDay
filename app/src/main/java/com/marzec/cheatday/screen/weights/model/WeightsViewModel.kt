@@ -2,6 +2,8 @@ package com.marzec.cheatday.screen.weights.model
 
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.asErrorAndReturn
+import com.marzec.cheatday.api.dataOrNull
+import com.marzec.cheatday.api.unwrapContent
 import com.marzec.cheatday.extensions.Quadruple
 import com.marzec.cheatday.extensions.combine
 import com.marzec.cheatday.interactor.WeightInteractor
@@ -112,7 +114,7 @@ class WeightsViewModel @Inject constructor(
 
     // TODO Extract flow content
     private fun loadData(): Flow<WeightsData> = combine(
-        weightInteractor.observeMinWeight(),
+        weightInteractor.observeMinWeight().unwrapContent(),
         weightInteractor.observeMaxPossibleWeight(),
         weightInteractor.observeTargetWeight(),
         weightInteractor.observeWeights()

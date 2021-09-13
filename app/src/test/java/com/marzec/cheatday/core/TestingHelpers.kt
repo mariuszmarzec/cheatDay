@@ -1,5 +1,6 @@
 package com.marzec.cheatday.core
 
+import com.google.common.truth.Truth.assertThat
 import com.marzec.mvi.StoreViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -30,7 +31,23 @@ class TestCollector<T>(
     }
 
     fun values(): List<T> {
-        job.cancel()
+        cancelIfActive()
         return values
+    }
+
+    fun isEqualTo(expected: List<T>) {
+        cancelIfActive()
+        assertThat(values).isEqualTo(expected)
+    }
+
+    fun isEqualTo(vararg expected: T) {
+        cancelIfActive()
+        assertThat(values).isEqualTo(expected.toList())
+    }
+
+    private fun cancelIfActive() {
+        if (job.isActive) {
+            job.cancel()
+        }
     }
 }

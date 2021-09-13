@@ -1,6 +1,8 @@
 package com.marzec.cheatday.interactor
 
 import com.marzec.cheatday.api.Content
+import com.marzec.cheatday.api.asContentFlow
+import com.marzec.cheatday.api.dataOrNull
 import com.marzec.cheatday.extensions.incIf
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.repository.UserPreferencesRepository
@@ -25,11 +27,10 @@ class WeightInteractor @Inject constructor(
     fun observeMaxPossibleWeight(): Flow<Float> =
         userPreferencesRepository.observeMaxPossibleWeight()
 
-    fun observeMinWeight(): Flow<WeightResult?> {
-        return userRepository.observeCurrentUser().flatMapLatest { user ->
+    fun observeMinWeight(): Flow<Content<WeightResult?>> =
+        userRepository.observeCurrentUser().flatMapLatest { user ->
             weightResultRepository.observeMinWeight()
         }
-    }
 
     suspend fun setTargetWeight(weight: Float) = userPreferencesRepository.setTargetWeight(weight)
 
@@ -43,19 +44,20 @@ class WeightInteractor @Inject constructor(
         }
     }
 
-    suspend fun addWeight(weight: WeightResult): Content<Unit> {
-        val lastValue = weightResultRepository.observeLastWeight().first()?.value
+    suspend fun addWeight(weight: WeightResult): Flow<Content<Unit>> = asContentFlow {
+        val lastValue = weightResultRepository.observeLastWeight().dataOrNull()?.value
+        val minBeforeNewAdded = weightResultRepository.observeMinWeight().dataOrNull()?.value
+        val result = weightResultRepository.putWeight(weight).dataOrNull()
 
-        val minBeforeNewAdded = weightResultRepository.observeMinWeight().first()?.value
-
-        val result = weightResultRepository.putWeight(weight)
-
-        if (result is Content.Data) {
+        if (result != null) {
             if (weight.date.withTimeAtStartOfDay() == DateTime.now().withTimeAtStartOfDay()) {
-                lastValue?.let { old -> incrementCheatDaysIfNeeded(minBeforeNewAdded, weight, old) }
+                lastValue?.let { old ->
+                    incrementCheatDaysIfNeeded(minBeforeNewAdded, weight, old)
+                }
             }
+        } else {
+            throw Error()
         }
-        return result
     }
 
     private suspend fun incrementCheatDaysIfNeeded(
@@ -83,14 +85,12 @@ class WeightInteractor @Inject constructor(
         }
     }
 
-    suspend fun updateWeight(weight: WeightResult): Content<Unit> =
+    suspend fun updateWeight(weight: WeightResult): Flow<Content<Unit>> =
         weightResultRepository.updateWeight(weight)
 
-    suspend fun getWeight(id: Long): WeightResult? {
-        return weightResultRepository.getWeight(id)
-    }
+    suspend fun getWeight(id: Long): Flow<Content<WeightResult>> =
+        weightResultRepository.getWeight(id)
 
-    suspend fun removeWeight(id: Long) {
+    suspend fun removeWeight(id: Long): Flow<Content<Unit>> =
         weightResultRepository.removeWeight(id)
-    }
 }

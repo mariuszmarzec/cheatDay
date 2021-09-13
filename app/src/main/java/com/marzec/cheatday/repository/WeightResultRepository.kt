@@ -4,14 +4,14 @@ import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.api.asContent
+import com.marzec.cheatday.api.asContentFlow
 import com.marzec.cheatday.api.request.PutWeightRequest
 import com.marzec.cheatday.api.response.toDomain
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.model.domain.toDto
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
@@ -24,39 +24,35 @@ class WeightResultRepository @Inject constructor(
             asContent { weightApi.getAll().map { it.toDomain() }.sortedByDescending { it.date } }
         }
 
-    fun observeMinWeight(): Flow<WeightResult?> =
-        flow {
-            emit(weightApi.getAll().map { it.toDomain() }.minByOrNull { it.value })
-        }
-
-    fun observeLastWeight(): Flow<WeightResult?> =
-        flow {
-            emit(weightApi.getAll().map { it.toDomain() }.maxByOrNull { it.date })
+    fun observeMinWeight(): Flow<Content<WeightResult?>> =
+        asContentFlow {
+            weightApi.getAll().map { it.toDomain() }.minByOrNull { it.value }
         }.flowOn(dispatcher)
 
-    suspend fun putWeight(weightResult: WeightResult): Content<Unit> =
-        withContext(dispatcher) {
-            asContent {
-                weightApi.put(
-                    PutWeightRequest(
-                        value = weightResult.value,
-                        date = weightResult.date.toString(Api.DATE_FORMAT)
-                    )
+    fun observeLastWeight(): Flow<Content<WeightResult?>> =
+        asContentFlow {
+            weightApi.getAll().map { it.toDomain() }.maxByOrNull { it.date }
+        }.flowOn(dispatcher)
+
+    suspend fun putWeight(weightResult: WeightResult): Flow<Content<Unit>> =
+        asContentFlow {
+            weightApi.put(
+                PutWeightRequest(
+                    value = weightResult.value,
+                    date = weightResult.date.toString(Api.DATE_FORMAT)
                 )
-            }
-        }
+            )
+        }.flowOn(dispatcher)
 
-    suspend fun updateWeight(weightResult: WeightResult): Content<Unit> = withContext(dispatcher) {
-        asContent {
+    suspend fun updateWeight(weightResult: WeightResult): Flow<Content<Unit>> =
+        asContentFlow {
             weightApi.update(weightResult.id, weightResult.toDto())
-        }
-    }
+        }.flowOn(dispatcher)
 
-    suspend fun getWeight(id: Long): WeightResult? = withContext(dispatcher) {
-        weightApi.getAll().map { it.toDomain() }.find { it.id == id }
-    }
+    suspend fun getWeight(id: Long): Flow<Content<WeightResult>> = asContentFlow {
+        weightApi.getAll().map { it.toDomain() }.first { it.id == id }
+    }.flowOn(dispatcher)
 
-    suspend fun removeWeight(id: Long): Content<Unit> = withContext(dispatcher) {
-        asContent { weightApi.remove(id) }
-    }
+    suspend fun removeWeight(id: Long): Flow<Content<Unit>> =
+        asContentFlow { weightApi.remove(id) }.flowOn(dispatcher)
 }
