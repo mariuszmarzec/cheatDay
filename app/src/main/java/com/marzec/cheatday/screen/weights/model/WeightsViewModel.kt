@@ -2,10 +2,8 @@ package com.marzec.cheatday.screen.weights.model
 
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.asErrorAndReturn
-import com.marzec.cheatday.api.dataOrNull
-import com.marzec.cheatday.api.unwrapContent
-import com.marzec.cheatday.extensions.Quadruple
-import com.marzec.cheatday.extensions.combine
+import com.marzec.cheatday.api.combineContentsFlows
+import com.marzec.cheatday.api.toContentData
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.MAX_POSSIBLE_ID
@@ -16,8 +14,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
-typealias WeightsData = Quadruple<WeightResult?, Float, Float, Content<List<WeightResult>>>
+data class WeightsData(
+    val minWeight: WeightResult?,
+    val maxPossibleWeight: Float,
+    val targetWeight: Float,
+    val weights: List<WeightResult>
+)
 
 @HiltViewModel
 class WeightsViewModel @Inject constructor(
@@ -26,7 +30,7 @@ class WeightsViewModel @Inject constructor(
     defaultState: WeightsViewState
 ) : StoreViewModel<WeightsViewState, WeightsSideEffects>(defaultState) {
 
-    fun load() = intent<WeightsData> {
+    fun load() = intent<Content<WeightsData>> {
         onTrigger {
             loadData()
         }
@@ -36,7 +40,7 @@ class WeightsViewModel @Inject constructor(
         }
 
         emitSideEffect {
-            resultNonNull().ob4.asErrorAndReturn { WeightsSideEffects.ShowError }
+            resultNonNull().asErrorAndReturn { WeightsSideEffects.ShowError }
         }
     }
 
@@ -97,10 +101,10 @@ class WeightsViewModel @Inject constructor(
         emitSideEffect { WeightsSideEffects.GoToChartAction }
     }
 
-    fun removeWeight(id: String) = intent<WeightsData> {
+    fun removeWeight(id: String) = intent<Content<WeightsData>> {
         onTrigger {
             weightInteractor.removeWeight(id.toLong())
-            loadData()
+            loadData() // REMOVE LOADING
         }
 
         reducer {
@@ -108,24 +112,25 @@ class WeightsViewModel @Inject constructor(
         }
 
         emitSideEffect {
-            resultNonNull().ob4.asErrorAndReturn { WeightsSideEffects.ShowError }
+            resultNonNull().asErrorAndReturn { WeightsSideEffects.ShowError }
         }
     }
 
-    // TODO Extract flow content
-    private fun loadData(): Flow<WeightsData> = combine(
-        weightInteractor.observeMinWeight().unwrapContent(),
-        weightInteractor.observeMaxPossibleWeight(),
-        weightInteractor.observeTargetWeight(),
+    private fun loadData(): Flow<Content<WeightsData>> = combineContentsFlows(
+        weightInteractor.observeMinWeight(),
+        weightInteractor.observeMaxPossibleWeight().map { it.toContentData() },
+        weightInteractor.observeTargetWeight().map { it.toContentData() },
         weightInteractor.observeWeights()
-    )
+    ) { minWeight, maxPossibleWeight, targetWeight, weights ->
+        WeightsData(minWeight, maxPossibleWeight, targetWeight, weights)
+    }
 
     // TODO mapper should be use in renderer
-    private fun IntentBuilder.IntentContext<WeightsViewState, WeightsData>.reduceData(): WeightsViewState {
-        val (min, maxPossible, target, content) = resultNonNull()
-        return when (content) {
+    private fun IntentBuilder.IntentContext<WeightsViewState, Content<WeightsData>>.reduceData(): WeightsViewState {
+        return when (val content = resultNonNull()) {
             is Content.Data -> {
-                state.copy(list = mapper.mapWeights(min, maxPossible, target, content.data))
+                val (min, maxPossible, target, weights) = content.data
+                state.copy(list = mapper.mapWeights(min, maxPossible, target, weights))
             }
             is Content.Error -> {
                 state.copy()

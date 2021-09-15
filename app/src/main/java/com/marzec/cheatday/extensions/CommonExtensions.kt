@@ -26,12 +26,14 @@ operator fun <T : ListItem> List<T>.plus(item: T): List<T> {
     return this + listOf(item)
 }
 
+@Deprecated("Use kotlin stdlib ones")
 fun <T1, T2> combine(
     first: Flow<T1>,
     second: Flow<T2>
 ): Flow<Pair<T1, T2>> =
     first.combine(second) { a, b -> Pair(a, b) }
 
+@Deprecated("Use kotlin stdlib ones")
 fun <T1, T2, T3> combine(
     first: Flow<T1>,
     second: Flow<T2>,
@@ -42,6 +44,7 @@ fun <T1, T2, T3> combine(
             Triple(a, b, c)
         }
 
+@Deprecated("Use kotlin stdlib ones")
 fun <T1, T2, T3, T4> combine(
     first: Flow<T1>,
     second: Flow<T2>,
