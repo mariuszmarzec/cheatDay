@@ -2,7 +2,7 @@ package com.marzec.cheatday.api
 
 import android.util.Log
 import com.marzec.cheatday.extensions.asInstance
-import com.marzec.cheatday.extensions.asInstanceAndReturn
+import com.marzec.cheatday.extensions.asInstanceAndReturnOther
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
@@ -70,7 +70,7 @@ inline fun <reified T : Any> Content<T>.asData(action: Content.Data<T>.() -> Uni
 
 @Suppress("unchecked_cast")
 inline fun <reified T : Any, R> Content<T>.asDataAndReturn(action: Content.Data<T>.() -> R) =
-    asInstanceAndReturn(action)
+    asInstanceAndReturnOther(action)
 
 @Suppress("unchecked_cast")
 inline fun <reified T : Any> Content<T>.asError(action: Content.Error<T>.() -> Unit) =
@@ -78,7 +78,7 @@ inline fun <reified T : Any> Content<T>.asError(action: Content.Error<T>.() -> U
 
 @Suppress("unchecked_cast")
 inline fun <reified T : Any, R> Content<T>.asErrorAndReturn(action: Content.Error<T>.() -> R) =
-    asInstanceAndReturn(action)
+    asInstanceAndReturnOther(action)
 
 fun <R> combineContents(vararg contents: Content<*>, mapData: (List<*>) -> R): Content<R> =
     with(contents.toList()) {

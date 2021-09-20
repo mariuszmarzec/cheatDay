@@ -7,8 +7,10 @@ import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.LoginRepository
+import com.marzec.mvi.State
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -21,7 +23,7 @@ internal class LoginViewModelTest {
         login = "login",
         password = "password"
     )
-    val defaultState = LoginViewState.Data(defaultData)
+    val defaultState = State.Data(defaultData)
 
     private val user = User(
         0, "email"
@@ -37,17 +39,15 @@ internal class LoginViewModelTest {
                 email = "login",
                 password = "password"
             )
-        } returns Content.Data(user)
+        } returns flowOf(Content.Loading(), Content.Data(user))
 
         viewModel.onLoginButtonClicked()
 
-        assertThat(states.values()).isEqualTo(
-            listOf(
-                defaultState,
-                LoginViewState.Pending(defaultData),
-                LoginSideEffects.OnLoginSuccessful,
-                defaultState
-            )
+        states.isEqualTo(
+            defaultState,
+            State.Loading(defaultData),
+            LoginSideEffects.OnLoginSuccessful
+
         )
     }
 
@@ -81,7 +81,7 @@ internal class LoginViewModelTest {
         )
     }
 
-    private fun viewModel(state: LoginViewState.Data) = LoginViewModel(
+    private fun viewModel(state: State.Data<LoginData>) = LoginViewModel(
         loginRepository = loginRepository,
         initialState = state
     )

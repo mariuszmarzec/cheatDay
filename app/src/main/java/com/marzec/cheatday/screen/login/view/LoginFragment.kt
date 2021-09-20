@@ -9,17 +9,17 @@ import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.common.StateObserver
+import com.marzec.cheatday.screen.login.model.LoginData
 import com.marzec.cheatday.screen.login.model.LoginSideEffects
 import com.marzec.cheatday.screen.login.model.LoginViewModel
-import com.marzec.cheatday.screen.login.model.LoginViewState
 import com.marzec.cheatday.screen.login.render.LoginRender
+import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 @AndroidEntryPoint
-class LoginFragment : BaseFragment(R.layout.fragment_login), StateObserver<LoginViewState> {
+class LoginFragment : BaseFragment(R.layout.fragment_login), StateObserver<State<LoginData>> {
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -56,8 +56,8 @@ class LoginFragment : BaseFragment(R.layout.fragment_login), StateObserver<Login
     }
 
     override fun bindStateObserver(
-        stateFlow: Flow<LoginViewState>,
-        action: (LoginViewState) -> Unit
+        stateFlow: Flow<State<LoginData>>,
+        action: (State<LoginData>) -> Unit
     ) {
         stateFlow.observe(action)
     }

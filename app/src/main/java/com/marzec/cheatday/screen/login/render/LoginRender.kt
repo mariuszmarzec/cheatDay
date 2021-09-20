@@ -9,7 +9,7 @@ import com.marzec.cheatday.R
 import com.marzec.cheatday.extensions.gone
 import com.marzec.cheatday.extensions.visible
 import com.marzec.cheatday.screen.login.model.LoginData
-import com.marzec.cheatday.screen.login.model.LoginViewState
+import com.marzec.mvi.State
 import javax.inject.Inject
 
 class LoginRender @Inject constructor() {
@@ -35,11 +35,11 @@ class LoginRender @Inject constructor() {
         password.doOnTextChanged { text, _, _, _ -> onPasswordChange(text.toString()) }
     }
 
-    fun render(loginViewState: LoginViewState) {
+    fun render(loginViewState: State<LoginData>) {
         when (loginViewState) {
-            is LoginViewState.Data -> renderData(loginViewState.loginData)
-            is LoginViewState.Pending -> renderPending(loginViewState.loginData)
-            is LoginViewState.Error -> renderError(loginViewState)
+            is State.Data -> renderData(loginViewState.data)
+            is State.Loading -> renderPending(loginViewState)
+            is State.Error -> renderError(loginViewState)
         }
     }
 
@@ -58,16 +58,16 @@ class LoginRender @Inject constructor() {
         }
     }
 
-    private fun renderPending(loginData: LoginData) {
+    private fun renderPending(state: State<LoginData>) {
         progressBar.visible()
         error.gone()
-        renderLoginData(loginData)
+        state.data?.let(::renderLoginData)
     }
 
-    private fun renderError(loginViewState: LoginViewState.Error) {
+    private fun renderError(state: State.Error<LoginData>) {
         progressBar.gone()
-        renderLoginData(loginViewState.loginData)
+        state.data?.let(::renderLoginData)
         error.visible()
-        error.text = loginViewState.error
+        error.text = state.message
     }
 }
