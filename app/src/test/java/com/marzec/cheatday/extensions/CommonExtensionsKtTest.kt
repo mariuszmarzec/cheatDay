@@ -97,11 +97,4 @@ internal class CommonExtensionsKtTest {
             DateTime(2021, 7, 8, 9, 31, 12)
         )
     }
-
-    @Test
-    fun testToDateTimeWithoutSeconds() {
-        assertThat("2021-07-08T09:31".toDateTime()).isEqualTo(
-            DateTime(2021, 7, 8, 9, 31)
-        )
-    }
 }

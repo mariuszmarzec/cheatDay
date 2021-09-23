@@ -56,11 +56,7 @@ fun <T1, T2, T3, T4> combine(
             Quadruple(a, b, c, d)
         }
 
-fun String.toDateTime(): DateTime = try {
-    DateTime.parse(this, Api.DATE_FORMATTER)
-} catch (ex: IllegalArgumentException) {
-    DateTime.parse(this, DateTimeFormat.forPattern(Api.DATE_FORMAT.dropLast(3)))
-}
+fun String.toDateTime(): DateTime = DateTime.parse(this, Api.DATE_FORMATTER)
 
 @Suppress("unchecked_cast")
 inline fun <reified T: Any> Any.asInstance(action: T.() -> Unit) = (this as? T)?.action()
