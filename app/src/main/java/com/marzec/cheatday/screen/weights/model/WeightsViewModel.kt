@@ -116,7 +116,7 @@ class WeightsViewModel @Inject constructor(
         }
     }
 
-    private fun loadData(): Flow<Content<WeightsData>> = combineContentsFlows(
+    private suspend fun loadData(): Flow<Content<WeightsData>> = combineContentsFlows(
         weightInteractor.observeMinWeight(),
         weightInteractor.observeMaxPossibleWeight().map { it.toContentData() },
         weightInteractor.observeTargetWeight().map { it.toContentData() },

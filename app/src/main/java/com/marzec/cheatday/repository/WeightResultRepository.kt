@@ -19,10 +19,10 @@ class WeightResultRepository @Inject constructor(
     private val weightApi: WeightApi,
     private val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun observeWeights(): Content<List<WeightResult>> =
-        withContext(dispatcher) {
-            asContent { weightApi.getAll().map { it.toDomain() }.sortedByDescending { it.date } }
-        }
+    suspend fun observeWeights(): Flow<Content<List<WeightResult>>> =
+        asContentFlow {
+            weightApi.getAll().map { it.toDomain() }
+        }.flowOn(dispatcher)
 
     fun observeMinWeight(): Flow<Content<WeightResult?>> =
         asContentFlow {

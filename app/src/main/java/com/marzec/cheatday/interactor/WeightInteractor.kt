@@ -6,17 +6,13 @@ import com.marzec.cheatday.api.dataOrNull
 import com.marzec.cheatday.extensions.incIf
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.repository.UserPreferencesRepository
-import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.repository.WeightResultRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import org.joda.time.DateTime
 
 class WeightInteractor @Inject constructor(
-    private val userRepository: UserRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
     private val weightResultRepository: WeightResultRepository,
     private val daysInteractor: DaysInteractor
@@ -28,9 +24,7 @@ class WeightInteractor @Inject constructor(
         userPreferencesRepository.observeMaxPossibleWeight()
 
     fun observeMinWeight(): Flow<Content<WeightResult?>> =
-        userRepository.observeCurrentUser().flatMapLatest { user ->
-            weightResultRepository.observeMinWeight()
-        }
+        weightResultRepository.observeMinWeight()
 
     suspend fun setTargetWeight(weight: Float) = userPreferencesRepository.setTargetWeight(weight)
 
@@ -38,11 +32,7 @@ class WeightInteractor @Inject constructor(
         userPreferencesRepository.setMaxPossibleWeight(weight)
     }
 
-    fun observeWeights(): Flow<Content<List<WeightResult>>> {
-        return userRepository.observeCurrentUser().map { user ->
-            weightResultRepository.observeWeights()
-        }
-    }
+    suspend fun observeWeights(): Flow<Content<List<WeightResult>>> = weightResultRepository.observeWeights()
 
     suspend fun addWeight(weight: WeightResult): Flow<Content<Unit>> = asContentFlow {
         val lastValue = weightResultRepository.observeLastWeight().dataOrNull()?.value

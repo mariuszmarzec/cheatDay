@@ -7,6 +7,7 @@ import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
@@ -23,7 +24,7 @@ internal class ChartsViewModelTest {
 
     @Test
     fun loadData() = runBlockingTest {
-        every { weightInteractor.observeWeights() } returns flowOf(
+        coEvery { weightInteractor.observeWeights() } returns flowOf(
             Content.Data(listOf(stubWeightResult()))
         )
 
@@ -42,7 +43,7 @@ internal class ChartsViewModelTest {
 
     @Test
     fun loadData_error() = runBlockingTest {
-        every { weightInteractor.observeWeights() }returns flowOf(
+        coEvery { weightInteractor.observeWeights() }returns flowOf(
             Content.Error(Exception())
         )
         val viewModel = viewModel()
