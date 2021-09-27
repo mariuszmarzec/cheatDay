@@ -6,10 +6,11 @@ import com.marzec.cheatday.TestCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.toContentFlow
 import com.marzec.cheatday.core.test
+import com.marzec.cheatday.extensions.emptyString
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
+import com.marzec.mvi.State
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import java.lang.Exception
 import kotlinx.coroutines.flow.flowOf
@@ -31,10 +32,9 @@ class WeightsViewModelTest {
         stubWeightResult(value = 2.0f),
         stubWeightResult(value = 3.0f)
     )
-    val defaultState = WeightsViewState.INITIAL
+    val defaultState = State.Loading<WeightsData>()
 
     val weightInteractor: WeightInteractor = mockk(relaxed = true)
-    val mapper: WeightsMapper = mockk(relaxed = true)
 
     @BeforeEach
     fun before() = runBlockingTest {
@@ -42,7 +42,6 @@ class WeightsViewModelTest {
         coEvery {  weightInteractor.observeMaxPossibleWeight() } returns flowOf(maxPossible)
         coEvery {  weightInteractor.observeTargetWeight() } returns flowOf(target)
         coEvery {  weightInteractor.observeWeights() } returns flowOf(Content.Data(weights))
-        every { mapper.mapWeights(minWeightResult, maxPossible, target, weights) } returns emptyList()
     }
 
     @Test
@@ -56,7 +55,8 @@ class WeightsViewModelTest {
 
         assertThat(values.values()).isEqualTo(
             listOf(
-                defaultState
+                defaultState,
+                State.Data(WeightsData(minWeightResult, maxPossible, target, weights))
             )
         )
     }
@@ -89,7 +89,8 @@ class WeightsViewModelTest {
         assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
-                WeightsSideEffects.ShowError
+                WeightsSideEffects.ShowError,
+                State.Error(null, message = emptyString())
             )
         )
     }
@@ -259,6 +260,6 @@ class WeightsViewModelTest {
         )
     }
 
-    private fun viewModel(state: WeightsViewState = defaultState) =
-        WeightsViewModel(weightInteractor, mapper, state)
+    private fun viewModel(state: State<WeightsData> = defaultState) =
+        WeightsViewModel(weightInteractor, state)
 }

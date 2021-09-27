@@ -48,10 +48,10 @@ fun <T> State<T>.reduceData(
 
 fun <T, R> State<T>.reduceDataWithContent(
     result: Content<R>,
-    reducer: T?.(Content.Data<R>) -> T
+    reducer: T?.(R) -> T
 ): State<T> =
     when (result) {
-        is Content.Data -> State.Data((this.data).reducer(result))
+        is Content.Data -> State.Data((this.data).reducer(result.data))
         is Content.Loading -> State.Loading(data)
         is Content.Error -> State.Error(data, result.exception.message.orEmpty())
     }

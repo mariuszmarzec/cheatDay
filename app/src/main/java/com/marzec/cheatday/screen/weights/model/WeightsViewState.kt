@@ -1,9 +1,10 @@
 package com.marzec.cheatday.screen.weights.model
 
-import com.marzec.cheatday.view.model.ListItem
+import com.marzec.cheatday.model.domain.WeightResult
 
-data class WeightsViewState(val list: List<ListItem>) {
-    companion object {
-        val INITIAL = WeightsViewState(emptyList())
-    }
-}
+data class WeightsData(
+    val minWeight: WeightResult?,
+    val maxPossibleWeight: Float,
+    val targetWeight: Float,
+    val weights: List<WeightResult>
+)

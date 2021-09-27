@@ -2,15 +2,14 @@ package com.marzec.cheatday.screen.weights
 
 import android.os.Bundle
 import android.text.InputType
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.airbnb.epoxy.EpoxyRecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.extensions.DialogInputOptions
@@ -20,46 +19,37 @@ import com.marzec.cheatday.extensions.showErrorDialog
 import com.marzec.cheatday.extensions.showInputDialog
 import com.marzec.cheatday.screen.weights.model.WeightsSideEffects
 import com.marzec.cheatday.screen.weights.model.WeightsViewModel
-import com.marzec.cheatday.view.labeledRowView
-import com.marzec.cheatday.view.model.LabeledRowItem
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
 
+    @Inject
+    lateinit var renderer: WeightsRenderer
+
     private val viewModel: WeightsViewModel by viewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return super.onCreateView(inflater, container, savedInstanceState)?.also { view ->
+            renderer.onClickListener = { viewModel.onClick(it) }
+            renderer.onLongClickListener = { viewModel.onLongClick(it) }
+            renderer.onFloatingButtonClick = { viewModel.onFloatingButtonClick() }
+            renderer.init(view = view)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        val recyclerView = view.findViewById<EpoxyRecyclerView>(R.id.recycler_view)
-        val floatingButton = view.findViewById<FloatingActionButton>(R.id.floating_button)
 
 
-        viewModel.state.observe { state ->
-            recyclerView.withModels {
-                state.list.forEach { item ->
-                    when (item) {
-                        is LabeledRowItem -> {
-                            labeledRowView {
-                                id(item.id)
-                                label(item.label)
-                                value(item.value)
-                                onClickListener { _, _, _, _ ->
-                                    viewModel.onClick(item.id)
-                                }
-                                onLongClickListener { _, _, _, _ ->
-                                    viewModel.onLongClick(item.id)
-                                    true
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        viewModel.state.observe(renderer::render)
 
         viewModel.sideEffects.observe { effect ->
             when (effect) {
@@ -91,11 +81,6 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
                     showTargetWeightDialog()
                 }
             }
-        }
-
-
-        floatingButton.setOnClickListener {
-            viewModel.onFloatingButtonClick()
         }
     }
 
@@ -153,3 +138,4 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
         }
     }
 }
+
