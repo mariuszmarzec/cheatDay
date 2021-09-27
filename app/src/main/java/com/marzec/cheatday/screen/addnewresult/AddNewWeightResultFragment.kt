@@ -15,6 +15,7 @@ import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.screen.addnewresult.model.AddNewWeightResultViewModel
 import com.marzec.cheatday.screen.addnewresult.model.AddWeightSideEffect
+import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import org.jetbrains.anko.alert
@@ -49,14 +50,25 @@ class AddNewWeightResultFragment :
 
         viewModel.load(args.weightId)
 
+        // TODO RENDERER
         viewModel.state.observe { state ->
-            val newText = state.weight
-            val newDate = state.date.toString(Constants.DATE_PICKER_PATTERN)
-            if (weightEditText.text.toString() != newText) {
-                weightEditText.setText(newText)
-            }
-            if (dateEditText.text.toString() != newDate) {
-                dateEditText.setText(newDate)
+            when (state) {
+                is State.Data -> {
+                    val newText = state.data.weight
+                    val newDate = state.data.date.toString(Constants.DATE_PICKER_PATTERN)
+                    if (weightEditText.text.toString() != newText) {
+                        weightEditText.setText(newText)
+                    }
+                    if (dateEditText.text.toString() != newDate) {
+                        dateEditText.setText(newDate)
+                    }
+                }
+                is State.Error -> {
+                    // TODO RENDER ERROR
+                }
+                is State.Loading -> {
+                    // TODO RENDER LOADING
+                }
             }
         }
 

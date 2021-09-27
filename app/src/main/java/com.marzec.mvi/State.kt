@@ -19,6 +19,13 @@ sealed class State<T>(open val data: T?) {
         blockOnLoading: Boolean = true,
         action: T.() -> R
     ) = data?.takeIf { !blockOnLoading || this !is Loading }?.let(action)
+
+    suspend fun <R> ifDataAvailableSuspend(
+        blockOnLoading: Boolean = true,
+        action: suspend T.() -> R
+    ) = data?.takeIf { !blockOnLoading || this !is Loading }?.let {
+        it.action()
+    }
 }
 
 fun <T, R> State<T>.reduceContentNoChanges(result: Content<R>): State<T> =

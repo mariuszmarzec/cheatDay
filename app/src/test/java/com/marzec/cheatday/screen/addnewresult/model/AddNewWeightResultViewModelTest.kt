@@ -7,8 +7,10 @@ import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.toContentFlow
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.extensions.asFlow
+import com.marzec.cheatday.extensions.emptyString
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
+import com.marzec.mvi.State
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlin.Exception
@@ -21,14 +23,18 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 
+
 @ExtendWith(value = [InstantExecutorExtension::class, TestCoroutineExecutorExtension::class])
 internal class AddNewWeightResultViewModelTest {
 
     val weightInteractor = mockk<WeightInteractor>()
 
+    val defaultData by lazy { AddWeightData.INITIAL }
+    val defaultState by lazy { State.Data(defaultData) }
+
     private fun viewModel(
         weightInteractor: WeightInteractor = this.weightInteractor,
-        defaultState: AddWeightState = AddWeightState.INITIAL
+        defaultState: State<AddWeightData> = this.defaultState
     ) = AddNewWeightResultViewModel(
         weightInteractor,
         defaultState
@@ -48,7 +54,7 @@ internal class AddNewWeightResultViewModelTest {
 
         assertThat(states.values()).isEqualTo(
             listOf(
-                AddWeightState.INITIAL
+                defaultState
             )
         )
     }
@@ -67,11 +73,13 @@ internal class AddNewWeightResultViewModelTest {
 
         assertThat(states.values()).isEqualTo(
             listOf(
-                AddWeightState.INITIAL,
-                AddWeightState(
-                    weightResult = stubWeightResult(value = 10f, date = DateTime(10)),
-                    weight = "10.0",
-                    date = DateTime(10)
+                defaultState,
+                State.Data(
+                    AddWeightData(
+                        weightResult = stubWeightResult(value = 10f, date = DateTime(10)),
+                        weight = "10.0",
+                        date = DateTime(10)
+                    )
                 )
             )
         )
@@ -87,7 +95,8 @@ internal class AddNewWeightResultViewModelTest {
 
         assertThat(states.values()).isEqualTo(
             listOf(
-                AddWeightState.INITIAL
+                defaultState,
+                State.Error(defaultData, emptyString())
             )
         )
     }
@@ -102,8 +111,8 @@ internal class AddNewWeightResultViewModelTest {
 
         assertThat(states.values()).isEqualTo(
             listOf(
-                AddWeightState.INITIAL,
-                AddWeightState.INITIAL.copy(date = DateTime(10))
+                defaultState,
+                State.Data(defaultData.copy(date = DateTime(10)))
             )
         )
     }
@@ -117,7 +126,7 @@ internal class AddNewWeightResultViewModelTest {
 
         assertThat(states.values()).isEqualTo(
             listOf(
-                AddWeightState.INITIAL,
+                defaultState,
                 AddWeightSideEffect.ShowDatePicker(DateTime(0))
             )
         )
@@ -134,7 +143,7 @@ internal class AddNewWeightResultViewModelTest {
 
         assertThat(states.values()).isEqualTo(
             listOf(
-                AddWeightState.INITIAL,
+                defaultState,
                 AddWeightSideEffect.SaveSuccess
             )
         )
@@ -152,8 +161,9 @@ internal class AddNewWeightResultViewModelTest {
 
         assertThat(states.values()).isEqualTo(
             listOf(
-                AddWeightState.INITIAL,
-                AddWeightSideEffect.ShowError
+                defaultState,
+                AddWeightSideEffect.ShowError,
+                State.Error(defaultData, emptyString())
             )
         )
     }
@@ -164,7 +174,7 @@ internal class AddNewWeightResultViewModelTest {
             Unit
         ).asFlow()
         val viewModel = viewModel(
-            defaultState = AddWeightState.INITIAL.copy(weightResult = stubWeightResult(id = 1))
+            defaultState = State.Data(defaultData.copy(weightResult = stubWeightResult(id = 1)))
         )
         val states = viewModel.test(this)
 
@@ -172,7 +182,7 @@ internal class AddNewWeightResultViewModelTest {
 
         assertThat(states.values()).isEqualTo(
             listOf(
-                AddWeightState.INITIAL.copy(weightResult = stubWeightResult(id = 1)),
+                State.Data(defaultData.copy(weightResult = stubWeightResult(id = 1))),
                 AddWeightSideEffect.SaveSuccess
             )
         )
@@ -183,8 +193,9 @@ internal class AddNewWeightResultViewModelTest {
         coEvery { weightInteractor.updateWeight(stubWeightResult(id = 1)) } returns Content.Error<Unit>(
             Exception()
         ).asFlow()
+        val data = defaultData.copy(weightResult = stubWeightResult(id = 1))
         val viewModel = viewModel(
-            defaultState = AddWeightState.INITIAL.copy(weightResult = stubWeightResult(id = 1))
+            defaultState = State.Data(data)
         )
         val states = viewModel.test(this)
 
@@ -192,8 +203,9 @@ internal class AddNewWeightResultViewModelTest {
 
         assertThat(states.values()).isEqualTo(
             listOf(
-                AddWeightState.INITIAL.copy(weightResult = stubWeightResult(id = 1)),
-                AddWeightSideEffect.ShowError
+                State.Data(data),
+                AddWeightSideEffect.ShowError,
+                State.Error(data, emptyString())
             )
         )
     }
@@ -207,10 +219,9 @@ internal class AddNewWeightResultViewModelTest {
 
         assertThat(states.values()).isEqualTo(
             listOf(
-                AddWeightState.INITIAL,
-                AddWeightState.INITIAL.copy(weight = "11.0")
+                State.Data(defaultData),
+                State.Data(defaultData.copy(weight = "11.0"))
             )
         )
-
     }
 }

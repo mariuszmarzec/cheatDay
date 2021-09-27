@@ -3,17 +3,20 @@ package com.marzec.cheatday.screen.addnewresult.model
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.model.domain.WeightResult
+import com.marzec.mvi.State
 import com.marzec.mvi.StoreViewModel
+import com.marzec.mvi.reduceContentNoChanges
+import com.marzec.mvi.reduceData
+import com.marzec.mvi.reduceDataWithContent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.flow
 import org.joda.time.DateTime
 
 @HiltViewModel
 class AddNewWeightResultViewModel @Inject constructor(
     private val weightInteractor: WeightInteractor,
-    defaultState: AddWeightState
-) : StoreViewModel<AddWeightState, AddWeightSideEffect>(defaultState) {
+    defaultState: State<AddWeightData>
+) : StoreViewModel<State<AddWeightData>, AddWeightSideEffect>(defaultState) {
 
     fun load(id: String?) = intent<Content<WeightResult>> {
         onTrigger {
@@ -23,46 +26,44 @@ class AddNewWeightResultViewModel @Inject constructor(
         }
 
         reducer {
-            when (val res = resultNonNull()) {
-                is Content.Data -> {
-                    val weightResult = res.data
-                    state.copy(
-                        weightResult = weightResult,
-                        weight = weightResult.value.toString(),
-                        date = weightResult.date
-                    )
+            state.reduceDataWithContent(resultNonNull()) { weightResult ->
+                val data = this ?: AddWeightData.INITIAL
+                data.copy(
+                    weightResult = weightResult,
+                    weight = weightResult.value.toString(),
+                    date = weightResult.date
+                )
 
-                }
-                is Content.Error -> state
-                is Content.Loading -> state
             }
         }
     }
 
     fun setDate(date: DateTime) = intent<Unit> {
         reducer {
-            state.copy(date = date)
+            state.reduceData {
+                copy(date = date)
+            }
         }
     }
 
     fun onDatePickerClick() = intent<Unit> {
         emitSideEffect {
-            AddWeightSideEffect.ShowDatePicker(state.date)
+            state.ifDataAvailable { AddWeightSideEffect.ShowDatePicker(date) }
         }
     }
 
     fun save() = intent<Content<Unit>> {
         onTrigger {
-            val weightResult = state.weightResult.copy(
-                date = state.date,
-                value = state.weight.toFloat()
-            )
-            if (state.weightResult.id != 0L) {
-                weightInteractor.updateWeight(weightResult)
-            } else {
-                weightInteractor.addWeight(weightResult)
+            state.ifDataAvailable {
+                if (weightResult.id != 0L) {
+                    weightInteractor.updateWeight(weightResult)
+                } else {
+                    weightInteractor.addWeight(weightResult)
+                }
             }
         }
+
+        reducer { state.reduceContentNoChanges(resultNonNull()) }
 
         emitSideEffect {
             when (resultNonNull()) {
@@ -75,7 +76,9 @@ class AddNewWeightResultViewModel @Inject constructor(
 
     fun setNewWeight(newWeight: String) = intent<Unit> {
         reducer {
-            state.copy(weight = newWeight)
+            state.reduceData {
+                copy(weight = newWeight)
+            }
         }
     }
 }

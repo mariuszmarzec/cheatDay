@@ -1,6 +1,7 @@
 package com.marzec.cheatday.screen.addnewresult.di
 
-import com.marzec.cheatday.screen.addnewresult.model.AddWeightState
+import com.marzec.cheatday.screen.addnewresult.model.AddWeightData
+import com.marzec.mvi.State
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,5 +12,5 @@ import dagger.hilt.android.components.ViewModelComponent
 class AddNewWeightResultViewModelModule {
 
     @Provides
-    fun provideDefaultState(): AddWeightState = AddWeightState.INITIAL
+    fun provideDefaultState(): State<AddWeightData> = State.Data(AddWeightData.INITIAL)
 }
