@@ -3,21 +3,15 @@ package com.marzec.cheatday.screen.addnewresult
 import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
-import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.screen.addnewresult.model.AddNewWeightResultViewModel
 import com.marzec.cheatday.screen.addnewresult.model.AddWeightSideEffect
-import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 import org.jetbrains.anko.alert
 import org.joda.time.DateTime
 
@@ -25,52 +19,23 @@ import org.joda.time.DateTime
 class AddNewWeightResultFragment :
     BaseFragment(R.layout.fragment_add_new_weight_result) {
 
+    @Inject
+    lateinit var renderer: AddNewWeightResultRenderer
+
     private val viewModel: AddNewWeightResultViewModel by viewModels()
     private val args: AddNewWeightResultFragmentArgs by navArgs()
-
-    private lateinit var weightEditText: EditText
-    private lateinit var dateEditText: EditText
-    private lateinit var button: Button
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        weightEditText = view.findViewById(R.id.weight_edit_text)
-        dateEditText = view.findViewById(R.id.date_edit_text)
-        button = view.findViewById(R.id.button)
-
-        dateEditText.setOnClickListener {
-            viewModel.onDatePickerClick()
-        }
-
-        button.setText(
-            args.weightId?.let { R.string.common_update } ?: R.string.common_add
-        )
+        renderer.onDatePickerClick = { viewModel.onDatePickerClick() }
+        renderer.onNewWeightChanged = { viewModel.setNewWeight(it) }
+        renderer.onButtonClick = { viewModel.save() }
+        renderer.init(args.weightId, view)
 
         viewModel.load(args.weightId)
 
-        // TODO RENDERER
-        viewModel.state.observe { state ->
-            when (state) {
-                is State.Data -> {
-                    val newText = state.data.weight
-                    val newDate = state.data.date.toString(Constants.DATE_PICKER_PATTERN)
-                    if (weightEditText.text.toString() != newText) {
-                        weightEditText.setText(newText)
-                    }
-                    if (dateEditText.text.toString() != newDate) {
-                        dateEditText.setText(newDate)
-                    }
-                }
-                is State.Error -> {
-                    // TODO RENDER ERROR
-                }
-                is State.Loading -> {
-                    // TODO RENDER LOADING
-                }
-            }
-        }
+        viewModel.state.observe(renderer::render)
 
         viewModel.sideEffects.observe { sideEffect ->
             when (sideEffect) {
@@ -84,14 +49,6 @@ class AddNewWeightResultFragment :
                 }
 
             }
-        }
-
-        weightEditText.doOnTextChanged { text, _, _, _ ->
-            viewModel.setNewWeight(text.toString())
-        }
-
-        button.setOnClickListener {
-            viewModel.save()
         }
     }
 
@@ -107,3 +64,4 @@ class AddNewWeightResultFragment :
         ).apply { show() }
     }
 }
+
