@@ -3,7 +3,6 @@ package com.marzec.cheatday.screen.chart
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.extensions.showErrorDialog
@@ -13,7 +12,6 @@ import com.marzec.cheatday.screen.chart.renderer.ChartRenderer
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class ChartFragment : BaseFragment(R.layout.fragment_chart) {
@@ -27,12 +25,9 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        chartRenderer.init(view.findViewById(R.id.chart))
+        chartRenderer.init(view)
 
-        viewModel.state.observe { state ->
-            val weights = state.weights
-            chartRenderer.render(weights)
-        }
+        viewModel.state.observe(chartRenderer::render)
 
         viewModel.sideEffects.observe { sideEffect ->
             when (sideEffect) {

@@ -5,10 +5,11 @@ import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.core.test
+import com.marzec.cheatday.extensions.emptyString
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
+import com.marzec.mvi.State
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
@@ -20,7 +21,7 @@ internal class ChartsViewModelTest {
 
     val weightInteractor = mockk<WeightInteractor>()
 
-    val defaultState = ChartsState(emptyList())
+    val defaultState: State<ChartsData> = State.Loading()
 
     @Test
     fun loadData() = runBlockingTest {
@@ -36,7 +37,7 @@ internal class ChartsViewModelTest {
         assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
-                defaultState.copy(listOf(stubWeightResult()))
+                State.Data(ChartsData(listOf(stubWeightResult())))
             )
         )
     }
@@ -54,7 +55,8 @@ internal class ChartsViewModelTest {
         assertThat(test.values()).isEqualTo(
             listOf(
                 defaultState,
-                ChartsSideEffect.ShowErrorDialog
+                ChartsSideEffect.ShowErrorDialog,
+                State.Error(null, message = emptyString())
             )
         )
     }

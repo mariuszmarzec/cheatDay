@@ -1,6 +1,7 @@
 package com.marzec.cheatday.screen.chart.di
 
-import com.marzec.cheatday.screen.chart.model.ChartsState
+import com.marzec.cheatday.screen.chart.model.ChartsData
+import com.marzec.mvi.State
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,5 +12,5 @@ import dagger.hilt.android.components.ViewModelComponent
 class ChartsViewModelModule {
 
     @Provides
-    fun provideLoginState(): ChartsState = ChartsState.INITIAL
+    fun provideLoginState(): State<ChartsData> = State.Loading(ChartsData.INITIAL)
 }

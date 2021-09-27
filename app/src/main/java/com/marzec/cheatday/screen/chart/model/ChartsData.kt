@@ -2,11 +2,11 @@ package com.marzec.cheatday.screen.chart.model
 
 import com.marzec.cheatday.model.domain.WeightResult
 
-data class ChartsState(
+data class ChartsData(
     val weights: List<WeightResult>
 ) {
 
     companion object {
-        val INITIAL = ChartsState(emptyList())
+        val INITIAL = ChartsData(emptyList())
     }
 }
