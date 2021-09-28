@@ -26,15 +26,16 @@ class AddNewWeightResultViewModel @Inject constructor(
         }
 
         reducer {
-            state.reduceDataWithContent(resultNonNull()) { weightResult ->
-                val data = this ?: AddWeightData.INITIAL
-                data.copy(
-                    weightResult = weightResult,
-                    weight = weightResult.value.toString(),
-                    date = weightResult.date
-                )
-
-            }
+            result?.let {
+                state.reduceDataWithContent(it) { weightResult ->
+                    val data = this ?: AddWeightData.INITIAL
+                    data.copy(
+                        weightResult = weightResult,
+                        weight = weightResult.value.toString(),
+                        date = weightResult.date
+                    )
+                }
+            } ?: state
         }
     }
 

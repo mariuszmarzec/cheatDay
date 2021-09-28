@@ -8,11 +8,13 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.runningReduce
 import kotlinx.coroutines.launch
 
@@ -31,6 +33,11 @@ open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewMo
     init {
         viewModelScope.launch { store.init(viewModelScope) }
     }
+
+    protected fun <T> Flow<T>.cancelFlowsIf(function: (T) -> Boolean): Flow<T> {
+        return store.cancelIf(this, function)
+    }
+
 
     fun <Result : Any> intent(buildFun: IntentBuilder<State, Result>.() -> Unit) {
         viewModelScope.launch {
@@ -52,8 +59,8 @@ open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewMo
 
 open class Store<State : Any>(defaultState: State) {
 
-    private val actions = MutableStateFlow<Intent2<State, Any>>(Intent2(state = defaultState, result = null))
-
+    private val actions =
+        MutableSharedFlow<Intent2<State, Any>>(extraBufferCapacity = 10)
     private val _intentContextFlow =
         MutableStateFlow<Intent2<State, Any>>(Intent2(state = defaultState, result = null))
 
@@ -62,18 +69,27 @@ open class Store<State : Any>(defaultState: State) {
     val state: StateFlow<State>
         get() = _state
 
-    suspend fun init(scope: CoroutineScope) {
+    private var pause = MutableStateFlow(false)
+
+    suspend fun init(scope: CoroutineScope, initialAction: suspend () -> Unit = {}) {
+        pause.emit(false)
         scope.launch {
-            actions.flatMapMerge { intent ->
-                debug("actions flatMapMerge intent: $intent")
-                (intent.onTrigger(_state.value) ?: flowOf(null)).map {
-                    debug("actions onTrigger state: ${intent.state} result: $it")
-                    intent.copy(result = it, sideEffect = intent.sideEffect)
+            actions.onSubscription { initialAction() }
+                .flatMapMerge { intent ->
+                    debug("actions flatMapMerge intent: $intent")
+                    val currentState = _state.value
+                    val flow = intent.onTrigger(currentState)
+                        ?.makeCancellableIfNeeded(
+                            intent.isCancellableFlowTrigger
+                        ) ?: flowOf(null)
+                    flow.map {
+                        debug("actions onTrigger state: ${intent.state} result: $it")
+                        intent.copy(state = currentState, result = it, sideEffect = intent.sideEffect)
+                    }
+                }.collect {
+                    debug("actions collect intent: $it")
+                    _intentContextFlow.emit(it)
                 }
-            }.collect {
-                debug("actions collect intent: $it")
-                _intentContextFlow.emit(it)
-            }
         }
         scope.launch {
             _intentContextFlow
@@ -92,7 +108,32 @@ open class Store<State : Any>(defaultState: State) {
         }
     }
 
-    suspend fun <Result: Any> intent(buildFun: IntentBuilder<State, Result>.() -> Unit) {
+    private fun <T> Flow<T>.makeCancellableIfNeeded(
+        isCancellableFlowTrigger: Boolean
+    ) = if (isCancellableFlowTrigger) {
+        combine(pause) { triggerValue, pause ->
+            pause to triggerValue
+        }.filter { !it.first }
+            .map { it.second }
+    } else {
+        this
+    }
+
+    protected fun <T> Flow<T>.cancelFlowsIf(function: (T) -> Boolean): Flow<T> =
+        onEach {
+            if (function.invoke(it)) {
+                cancelFlows()
+            }
+        }
+
+    public fun <T> cancelIf(flow: Flow<T>, function: (T) -> Boolean): Flow<T> =
+        flow.cancelFlowsIf(function)
+
+    protected suspend fun cancelFlows() {
+        pause.emit(true)
+    }
+
+    suspend fun <Result : Any> intent(buildFun: IntentBuilder<State, Result>.() -> Unit) {
         actions.emit(IntentBuilder<State, Result>().apply { buildFun() }.build())
     }
 
@@ -114,7 +155,8 @@ data class Intent2<State, out Result : Any>(
     val reducer: suspend (result: Any?, stateParam: State) -> State = { _, stateParam -> stateParam },
     val sideEffect: (suspend (result: Any?, state: State) -> Unit)? = null,
     val state: State?,
-    val result: Result?
+    val result: Result?,
+    val isCancellableFlowTrigger: Boolean = false
 ) {
     fun resultNonNull(): Result = result!!
 }
@@ -125,8 +167,13 @@ class IntentBuilder<State: Any, Result: Any> {
     private var onTrigger: suspend (stateParam: State) -> Flow<Result>? = { _ -> null }
     private var reducer: suspend (result: Any?, stateParam: State) -> State = { _, stateParam -> stateParam }
     private var sideEffect: (suspend (result: Any?, state: State) -> Unit)? = null
+    private var isCancellableFlowTrigger: Boolean = false
 
-    fun onTrigger(func: suspend IntentContext<State, Result>.() -> Flow<Result>? = { null }): IntentBuilder<State, Result> {
+    fun onTrigger(
+        isCancellableFlowTrigger: Boolean = false,
+        func: suspend IntentContext<State, Result>.() -> Flow<Result>? = { null }
+    ): IntentBuilder<State, Result> {
+        this.isCancellableFlowTrigger = isCancellableFlowTrigger
         onTrigger = { state ->
             IntentContext<State, Result>(state, null).func()
         }
