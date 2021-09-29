@@ -6,6 +6,7 @@ import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.LoginApi
 import com.marzec.cheatday.api.request.LoginRequest
 import com.marzec.cheatday.api.response.UserDto
+import com.marzec.cheatday.core.test
 import com.marzec.cheatday.model.domain.CurrentUserDomain
 import com.marzec.cheatday.model.domain.User
 import io.mockk.coEvery
@@ -46,6 +47,7 @@ class LoginRepositoryTest {
         )
 
         val result = repository.login("email", "password")
+            .test(this)
 
         coVerify {
             userRepository.setCurrentUserWithAuth(
@@ -57,7 +59,10 @@ class LoginRepositoryTest {
         coVerify {
             userRepository.addUserToDbIfNeeded(user)
         }
-        assertThat(result).isEqualTo(Content.Data(user))
+        result.isEqualTo(
+            Content.Loading(),
+            Content.Data(user)
+        )
     }
 
     @Test

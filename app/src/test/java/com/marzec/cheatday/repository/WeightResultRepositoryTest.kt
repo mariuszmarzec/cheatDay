@@ -34,7 +34,10 @@ internal class WeightResultRepositoryTest {
     fun observeWeights() = runBlockingTest {
         coEvery { weightApi.getAll() } returns listOf(stubWeightDto())
 
-        assertThat(repository.observeWeights()).isEqualTo(
+        val values = repository.observeWeights().test(this)
+
+        values.isEqualTo(
+            Content.Loading(),
             Content.Data(listOf(stubWeightResult()))
         )
     }

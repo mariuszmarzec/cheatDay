@@ -26,43 +26,39 @@ operator fun <T : ListItem> List<T>.plus(item: T): List<T> {
     return this + listOf(item)
 }
 
-@Deprecated("Use kotlin stdlib ones")
 fun <T1, T2> combine(
     first: Flow<T1>,
     second: Flow<T2>
 ): Flow<Pair<T1, T2>> =
-    first.combine(second) { a, b -> Pair(a, b) }
+    combine(first, second) { a, b -> Pair(a, b) }
 
-@Deprecated("Use kotlin stdlib ones")
 fun <T1, T2, T3> combine(
     first: Flow<T1>,
     second: Flow<T2>,
     third: Flow<T3>,
 ): Flow<Triple<T1, T2, T3>> =
-    combine(first, second)
-        .combine(third) { (a, b), c ->
-            Triple(a, b, c)
-        }
+    combine(first, second, third) { a, b, c ->
+        Triple(a, b, c)
+    }
 
-@Deprecated("Use kotlin stdlib ones")
 fun <T1, T2, T3, T4> combine(
     first: Flow<T1>,
     second: Flow<T2>,
     third: Flow<T3>,
     fourth: Flow<T4>,
 ): Flow<Quadruple<T1, T2, T3, T4>> =
-    combine(first, second, third)
-        .combine(fourth) { (a, b, c), d ->
-            Quadruple(a, b, c, d)
-        }
+    combine(first, second, third, fourth) { a, b, c, d ->
+        Quadruple(a, b, c, d)
+    }
 
 fun String.toDateTime(): DateTime = DateTime.parse(this, Api.DATE_FORMATTER)
 
 @Suppress("unchecked_cast")
-inline fun <reified T: Any> Any.asInstance(action: T.() -> Unit) = (this as? T)?.action()
+inline fun <reified T : Any> Any.asInstance(action: T.() -> Unit) = (this as? T)?.action()
 
 @Suppress("unchecked_cast")
-inline fun <reified T: Any, R> Any.asInstanceAndReturnOther(action: T.() -> R) = (this as? T)?.action()
+inline fun <reified T : Any, R> Any.asInstanceAndReturnOther(action: T.() -> R) =
+    (this as? T)?.action()
 
 data class Quadruple<T1, T2, T3, T4>(
     val ob1: T1,
