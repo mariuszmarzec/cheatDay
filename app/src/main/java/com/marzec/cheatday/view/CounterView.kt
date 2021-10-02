@@ -106,14 +106,6 @@ class CounterView @JvmOverloads constructor(
         visible()
     }
 
-    fun setDayOrHide(day: Day?) {
-        if (day != null) {
-            setDay(day)
-        } else {
-            gone()
-        }
-    }
-
     private fun drawValue() {
         valueTextView.text = when (mode) {
             CountMode.DECREASE -> "${this.value}"
