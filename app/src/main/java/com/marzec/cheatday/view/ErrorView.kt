@@ -6,10 +6,16 @@ import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.airbnb.epoxy.ModelProp
+import com.airbnb.epoxy.ModelView
+import com.airbnb.epoxy.TextProp
 import com.airbnb.paris.annotations.Attr
+import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.extensions.style
 import com.marzec.cheatday.R
 
+@ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_MATCH_HEIGHT)
+@Styleable("ErrorView")
 class ErrorView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
@@ -17,7 +23,7 @@ class ErrorView @JvmOverloads constructor(
     private val errorMessageTextView: TextView
     private val button: Button
 
-    var onButtonClickListener: () -> Unit = { }
+    private var onButtonClickListener: () -> Unit = { }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.view_error, this)
@@ -31,12 +37,19 @@ class ErrorView @JvmOverloads constructor(
     }
 
     @Attr(R.styleable.ErrorView_ev_message)
-    fun setErrorMessage(message: String) {
+    @TextProp
+    fun setErrorMessage(message: CharSequence) {
         errorMessageTextView.text = message
     }
 
     @Attr(R.styleable.ErrorView_ev_button_label)
-    fun setButtonLabel(buttonLabel: String) {
+    @TextProp
+    fun setButtonLabel(buttonLabel: CharSequence) {
         button.text = buttonLabel
+    }
+
+    @ModelProp(options = [ModelProp.Option.DoNotHash])
+    fun setOnButtonClickListener(onButtonClickListener: () -> Unit) {
+        this.onButtonClickListener = onButtonClickListener
     }
 }

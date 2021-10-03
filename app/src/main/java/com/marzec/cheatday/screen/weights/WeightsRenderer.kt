@@ -6,17 +6,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.marzec.cheatday.R
 import com.marzec.cheatday.screen.weights.model.WeightsData
 import com.marzec.cheatday.screen.weights.model.WeightsMapper
+import com.marzec.cheatday.view.errorView
 import com.marzec.cheatday.view.labeledRowView
 import com.marzec.cheatday.view.model.LabeledRowItem
+import com.marzec.cheatday.view.progressView
 import com.marzec.mvi.State
 import javax.inject.Inject
 
 class WeightsRenderer @Inject constructor(
     private val mapper: WeightsMapper,
 ) {
-    lateinit var onClickListener: (String) -> Unit
-    lateinit var onLongClickListener: (String) -> Unit
-    lateinit var onFloatingButtonClick: () -> Unit
+    var onClickListener: (String) -> Unit = { }
+    var onLongClickListener: (String) -> Unit = { }
+    var onFloatingButtonClick: () -> Unit = { }
+    var onTryAgainButtonClickListener: () -> Unit = { }
 
     private lateinit var recyclerView: EpoxyRecyclerView
     private lateinit var floatingButton: FloatingActionButton
@@ -58,10 +61,20 @@ class WeightsRenderer @Inject constructor(
 
             }
             is State.Error -> {
-                // TODO RENDER ERROR
+                recyclerView.withModels {
+                    progressView {
+                        errorView {
+                            errorMessage(state.message)
+                            onButtonClickListener { onTryAgainButtonClickListener() }
+                        }
+                    }
+                }
+
             }
             is State.Loading -> {
-                // TODO RENDER LOADING
+                recyclerView.withModels {
+                    progressView { }
+                }
             }
         }
     }

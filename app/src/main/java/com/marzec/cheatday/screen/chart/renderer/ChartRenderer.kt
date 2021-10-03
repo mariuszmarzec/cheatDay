@@ -31,7 +31,7 @@ class ChartRenderer @Inject constructor() {
         val color = chart.context.getColor(R.color.colorPrimaryDark)
 
         progressBar.background = null
-        errorView.onButtonClickListener = { onTryAgainButtonClickListener() }
+        errorView.setOnButtonClickListener { onTryAgainButtonClickListener() }
 
         chart.xAxis.run {
             setDrawGridLines(false)
