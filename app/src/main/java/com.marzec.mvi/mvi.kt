@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewModel() {
 
-    private val sideEffectsInternal = MutableSharedFlow<SideEffect>()
+    protected val sideEffectsInternal = MutableSharedFlow<SideEffect>()
     val sideEffects: Flow<SideEffect>
         get() = sideEffectsInternal
 

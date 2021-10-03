@@ -9,7 +9,7 @@ import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.MAX_POSS
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.TARGET_ID
 import com.marzec.mvi.State
 import com.marzec.mvi.StoreViewModel
-import com.marzec.mvi.reduceContentNoChanges
+import com.marzec.mvi.reduceContentAsSideAction
 import com.marzec.mvi.reduceDataWithContent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -30,10 +30,6 @@ class WeightsViewModel @Inject constructor(
 
         reducer {
             state.reduceDataWithContent(resultNonNull()) { it }
-        }
-
-        emitSideEffect {
-            resultNonNull().asErrorAndReturn { WeightsSideEffects.ShowError }
         }
     }
 
@@ -95,16 +91,17 @@ class WeightsViewModel @Inject constructor(
     }
 
     fun removeWeight(id: String) = intent<Content<Unit>> {
-        onTrigger {
-            weightInteractor.removeWeight(id.toLong())
-        }
+        onTrigger { weightInteractor.removeWeight(id.toLong()) }
 
-        reducer {
-            state.reduceContentNoChanges(resultNonNull())
-        }
+        reducer { state.reduceContentAsSideAction(resultNonNull()) }
 
-        emitSideEffect {
-            resultNonNull().asErrorAndReturn { WeightsSideEffects.ShowError }
+        sideEffect {
+            val content = resultNonNull()
+            if (content is Content.Data) {
+                load()
+            } else {
+                content.asErrorAndReturn { sideEffectsInternal.emit(WeightsSideEffects.ShowError) }
+            }
         }
     }
 

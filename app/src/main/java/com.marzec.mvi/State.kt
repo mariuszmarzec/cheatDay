@@ -44,6 +44,21 @@ fun <T, R> State<T>.reduceContent(
         )
     }
 
+fun <T, R> State<T>.reduceContentAsSideAction(
+    result: Content<R>
+): State<T> =
+    when (result) {
+        is Content.Loading -> State.Loading(data)
+        else -> {
+            val data = data
+            if (data != null) {
+                State.Data(data)
+            } else {
+                State.Error(data, message = "No data available")
+            }
+        }
+    }
+
 fun <T> State<T>.reduceData(
     reducer: T.() -> T
 ): State<T> =
