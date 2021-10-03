@@ -34,4 +34,9 @@ class ErrorView @JvmOverloads constructor(
     fun setErrorMessage(message: String) {
         errorMessageTextView.text = message
     }
+
+    @Attr(R.styleable.ErrorView_ev_button_label)
+    fun setButtonLabel(buttonLabel: String) {
+        button.text = buttonLabel
+    }
 }

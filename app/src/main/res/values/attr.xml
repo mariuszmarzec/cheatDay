@@ -13,6 +13,7 @@
 
     <declare-styleable name="ErrorView">
         <attr name="ev_message" format="string" />
+        <attr name="ev_button_label" format="string" />
     </declare-styleable>
 
 </resources>

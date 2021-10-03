@@ -25,6 +25,9 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        chartRenderer.onTryAgainButtonClickListener = {
+            viewModel.load()
+        }
         chartRenderer.init(view)
 
         viewModel.state.observe(chartRenderer::render)
