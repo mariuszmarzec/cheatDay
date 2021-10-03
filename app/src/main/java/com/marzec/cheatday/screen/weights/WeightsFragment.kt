@@ -39,6 +39,7 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
             renderer.onClickListener = { viewModel.onClick(it) }
             renderer.onLongClickListener = { viewModel.onLongClick(it) }
             renderer.onFloatingButtonClick = { viewModel.onFloatingButtonClick() }
+            renderer.onTryAgainButtonClickListener = { viewModel.load() }
             renderer.init(view = view)
         }
     }
@@ -82,11 +83,7 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.load()
+        savedInstanceState ?: viewModel.load()
     }
 
     private fun showTargetWeightDialog() {

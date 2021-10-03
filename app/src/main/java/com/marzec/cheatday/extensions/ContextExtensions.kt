@@ -7,6 +7,7 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.marzec.cheatday.R
 import org.jetbrains.anko.alert
+import org.jetbrains.anko.okButton
 
 fun Context.showInputDialog(dialogInputOptions: DialogInputOptions): Unit = with(dialogInputOptions) {
     val editText = EditText(this@showInputDialog).apply {
@@ -55,6 +56,7 @@ fun Context.showErrorDialog(
         titleResource = titleResId
         messageResource = messageResId
         isCancelable = true
+        okButton { }
         show()
     }
 }

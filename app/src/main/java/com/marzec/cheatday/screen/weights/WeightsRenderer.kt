@@ -62,18 +62,18 @@ class WeightsRenderer @Inject constructor(
             }
             is State.Error -> {
                 recyclerView.withModels {
-                    progressView {
-                        errorView {
-                            errorMessage(state.message)
-                            onButtonClickListener { onTryAgainButtonClickListener() }
-                        }
+                    errorView {
+                        id("ERROR")
+                        errorMessage(state.message)
+                        buttonLabel(R.string.button_try_again)
+                        onButtonClickListener { onTryAgainButtonClickListener() }
                     }
                 }
 
             }
             is State.Loading -> {
                 recyclerView.withModels {
-                    progressView { }
+                    progressView { id("PROGRESS") }
                 }
             }
         }
