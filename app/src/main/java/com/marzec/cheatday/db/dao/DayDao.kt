@@ -16,7 +16,7 @@ abstract class DayDao : BaseDao<DayEntity> {
     abstract fun getDay(userId: Long, type: String): DayEntity?
 
     @Transaction
-    open suspend fun createOrUpdate(day: DayEntity) {
+    open fun createOrUpdate(day: DayEntity) {
         val old = getDay(day.userId, day.type)
         if (old != null) {
             update(day.copy(id = old.id))

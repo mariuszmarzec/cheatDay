@@ -6,123 +6,123 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room.inMemoryDatabaseBuilder
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.model.db.DayEntity
 import com.marzec.cheatday.db.model.db.UserEntity
 import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
+class DayDaoTest {
 
-//@RunWith(AndroidJUnit4::class)
-//class DayDaoTest {
-//
-//    @get:Rule
-//    var instantTaskExecutorRule = InstantTaskExecutorRule()
-//
-//    private lateinit var userDao: UserDao
-//    private lateinit var dayDao: DayDao
-//    private lateinit var db: AppDatabase
-//    private val userEntity = UserEntity("uuid", "email")
-//    private val testEntity = DayEntity(
-//        1,
-//        "type",
-//        10,
-//        3,
-//        "uuid"
-//    )
-//
-//    @Before
-//    fun setUp() {
-//        val context = ApplicationProvider.getApplicationContext<Context>()
-//        db = inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
-//        userDao = db.getUserDao()
-//        dayDao = db.getDayDao()
-//        userDao.insertCompletable(userEntity).test()
-//    }
-//
-//    @Test
-//    fun insert() {
-//        dayDao.insertCompletable(
-//            DayEntity(
-//                1,
-//                "type",
-//                10,
-//                3,
-//                "uuid"
-//            )
-//        ).test().assertComplete()
-//    }
-//
-//    @Test
-//    fun insertDuplicate() {
-//        dayDao.insertCompletable(
-//            DayEntity(
-//                1,
-//                "type",
-//                10,
-//                3,
-//                "uuid"
-//            )
-//        ).test().assertComplete()
-//        dayDao.insertCompletable(
-//            DayEntity(
-//                1,
-//                "type",
-//                10,
-//                3,
-//                "uuid"
-//            )
-//        ).test().assertError { it is SQLiteConstraintException }
-//    }
-//
-//    @Test
-//    fun getDay() {
-//        dayDao.insert(
-//            DayEntity(
-//                1,
-//                "type",
-//                10,
-//                3,
-//                "uuid"
-//            )
-//        )
-//        assertEquals(
-//            DayEntity(
-//                1,
-//                "type",
-//                10,
-//                3,
-//                "uuid"
-//            ), dayDao.getDay(userEntity.uuid, "type")
-//        )
-//        dayDao.observeDay(userEntity.uuid, "unknown_type").test().assertEmpty()
-//        dayDao.observeDay(userEntity.uuid, "type").test().assertValue(
-//            DayEntity(
-//                1,
-//                "type",
-//                10,
-//                3,
-//                "uuid"
-//            )
-//        )
-//    }
-//
-//    @Test
-//    fun createOrUpdate() {
-//        dayDao.insert(testEntity)
-//        dayDao.createOrUpdateCompletable(testEntity.copy(count = 20)).test()
-//        dayDao.observeDay("uuid", "type").test().assertValue(testEntity.copy(count = 20))
-//    }
-//
-//    @Test
-//    fun cascadeDeleteWithUser() {
-//        dayDao.insert(testEntity)
-//        val user = userDao.getUser("email").test().values().first()
-//        userDao.remove(user)
-//
-//        dayDao.observeDay(testEntity.userId, testEntity.type).test().assertEmpty()
-//    }
-//}
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    lateinit var userDao: UserDao
+    lateinit var dayDao: DayDao
+    lateinit var db: AppDatabase
+    val userEntity = UserEntity(1, "email")
+    val testEntity = DayEntity(
+        1,
+        "type",
+        10,
+        3,
+        1
+    )
+
+    @Before
+    fun setUp() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        db = inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
+        userDao = db.getUserDao()
+        dayDao = db.getDayDao()
+        userDao.insert(userEntity)
+    }
+
+    @Test
+    fun insert() {
+        dayDao.insert(
+            DayEntity(
+                1,
+                "type",
+                10,
+                3,
+                1
+            )
+        )
+    }
+
+    @Test(expected = SQLiteConstraintException::class)
+    fun insertDuplicate() {
+        val entity = DayEntity(
+            id = 1,
+            type = "type",
+            count = 10,
+            max = 3,
+            userId = 1
+        )
+        dayDao.insert(entity)
+        dayDao.insert(entity)
+    }
+
+    @Test
+    fun getDay() = runBlockingTest {
+        dayDao.insert(
+            DayEntity(
+                1,
+                "type",
+                10,
+                3,
+                1
+            )
+        )
+        assertEquals(
+            DayEntity(
+                1,
+                "type",
+                10,
+                3,
+                1
+            ), dayDao.getDay(userEntity.id, "type")
+        )
+        val actual = dayDao.observeDay(userEntity.id, "type").first()
+
+        assertThat(actual).isEqualTo(
+            DayEntity(
+                id = 1,
+                type = "type",
+                count = 10,
+                max = 3,
+                userId = 1
+            )
+        )
+    }
+
+    @Test
+    fun createOrUpdate() = runBlockingTest {
+        dayDao.insert(testEntity)
+        dayDao.createOrUpdate(testEntity.copy(count = 20))
+
+        val actual = dayDao.observeDay(1, "type").first()
+
+        assertThat(actual).isEqualTo(testEntity.copy(count = 20))
+    }
+
+    @Test
+    fun cascadeDeleteWithUser() = runBlockingTest {
+        dayDao.insert(testEntity)
+        val user = userDao.getUser("email")
+        userDao.remove(user)
+
+        val actual = dayDao.observeDay(testEntity.userId, testEntity.type).firstOrNull()
+
+        assertThat(actual).isNull()
+    }
+}

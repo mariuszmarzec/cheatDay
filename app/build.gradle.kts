@@ -181,6 +181,7 @@ dependencies {
     implementation("androidx.room:room-ktx:${Dependency.room_version}")
     kapt("androidx.room:room-compiler:${Dependency.room_version}")
     androidTestImplementation("androidx.room:room-testing:${Dependency.room_version}")
+    androidTestImplementation("androidx.room:room-runtime:${Dependency.room_version}")
 
     // android views
     implementation("androidx.constraintlayout:constraintlayout:${Dependency.constraint_layout_version}")
