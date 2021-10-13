@@ -94,7 +94,7 @@ And clicks ok button
 Then user sees weights screen
 And user sees updated max possible weight
 
-XI: user updates target weight
+XII: user updates target weight
 Given user is logged in
 And user has weights results
 And user sees home screen
@@ -107,7 +107,7 @@ And clicks ok button
 Then user sees weights screen
 And user sees updated target weight
 
-X: user display weights chart
+XIII: user display weights chart
 Given user is logged in
 And user has weights results
 And user sees home screen
