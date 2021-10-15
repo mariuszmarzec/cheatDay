@@ -39,6 +39,7 @@ object Dependency {
     val protobuf_version = "0.8.14"
     val hilt_version = "2.38.1"
     val mockk_version = "1.11.0"
+    val kaspresso_version = "1.2.1"
 
     object BuildPlugins {
         val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"

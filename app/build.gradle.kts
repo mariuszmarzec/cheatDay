@@ -258,8 +258,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:${Dependency.espresso_core}")
     androidTestImplementation("androidx.test.espresso:espresso-contrib:${Dependency.espresso_core}")
 
-    // kakao
-    androidTestImplementation("com.agoda.kakao:kakao:${Dependency.kakao_version}")
+    // kaspresso
+    androidTestImplementation("com.kaspersky.android-components:kaspresso:${Dependency.kaspresso_version}")
 }
 
 protobuf {
