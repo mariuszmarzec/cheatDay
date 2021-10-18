@@ -1,7 +1,7 @@
 package com.marzec.cheatday.screen.addnewresult
 
+import androidx.core.os.bundleOf
 import com.karumi.shot.ScreenshotTest
-import com.marzec.cheatday.api.toContentData
 import com.marzec.cheatday.common.compareStateScreenshot
 import com.marzec.cheatday.screen.addnewresult.model.AddWeightData
 import com.marzec.mvi.State
@@ -38,11 +38,18 @@ class AddNewResultFragmentStateTest : ScreenshotTest {
     }
 
     @Test
-    fun initialState() = compareStateScreenshot<AddNewWeightResultFragment>(state)
+    fun initialState() = compare(state)
 
     @Test
-    fun loadingState() = compareStateScreenshot<AddNewWeightResultFragment>(loadingState)
+    fun loadingState() = compare(loadingState)
 
     @Test
-    fun errorState() = compareStateScreenshot<AddNewWeightResultFragment>(errorState)
+    fun errorState() = compare(errorState)
+
+    private fun compare(state: State<AddWeightData>) {
+        compareStateScreenshot<AddNewWeightResultFragment>(
+            state,
+            fragmentArgs = bundleOf("weightId" to null)
+        )
+    }
 }
