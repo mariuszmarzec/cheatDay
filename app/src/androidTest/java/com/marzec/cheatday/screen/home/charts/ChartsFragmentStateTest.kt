@@ -30,7 +30,7 @@ class ChartsFragmentStateTest : ScreenshotTest {
             WeightResult(id = 7, value = 83.5f, date = DateTime.now().minusDays(2))
         )
     )
-    val chartsState = chartsData.toContentData()
+    val chartsState = State.Data(chartsData)
     val loadingState = State.Loading(chartsData)
     val errorState = State.Error(null, "Error has occurred")
 

@@ -40,7 +40,7 @@ class WeightsFragmentStateTest : ScreenshotTest {
             )
         )
     }
-    val initialState = weightsData.toContentData()
+    val initialState = State.Data(weightsData)
     val loadingState = State.Loading<WeightsData>()
     val pendingActionState = State.Loading(weightsData)
     val errorState = State.Error(weightsData, "Error has occurred")

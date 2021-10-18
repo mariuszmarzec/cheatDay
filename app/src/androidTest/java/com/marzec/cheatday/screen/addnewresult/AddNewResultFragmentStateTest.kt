@@ -22,7 +22,7 @@ class AddNewResultFragmentStateTest : ScreenshotTest {
         AddWeightData.INITIAL
     }
 
-    val state by lazy { initialDate.toContentData() }
+    val state by lazy { State.Data(initialDate) }
 
     val loadingState by lazy {
         State.Loading(initialDate)
