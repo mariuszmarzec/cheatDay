@@ -1,16 +1,12 @@
-package com.marzec.cheatday.screen.home.weights
+package com.marzec.cheatday.screen.weights
 
 import com.karumi.shot.ScreenshotTest
-import com.marzec.cheatday.api.toContentData
 import com.marzec.cheatday.common.compareStateScreenshot
 import com.marzec.cheatday.model.domain.WeightResult
-import com.marzec.cheatday.screen.login.view.LoginFragment
-import com.marzec.cheatday.screen.weights.WeightsFragment
 import com.marzec.cheatday.screen.weights.model.WeightsData
 import com.marzec.mvi.State
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlin.math.min
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import org.junit.Before

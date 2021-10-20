@@ -1,4 +1,4 @@
-package com.marzec.cheatday.screen.home.login
+package com.marzec.cheatday.screen.login
 
 import com.karumi.shot.ScreenshotTest
 import com.marzec.cheatday.common.compareStateScreenshot
@@ -7,7 +7,6 @@ import com.marzec.cheatday.screen.login.view.LoginFragment
 import com.marzec.mvi.State
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
