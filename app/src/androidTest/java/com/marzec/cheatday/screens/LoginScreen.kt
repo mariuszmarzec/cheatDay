@@ -2,6 +2,7 @@ package com.marzec.cheatday.screens
 
 import com.kaspersky.kaspresso.screens.KScreen
 import com.marzec.cheatday.R
+import com.marzec.cheatday.common.typeAndCloseKeyboard
 import com.marzec.cheatday.screen.home.MainActivity
 import io.github.kakaocup.kakao.edit.KEditText
 import io.github.kakaocup.kakao.text.KButton
@@ -22,13 +23,9 @@ object LoginScreen : KScreen<LoginScreen>() {
 
     val loginButton = KButton { withId(R.id.button) }
 
-    fun typeLogin(login: String) {
-        loginEditText.typeText(login)
-    }
+    fun typeLogin(login: String) = typeAndCloseKeyboard(loginEditText, login)
 
-    fun typePassword(password: String) {
-        passwordEditText.typeText(password)
-    }
+    fun typePassword(password: String) = typeAndCloseKeyboard(passwordEditText, password)
 
     fun isDisplayed() {
         loginEditText {

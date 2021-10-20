@@ -37,6 +37,7 @@ fun <T> asContentFlow(request: suspend () -> T): Flow<Content<T>> {
         try {
             emit(Content.Data(request()))
         } catch (e: Exception) {
+            Log.e("AAA", e.message, e)
             emit(Content.Error<T>(e))
         }
     }

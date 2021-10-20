@@ -24,8 +24,8 @@ object HomeScreen : KScreen<HomeScreen>() {
     }
 
     fun isDisplayed() {
-        cheatDayCounter.isDisabled()
-        dietDayCounter.isDisabled()
-        workoutDayCounter.isDisabled()
+        cheatDayCounter.isDisplayed()
+        dietDayCounter.isDisplayed()
+        workoutDayCounter.isDisplayed()
     }
 }

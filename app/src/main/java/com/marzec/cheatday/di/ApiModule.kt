@@ -47,18 +47,24 @@ class ApiModule {
     @Provides
     @Singleton
     @LoginApiClient
-    fun provideRetrofitForLoginApi(httpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+    fun provideRetrofitForLoginApi(
+        httpClient: OkHttpClient,
+        @LoginApiUrl apiUrl: String
+    ): Retrofit = Retrofit.Builder()
         .client(httpClient)
-        .baseUrl(Api.BASE_URL)
+        .baseUrl(apiUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     @Provides
     @Singleton
     @CheatDayApiClient
-    fun provideRetrofitForCheatDayApi(httpClient: OkHttpClient): Retrofit = Retrofit.Builder()
+    fun provideRetrofitForCheatDayApi(
+        httpClient: OkHttpClient,
+        @CheatDayApiUrl apiUrl: String
+    ): Retrofit = Retrofit.Builder()
         .client(httpClient)
-        .baseUrl(Api.BASE_CHEAT_URL)
+        .baseUrl(apiUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -79,3 +85,9 @@ annotation class LoginApiClient
 
 @Qualifier
 annotation class CheatDayApiClient
+
+@Qualifier
+annotation class LoginApiUrl
+
+@Qualifier
+annotation class CheatDayApiUrl
