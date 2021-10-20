@@ -192,6 +192,7 @@ dependencies {
     implementation("com.google.code.gson:gson:${Dependency.gson_version}")
     implementation("com.squareup.okhttp3:okhttp:${Dependency.okhttp_version}")
     implementation("com.squareup.retrofit2:converter-gson:${Dependency.retrofit_version}")
+    implementation("com.squareup.okhttp3:mockwebserver:${Dependency.okhttp_version}")
 
     // joda time
     implementation("net.danlew:android.joda:${Dependency.joda_version}")
