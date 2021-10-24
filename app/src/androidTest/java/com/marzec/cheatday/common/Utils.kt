@@ -7,6 +7,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.kaspersky.kaspresso.screens.KScreen
 import com.marzec.cheatday.screen.home.MainActivity
 import io.github.kakaocup.kakao.edit.KEditText
+import java.io.File
 
 fun startApplication() {
     ActivityScenario.launch<MainActivity>(
@@ -26,3 +27,7 @@ fun <T: KScreen<T>> KScreen<T>.typeAndCloseKeyboard(
     editText.typeText(text)
     closeSoftKeyboard()
 }
+
+fun responseJson(fileName: String) = File(fileName).readText()
+
+fun loginResponseJson() = responseJson("response/user.json")
