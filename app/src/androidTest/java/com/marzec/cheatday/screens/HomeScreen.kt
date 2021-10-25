@@ -23,6 +23,10 @@ object HomeScreen : KScreen<HomeScreen>() {
         withId(R.id.workout_counter)
     }
 
+    val logoutButton = KView {
+        withId(R.id.logout)
+    }
+
     fun isDisplayed() {
         cheatDayCounter.isDisplayed()
         dietDayCounter.isDisplayed()

@@ -18,6 +18,7 @@ Then user sees error message
 
 III: Logout from application
 Given user is logged in
+Then user launch application
 And user sees home screen
 And user click logout button
 And user sees login screen

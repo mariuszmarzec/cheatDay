@@ -2,9 +2,13 @@ package com.marzec.cheatday.scenarios
 
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.marzec.cheatday.api.Api
+import com.marzec.cheatday.common.currentUser
+import com.marzec.cheatday.common.loginResponse
 import com.marzec.cheatday.common.loginResponseJson
+import com.marzec.cheatday.common.logoutResponse
 import com.marzec.cheatday.common.startApplication
 import com.marzec.cheatday.di.ApiUrlsModule
+import com.marzec.cheatday.model.domain.CurrentUserDomain
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.screens.HomeScreen
 import com.marzec.cheatday.screens.LoginScreen
@@ -39,43 +43,6 @@ class LoginScenariosTest : TestCase() {
     }
 
     @Test
-    fun loginInApplication() {
-        before {
-            server.enqueue(
-                MockResponse()
-                    .setHeader(Api.Headers.AUTHORIZATION, "token")
-                    .setBody(loginResponseJson())
-            )
-        }.after {
-            server.shutdown()
-        }.run {
-            step("User launch application") {
-                startApplication()
-            }
-
-            step("And user sees login screen") {
-                LoginScreen.isDisplayed()
-            }
-
-            step("Then user types login") {
-                LoginScreen.typeLogin("login")
-            }
-
-            step("And user types password") {
-                LoginScreen.typePassword("password")
-            }
-
-            step("And user click login button") {
-                LoginScreen.loginButton.click()
-            }
-
-            step("Then user see home screen") {
-                HomeScreen.isDisplayed()
-            }
-        }
-    }
-
-    @Test
     fun loginInApplicationFailed() {
         before {
             server.enqueue(
@@ -106,6 +73,69 @@ class LoginScenariosTest : TestCase() {
 
             step("Then user sees error message") {
                 LoginScreen.errorMessage.isDisplayed()
+            }
+        }
+    }
+
+    @Test
+    fun loginInApplication() {
+        before {
+            server.enqueue(loginResponse())
+        }.after {
+            server.shutdown()
+        }.run {
+            step("User launch application") {
+                startApplication()
+            }
+
+            step("And user sees login screen") {
+                LoginScreen.isDisplayed()
+            }
+
+            step("Then user types login") {
+                LoginScreen.typeLogin("login")
+            }
+
+            step("And user types password") {
+                LoginScreen.typePassword("password")
+            }
+
+            step("And user click login button") {
+                LoginScreen.loginButton.click()
+            }
+
+            step("Then user see home screen") {
+                HomeScreen.isDisplayed()
+            }
+        }
+    }
+
+    @Test
+    fun logoutFromApplication() {
+        before {
+            server.enqueue(logoutResponse())
+        }.after {
+            server.shutdown()
+        }.run {
+            step("Given user is logged in") {
+                runBlocking {
+                    userRepository.setCurrentUserWithAuth(currentUser)
+                }
+            }
+            step("Then user launch application") {
+                startApplication()
+            }
+
+            step("And user sees home screen") {
+                HomeScreen.isDisplayed()
+            }
+
+            step("And user click logout button") {
+                HomeScreen.logoutButton.click()
+            }
+
+            step("And user sees login screen") {
+                LoginScreen.isDisplayed()
             }
         }
     }

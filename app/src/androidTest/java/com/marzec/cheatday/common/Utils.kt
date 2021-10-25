@@ -5,9 +5,12 @@ import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import com.kaspersky.kaspresso.screens.KScreen
+import com.marzec.cheatday.api.Api
+import com.marzec.cheatday.model.domain.CurrentUserDomain
 import com.marzec.cheatday.screen.home.MainActivity
 import io.github.kakaocup.kakao.edit.KEditText
 import java.io.File
+import okhttp3.mockwebserver.MockResponse
 
 fun startApplication() {
     ActivityScenario.launch<MainActivity>(
@@ -20,7 +23,7 @@ fun startApplication() {
     )
 }
 
-fun <T: KScreen<T>> KScreen<T>.typeAndCloseKeyboard(
+fun <T : KScreen<T>> KScreen<T>.typeAndCloseKeyboard(
     editText: KEditText,
     text: String
 ) {
@@ -28,6 +31,18 @@ fun <T: KScreen<T>> KScreen<T>.typeAndCloseKeyboard(
     closeSoftKeyboard()
 }
 
+val currentUser = CurrentUserDomain(
+    id = 1,
+    auth = "token",
+    "email"
+)
+
 fun responseJson(fileName: String) = File(fileName).readText()
 
 fun loginResponseJson() = responseJson("response/user.json")
+
+fun loginResponse() = MockResponse()
+    .setHeader(Api.Headers.AUTHORIZATION, "token")
+    .setBody(loginResponseJson())
+
+fun logoutResponse() = MockResponse().setResponseCode(200)
