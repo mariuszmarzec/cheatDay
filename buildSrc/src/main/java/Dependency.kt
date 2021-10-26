@@ -20,7 +20,7 @@ object Dependency {
     val truth_version = "1.1.3"
     val viewmodel_version = "1.1.1"
     val room_version = "2.3.0"
-    val android_test_version = "1.1.1"
+    val android_test_version = "1.4.0"
     val android_test_runner_version = "1.1.0"
     val paris_version = "1.3.0"
     val arch_testing_version = "2.1.0"

@@ -43,6 +43,39 @@ class LoginScenariosTest : TestCase() {
     }
 
     @Test
+    fun loginInApplication() {
+        before {
+            server.enqueue(loginResponse())
+        }.after {
+            server.shutdown()
+        }.run {
+            step("User launch application") {
+                startApplication()
+            }
+
+            step("And user sees login screen") {
+                LoginScreen.isDisplayed()
+            }
+
+            step("Then user types login") {
+                LoginScreen.typeLogin("login")
+            }
+
+            step("And user types password") {
+                LoginScreen.typePassword("password")
+            }
+
+            step("And user click login button") {
+                LoginScreen.loginButton.click()
+            }
+
+            step("Then user see home screen") {
+                HomeScreen.isDisplayed()
+            }
+        }
+    }
+
+    @Test
     fun loginInApplicationFailed() {
         before {
             server.enqueue(
@@ -73,39 +106,6 @@ class LoginScenariosTest : TestCase() {
 
             step("Then user sees error message") {
                 LoginScreen.errorMessage.isDisplayed()
-            }
-        }
-    }
-
-    @Test
-    fun loginInApplication() {
-        before {
-            server.enqueue(loginResponse())
-        }.after {
-            server.shutdown()
-        }.run {
-            step("User launch application") {
-                startApplication()
-            }
-
-            step("And user sees login screen") {
-                LoginScreen.isDisplayed()
-            }
-
-            step("Then user types login") {
-                LoginScreen.typeLogin("login")
-            }
-
-            step("And user types password") {
-                LoginScreen.typePassword("password")
-            }
-
-            step("And user click login button") {
-                LoginScreen.loginButton.click()
-            }
-
-            step("Then user see home screen") {
-                HomeScreen.isDisplayed()
             }
         }
     }

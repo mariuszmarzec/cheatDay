@@ -42,6 +42,7 @@ android {
         versionName = Dependency.Android.versionName
         testInstrumentationRunner = "com.marzec.cheatday.MockTestRunner"
         testInstrumentationRunnerArgument("listener", "leakcanary.FailTestOnLeakRunListener")
+        testInstrumentationRunnerArguments(mapOf("clearPackageData" to "true"))
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -123,6 +124,9 @@ android {
     testOptions.animationsDisabled = true
     testOptions.unitTests.isReturnDefaultValues = true
     testOptions.unitTests.isIncludeAndroidResources = true
+    testOptions {
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+    }
 
     packagingOptions {
         exclude("META-INF/AL2.0")
@@ -253,6 +257,7 @@ dependencies {
 
     // test runner
     androidTestImplementation("androidx.test:runner:${Dependency.android_test_version}")
+    androidTestUtil("androidx.test:orchestrator:${Dependency.android_test_version}")
     androidTestImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
 
     // espresso

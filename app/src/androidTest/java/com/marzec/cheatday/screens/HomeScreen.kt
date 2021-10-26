@@ -3,6 +3,7 @@ package com.marzec.cheatday.screens
 import com.kaspersky.kaspresso.screens.KScreen
 import com.marzec.cheatday.R
 import com.marzec.cheatday.screen.home.MainActivity
+import com.marzec.views.KCounterView
 import io.github.kakaocup.kakao.common.views.KView
 
 object HomeScreen : KScreen<HomeScreen>() {
@@ -15,7 +16,7 @@ object HomeScreen : KScreen<HomeScreen>() {
         withId(R.id.cheat_counter)
     }
 
-    val dietDayCounter = KView {
+    val dietDayCounter = KCounterView {
         withId(R.id.diet_counter)
     }
 

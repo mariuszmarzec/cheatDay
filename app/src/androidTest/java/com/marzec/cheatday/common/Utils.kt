@@ -6,10 +6,13 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import com.kaspersky.kaspresso.screens.KScreen
 import com.marzec.cheatday.api.Api
+import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.model.domain.CurrentUserDomain
+import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.screen.home.MainActivity
 import io.github.kakaocup.kakao.edit.KEditText
 import java.io.File
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 
 fun startApplication() {
@@ -34,8 +37,19 @@ fun <T : KScreen<T>> KScreen<T>.typeAndCloseKeyboard(
 val currentUser = CurrentUserDomain(
     id = 1,
     auth = "token",
-    "email"
+    email = "email"
 )
+
+private fun resetUser(userRepository: UserRepository, userDao: UserDao) {
+    runBlocking {
+        try {
+            userDao.getUser(currentUser.email)
+        } catch (_: Exception) {
+            null
+        }?.let { userDao.remove(it) }
+        userRepository.setCurrentUserWithAuth(currentUser)
+    }
+}
 
 fun responseJson(fileName: String) = File(fileName).readText()
 

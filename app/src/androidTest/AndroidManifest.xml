@@ -2,4 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.marzec.cheatday.test"
     android:sharedUserId="com.marzec.cheatday.uid" >
+
+    <application
+        android:allowBackup="false"
+        />
 </manifest>

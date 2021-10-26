@@ -25,6 +25,7 @@ And user sees login screen
 
 IV: user increase diet counter
 Given user is logged in
+Then User launch application
 And user sees home screen
 And user clicks increase button for diet
 Then user sees counter value increased
