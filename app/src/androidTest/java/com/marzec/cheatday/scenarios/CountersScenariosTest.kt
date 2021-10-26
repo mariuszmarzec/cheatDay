@@ -60,4 +60,26 @@ class CountersScenariosTest : TestCase() {
             }
         }
     }
+
+    @Test
+    fun userIncreaseWorkoutCounter() {
+        run {
+
+            step("Then User launch application") {
+                startApplication()
+            }
+
+            step("And user sees home screen") {
+                HomeScreen.isDisplayed()
+            }
+
+            step("And user clicks increase button for workout") {
+                HomeScreen.workoutDayCounter.performIncrease()
+            }
+
+            step("Then user sees counter value increased") {
+                HomeScreen.workoutDayCounter.isValueEqual("1/3")
+            }
+        }
+    }
 }

@@ -20,7 +20,7 @@ object HomeScreen : KScreen<HomeScreen>() {
         withId(R.id.diet_counter)
     }
 
-    val workoutDayCounter = KView {
+    val workoutDayCounter = KCounterView {
         withId(R.id.workout_counter)
     }
 
