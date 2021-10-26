@@ -40,17 +40,6 @@ val currentUser = CurrentUserDomain(
     email = "email"
 )
 
-private fun resetUser(userRepository: UserRepository, userDao: UserDao) {
-    runBlocking {
-        try {
-            userDao.getUser(currentUser.email)
-        } catch (_: Exception) {
-            null
-        }?.let { userDao.remove(it) }
-        userRepository.setCurrentUserWithAuth(currentUser)
-    }
-}
-
 fun responseJson(fileName: String) = File(fileName).readText()
 
 fun loginResponseJson() = responseJson("response/user.json")

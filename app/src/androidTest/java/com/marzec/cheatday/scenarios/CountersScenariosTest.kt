@@ -28,9 +28,6 @@ class CountersScenariosTest : TestCase() {
     @Inject
     lateinit var userRepository: UserRepository
 
-    @Inject
-    lateinit var userDao: UserDao
-
     @Before
     fun init() {
         hiltRule.inject()
