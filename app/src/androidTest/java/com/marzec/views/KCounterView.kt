@@ -47,4 +47,13 @@ interface CounterViewActions : BaseActions {
             click()
         }
     }
+
+    fun performDecrease() {
+        KView {
+            withId(R.id.increase_button)
+        }.invoke {
+            isDisplayed()
+            click()
+        }
+    }
 }

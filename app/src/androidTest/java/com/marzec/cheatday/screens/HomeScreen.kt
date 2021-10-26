@@ -12,7 +12,7 @@ object HomeScreen : KScreen<HomeScreen>() {
 
     override val viewClass: Class<*> = MainActivity::class.java
 
-    val cheatDayCounter = KView {
+    val cheatDayCounter = KCounterView {
         withId(R.id.cheat_counter)
     }
 
@@ -26,6 +26,10 @@ object HomeScreen : KScreen<HomeScreen>() {
 
     val logoutButton = KView {
         withId(R.id.logout)
+    }
+
+    val weightTab = KView {
+        withId(R.id.weights)
     }
 
     fun isDisplayed() {

@@ -31,14 +31,16 @@ class CountersScenariosTest : TestCase() {
     @Before
     fun init() {
         hiltRule.inject()
-        runBlocking {
-            userRepository.setCurrentUserWithAuth(currentUser)
-        }
     }
 
     @Test
     fun userIncreaseDietCounter() {
         run {
+            step("Given user is logged in") {
+                runBlocking {
+                    userRepository.setCurrentUserWithAuth(currentUser)
+                }
+            }
 
             step("Then User launch application") {
                 startApplication()
@@ -61,6 +63,11 @@ class CountersScenariosTest : TestCase() {
     @Test
     fun userIncreaseWorkoutCounter() {
         run {
+            step("Given user is logged in") {
+                runBlocking {
+                    userRepository.setCurrentUserWithAuth(currentUser)
+                }
+            }
 
             step("Then User launch application") {
                 startApplication()
@@ -76,6 +83,91 @@ class CountersScenariosTest : TestCase() {
 
             step("Then user sees counter value increased") {
                 HomeScreen.workoutDayCounter.isValueEqual("1/3")
+            }
+        }
+    }
+
+    @Test
+    fun userDecreaseCheatDayCounter() {
+        run {
+            step("Given user is logged in") {
+                runBlocking {
+                    userRepository.setCurrentUserWithAuth(currentUser)
+                }
+            }
+
+            step("Then User launch application") {
+                startApplication()
+            }
+
+            step("And user sees home screen") {
+                HomeScreen.isDisplayed()
+            }
+
+            step("And user clicks decrease button for cheat day") {
+                HomeScreen.cheatDayCounter.performDecrease()
+            }
+
+            step("Then user sees counter value decreased") {
+                HomeScreen.cheatDayCounter.isValueEqual("-1")
+            }
+        }
+    }
+
+    @Test
+    fun userIncreaseCheatDayCounterByIncreasingDiet() {
+        run {
+            step("Given user is logged in") {
+                runBlocking {
+                    userRepository.setCurrentUserWithAuth(currentUser)
+                }
+            }
+
+            step("Then User launch application") {
+                startApplication()
+            }
+
+            step("And user sees home screen") {
+                HomeScreen.isDisplayed()
+            }
+
+            step("And user clicks increase button for diet 5 times") {
+                repeat(5) {
+                    HomeScreen.dietDayCounter.performIncrease()
+                }
+            }
+
+            step("Then user sees counter value decreased") {
+                HomeScreen.cheatDayCounter.isValueEqual("1")
+            }
+        }
+    }
+
+    @Test
+    fun userIncreaseCheatDayCounterByIncreasingWorkout() {
+        run {
+            step("Given user is logged in") {
+                runBlocking {
+                    userRepository.setCurrentUserWithAuth(currentUser)
+                }
+            }
+
+            step("Then User launch application") {
+                startApplication()
+            }
+
+            step("And user sees home screen") {
+                HomeScreen.isDisplayed()
+            }
+
+            step("And user clicks increase button for workout 3 times") {
+                repeat(3) {
+                    HomeScreen.workoutDayCounter.performIncrease()
+                }
+            }
+
+            step("Then user sees counter value decreased") {
+                HomeScreen.cheatDayCounter.isValueEqual("1")
             }
         }
     }

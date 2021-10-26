@@ -122,6 +122,7 @@ class LoginScenariosTest : TestCase() {
                     userRepository.setCurrentUserWithAuth(currentUser)
                 }
             }
+
             step("Then user launch application") {
                 startApplication()
             }
