@@ -58,17 +58,3 @@ class WeightsFragmentStateTest : ScreenshotTest {
     @Test
     fun errorState() = compareStateScreenshot<WeightsFragment>(errorState)
 }
-
-//class Item(parent: Matcher<View>) : KRecyclerItem<Item>(parent) {
-//    val label: KTextView = KTextView(parent) { withId(R.id.label) }
-//    val value: KTextView = KTextView(parent) { withId(R.id.value) }
-//}
-//
-//class WeightsScreen : Screen<WeightsScreen>() {
-//    val fab = KImageView { withId(R.id.floating_button) }
-//    val recyclerView = KRecyclerView({
-//        withId(R.id.recycler_view)
-//    }, itemTypeBuilder = {
-//        itemType(::Item)
-//    })
-//}

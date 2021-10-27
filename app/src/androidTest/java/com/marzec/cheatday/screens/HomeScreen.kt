@@ -3,7 +3,7 @@ package com.marzec.cheatday.screens
 import com.kaspersky.kaspresso.screens.KScreen
 import com.marzec.cheatday.R
 import com.marzec.cheatday.screen.home.MainActivity
-import com.marzec.views.KCounterView
+import com.marzec.cheatday.views.KCounterView
 import io.github.kakaocup.kakao.common.views.KView
 
 object HomeScreen : KScreen<HomeScreen>() {

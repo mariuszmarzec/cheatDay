@@ -7,7 +7,7 @@ import net.danlew.android.joda.JodaTimeAndroid
 import javax.inject.Inject
 
 @HiltAndroidApp
-open class App : Application() {
+class App : Application() {
 
     @Inject
     lateinit var notificationHelper: NotificationHelper
@@ -17,5 +17,13 @@ open class App : Application() {
         JodaTimeAndroid.init(this)
         notificationHelper.createNotificationChannel()
         notificationHelper.scheduleEveryDayNotification()
+    }
+}
+
+open class BaseApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        JodaTimeAndroid.init(this)
     }
 }

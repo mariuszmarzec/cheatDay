@@ -1,5 +1,6 @@
 package com.marzec.cheatday.scenarios
 
+import androidx.test.platform.app.InstrumentationRegistry
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.common.currentUser
@@ -17,6 +18,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
+import net.danlew.android.joda.JodaTimeAndroid
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Before

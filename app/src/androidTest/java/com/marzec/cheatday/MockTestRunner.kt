@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.StrictMode
 import com.karumi.shot.ShotTestRunner
 import dagger.hilt.android.testing.HiltTestApplication
+import net.danlew.android.joda.JodaTimeAndroid
 
 class MockTestRunner : ShotTestRunner() {
     override fun onCreate(args: Bundle) {
@@ -22,7 +23,8 @@ class MockTestRunner : ShotTestRunner() {
         cl: ClassLoader,
         className: String,
         context: Context
-    ): Application {
-        return super.newApplication(cl, HiltTestApplication::class.java.name, context)
-    }
+    ): Application = super.newApplication(cl,
+        TestApplication_Application::class.java.name,
+        context
+    )
 }

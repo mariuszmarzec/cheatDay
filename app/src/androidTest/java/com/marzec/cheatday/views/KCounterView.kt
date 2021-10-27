@@ -1,4 +1,4 @@
-package com.marzec.views
+package com.marzec.cheatday.views
 
 import android.view.View
 import androidx.test.espresso.DataInteraction

@@ -65,9 +65,6 @@ And user type weight value
 And user clicks add button
 Then user sees weights screen
 And user sees new weight result added
-And user clicks on home tab
-Then user sees home screen
-And user sees updated cheat day counter
 
 X: user updates new weight result
 Given user is logged in
