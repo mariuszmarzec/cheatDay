@@ -1,18 +1,14 @@
 package com.marzec.cheatday.common
 
-import android.app.Instrumentation
 import android.content.ComponentName
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.internal.inject.InstrumentationContext
-import androidx.test.platform.app.InstrumentationRegistry
 import com.kaspersky.kaspresso.screens.KScreen
 import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.model.domain.CurrentUserDomain
 import com.marzec.cheatday.screen.home.MainActivity
 import io.github.kakaocup.kakao.edit.KEditText
-import java.io.File
 import okhttp3.mockwebserver.MockResponse
 
 fun startApplication() {
@@ -48,19 +44,26 @@ fun responseJson(fileName: String): String {
 
 fun loginResponseJson() = responseJson("user.json")
 
-fun loginResponse() = MockResponse()
-    .setHeader(Api.Headers.AUTHORIZATION, "token")
+fun loginResponse() = okStatusResponse()
     .setBody(loginResponseJson())
 
 fun logoutResponse() = MockResponse().setResponseCode(200)
 
-fun emptyWeightsListResponse() = MockResponse()
-    .setHeader(Api.Headers.AUTHORIZATION, "token")
+fun emptyWeightsListResponse() = okStatusResponse()
     .setBody(responseJson("empty_weights.json"))
 
-fun oneWeightsListResponse() = MockResponse()
-    .setHeader(Api.Headers.AUTHORIZATION, "token")
+fun oneWeightsListResponse() = okStatusResponse()
     .setBody(responseJson("one_weights.json"))
 
-fun addWeightsResponse() = MockResponse()
+fun fewWeightsListResponse() = okStatusResponse()
+    .setBody(responseJson("few_weights.json"))
+
+fun updatedFewWeightsListResponse() = okStatusResponse()
+    .setBody(responseJson("updated_few_weights.json"))
+
+fun addWeightsResponse() = okStatusResponse()
+
+fun updateWeightResponse() = okStatusResponse()
+
+private fun okStatusResponse() = MockResponse()
     .setHeader(Api.Headers.AUTHORIZATION, "token")

@@ -69,6 +69,7 @@ And user sees new weight result added
 X: user updates new weight result
 Given user is logged in
 And user has weights results
+Then User launch application
 And user sees home screen
 And user clicks weights tab
 Then user sees weights screen
