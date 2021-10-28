@@ -1,6 +1,7 @@
 package com.marzec.cheatday.scenarios
 
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
+import com.marzec.cheatday.R
 import com.marzec.cheatday.common.addWeightsResponse
 import com.marzec.cheatday.common.currentUser
 import com.marzec.cheatday.common.emptyWeightsListResponse
@@ -11,6 +12,7 @@ import com.marzec.cheatday.common.updateWeightResponse
 import com.marzec.cheatday.common.updatedFewWeightsListResponse
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.screens.AddNewWeightsScreen
+import com.marzec.cheatday.screens.ChartScreen
 import com.marzec.cheatday.screens.HomeScreen
 import com.marzec.cheatday.screens.Item
 import com.marzec.cheatday.screens.UpdateWeightsScreen
@@ -185,6 +187,186 @@ class WeightScenariosTest : TestCase() {
                         value.hasText("83.0 kg")
                     }
                 }
+            }
+        }
+    }
+
+    @Test
+    fun userUpdateMaxPossibleWeight() {
+        before {
+        }.after {
+            server.shutdown()
+        }.run {
+            step("Given user is logged in") {
+                runBlocking {
+                    userRepository.setCurrentUserWithAuth(currentUser)
+                }
+            }
+
+            step("And user has weights results") {
+                server.enqueue(fewWeightsListResponse())
+                server.enqueue(fewWeightsListResponse())
+                server.enqueue(oneWeightsListResponse())
+            }
+
+            step("Then User launch application") {
+                startApplication()
+            }
+
+            step("And user sees home screen") {
+                HomeScreen.isDisplayed()
+            }
+
+            step("And user clicks weights tab") {
+                HomeScreen.weightTab.click()
+            }
+
+            step("Then user sees weights screen") {
+                WeightsScreen.isDisplayed()
+            }
+
+            step("And user clicks max possible weight row") {
+                WeightsScreen {
+                    weights.childAt<Item>(1) {
+                        click()
+                    }
+                }
+            }
+
+            step("Then user sees max possible weight update dialog") {
+                WeightsScreen.inputDialog {
+                    message.hasText(R.string.dialog_change_max_weight_message)
+                    isDisplayed()
+                }
+            }
+
+            step("And user type new max possible weight") {
+                WeightsScreen.typeMaxPossibleWeight("85.0")
+            }
+
+            step("And clicks ok button") {
+                WeightsScreen.inputDialog.positiveButton.click()
+            }
+
+            step("Then user sees weights screen") {
+                WeightsScreen.isDisplayed()
+            }
+
+            step("And user sees updated max possible weight") {
+                WeightsScreen {
+                    weights.childAt<Item>(1) {
+                        value.hasText("85.0 kg")
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun userUpdatesTargetWeight() {
+        before {
+        }.after {
+            server.shutdown()
+        }.run {
+            step("Given user is logged in") {
+                runBlocking {
+                    userRepository.setCurrentUserWithAuth(currentUser)
+                }
+            }
+
+            step("And user has weights results") {
+                server.enqueue(fewWeightsListResponse())
+                server.enqueue(fewWeightsListResponse())
+                server.enqueue(oneWeightsListResponse())
+            }
+
+            step("Then User launch application") {
+                startApplication()
+            }
+
+            step("And user sees home screen") {
+                HomeScreen.isDisplayed()
+            }
+
+            step("And user clicks weights tab") {
+                HomeScreen.weightTab.click()
+            }
+
+            step("Then user sees weights screen") {
+                WeightsScreen.isDisplayed()
+            }
+
+            step("And user clicks target weight row") {
+                WeightsScreen {
+                    weights.childAt<Item>(2) {
+                        click()
+                    }
+                }
+            }
+
+            step("Then user sees target weight update dialog") {
+                WeightsScreen.inputDialog {
+                    message.hasText(R.string.dialog_change_target_weight_message)
+                    isDisplayed()
+                }
+            }
+
+            step("And user type new target weight") {
+                WeightsScreen.typeMaxPossibleWeight("85.0")
+            }
+
+            step("And clicks ok button") {
+                WeightsScreen.inputDialog.positiveButton.click()
+            }
+
+            step("Then user sees weights screen") {
+                WeightsScreen.isDisplayed()
+            }
+
+            step("And user sees updated target weight") {
+                WeightsScreen {
+                    weights.childAt<Item>(2) {
+                        value.hasText("85.0 kg")
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun userDisplayWeightsChart() {
+        before {
+        }.after {
+            server.shutdown()
+        }.run {
+            step("Given user is logged in") {
+                runBlocking {
+                    userRepository.setCurrentUserWithAuth(currentUser)
+                }
+            }
+
+            step("Then User launch application") {
+                startApplication()
+            }
+
+            step("And user sees home screen") {
+                HomeScreen.isDisplayed()
+            }
+
+            step("And user clicks weights tab") {
+                HomeScreen.weightTab.click()
+            }
+
+            step("Then user sees weights screen") {
+                WeightsScreen.isDisplayed()
+            }
+
+            step("And user clicks chart button") {
+                WeightsScreen.chartButton.click()
+            }
+
+            step("Then user sees weight chart screen") {
+                ChartScreen.isDisplayed()
             }
         }
     }

@@ -113,6 +113,5 @@ And user has weights results
 And user sees home screen
 And user clicks weights tab
 Then user sees weights screen
-And user sees weight results
 And user clicks chart button
 Then user sees weight chart screen
