@@ -89,7 +89,6 @@ class WeightsViewModelTest {
         assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
-                WeightsSideEffects.ShowError,
                 State.Error(null, message = emptyString())
             )
         )

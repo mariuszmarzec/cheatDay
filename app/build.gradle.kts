@@ -4,7 +4,7 @@ import com.google.protobuf.gradle.*
 
 fun readProperties(): Properties {
     val properties = Properties()
-    val propertiesFile = File("local.properties")
+    val propertiesFile = File("${rootDir}/local.properties")
     if (propertiesFile.exists()) {
         properties.load(FileInputStream(propertiesFile))
     }
@@ -43,6 +43,7 @@ android {
         testInstrumentationRunner = "com.marzec.cheatday.MockTestRunner"
         testInstrumentationRunnerArgument("listener", "leakcanary.FailTestOnLeakRunListener")
         testInstrumentationRunnerArguments(mapOf("clearPackageData" to "true"))
+        testInstrumentationRunnerArguments(mapOf("useTestStorageService" to "true"))
 
         javaCompileOptions {
             annotationProcessorOptions {
