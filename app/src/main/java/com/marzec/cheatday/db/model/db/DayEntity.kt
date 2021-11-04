@@ -1,7 +1,11 @@
 package com.marzec.cheatday.db.model.db
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.marzec.cheatday.model.domain.Day
 
 @Entity(

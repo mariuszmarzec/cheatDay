@@ -8,6 +8,7 @@ import com.marzec.cheatday.db.model.db.WeightResultEntity
 
 val MIGRATION_2_TO_3 = Migration2to3()
 
+@Suppress("MaxLineLength", "MagicNumber")
 class Migration2to3 : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
         // create temp tables

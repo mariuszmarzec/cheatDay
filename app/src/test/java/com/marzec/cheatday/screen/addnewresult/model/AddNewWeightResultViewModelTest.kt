@@ -6,8 +6,8 @@ import com.marzec.cheatday.TestCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.toContentFlow
 import com.marzec.cheatday.core.test
+import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.extensions.asFlow
-import com.marzec.cheatday.extensions.emptyString
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
 import com.marzec.mvi.State
@@ -96,7 +96,7 @@ internal class AddNewWeightResultViewModelTest {
         assertThat(states.values()).isEqualTo(
             listOf(
                 defaultState,
-                State.Error(defaultData, emptyString())
+                State.Error(defaultData, EMPTY_STRING)
             )
         )
     }
@@ -163,7 +163,7 @@ internal class AddNewWeightResultViewModelTest {
             listOf(
                 defaultState,
                 AddWeightSideEffect.ShowError,
-                State.Error(defaultData, emptyString())
+                State.Error(defaultData, EMPTY_STRING)
             )
         )
     }
@@ -205,7 +205,7 @@ internal class AddNewWeightResultViewModelTest {
             listOf(
                 State.Data(data),
                 AddWeightSideEffect.ShowError,
-                State.Error(data, emptyString())
+                State.Error(data, EMPTY_STRING)
             )
         )
     }

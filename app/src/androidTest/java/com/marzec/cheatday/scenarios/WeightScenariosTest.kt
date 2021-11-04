@@ -110,6 +110,7 @@ class WeightScenariosTest : TestCase() {
     }
 
     @Test
+    @Suppress("LongMethod")
     fun userUpdatesNewWeightResult() {
         before {
         }.after {

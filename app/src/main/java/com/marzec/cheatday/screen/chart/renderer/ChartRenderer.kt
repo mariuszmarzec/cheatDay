@@ -35,7 +35,7 @@ class ChartRenderer @Inject constructor() {
 
         chart.xAxis.run {
             setDrawGridLines(false)
-            spaceMin = 5f
+            spaceMin = CHART_X_SPACE_MIN
             position = XAxis.XAxisPosition.BOTTOM
             textColor = color
         }
@@ -78,7 +78,7 @@ class ChartRenderer @Inject constructor() {
 
         lineDataSet.setColors(chart.context.getColor(R.color.chartDataSet))
         lineDataSet.valueTextColor = chart.context.getColor(R.color.colorPrimaryDark)
-        lineDataSet.valueTextSize = 10f
+        lineDataSet.valueTextSize = TEXT_SIZE
         chart.data = LineData(lineDataSet)
         chart.xAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
@@ -86,5 +86,10 @@ class ChartRenderer @Inject constructor() {
             }
         }
         chart.invalidate()
+    }
+
+    private companion object {
+        const val CHART_X_SPACE_MIN = 5f
+        const val TEXT_SIZE = 10f
     }
 }

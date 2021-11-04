@@ -23,25 +23,27 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient(userRepository: UserRepository): OkHttpClient = OkHttpClient.Builder()
-        .callTimeout(Duration.ofMillis(10_000))
-        .writeTimeout(Duration.ofMillis(10_000))
-        .readTimeout(Duration.ofMillis(10_000))
-        .addNetworkInterceptor(Interceptor { chain ->
-            var request = chain.request()
-            runBlocking { userRepository.getCurrentUserWithAuthToken() }?.let { user ->
-                request = request.newBuilder()
-                    .addHeader(Api.Headers.AUTHORIZATION, user.auth)
-                    .build()
-            }
+    fun provideHttpClient(userRepository: UserRepository): OkHttpClient {
+        return OkHttpClient.Builder()
+            .callTimeout(Duration.ofMillis(TIMEOUT))
+            .writeTimeout(Duration.ofMillis(TIMEOUT))
+            .readTimeout(Duration.ofMillis(TIMEOUT))
+            .addNetworkInterceptor(Interceptor { chain ->
+                var request = chain.request()
+                runBlocking { userRepository.getCurrentUserWithAuthToken() }?.let { user ->
+                    request = request.newBuilder()
+                        .addHeader(Api.Headers.AUTHORIZATION, user.auth)
+                        .build()
+                }
 
-            val response = chain.proceed(request)
-            if (response.code == 401) {
-                runBlocking { userRepository.clearCurrentUser() }
-            }
-            response
-        })
-        .build()
+                val response = chain.proceed(request)
+                if (response.code == HTTP_UNAUTHORIZED_STATUS) {
+                    runBlocking { userRepository.clearCurrentUser() }
+                }
+                response
+            })
+            .build()
+    }
 
 
     @Provides
@@ -78,6 +80,11 @@ class ApiModule {
     fun provideWeightApi(@CheatDayApiClient retrofit: Retrofit): WeightApi = retrofit.create(
         WeightApi::class.java
     )
+
+    private companion object {
+        const val TIMEOUT: Long = 10_000
+        const val HTTP_UNAUTHORIZED_STATUS = 401
+    }
 }
 
 @Qualifier

@@ -6,9 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
 import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 
-fun emptyString() = ""
+const val EMPTY_STRING = ""
 
 fun Long?.toDateTime() = this?.let { DateTime(it) }
 

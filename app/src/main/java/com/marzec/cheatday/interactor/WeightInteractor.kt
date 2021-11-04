@@ -46,7 +46,7 @@ class WeightInteractor @Inject constructor(
                 }
             }
         } else {
-            throw Error()
+            throw IllegalStateException("Adding new result failed")
         }
     }
 

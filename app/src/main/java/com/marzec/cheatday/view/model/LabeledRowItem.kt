@@ -5,5 +5,4 @@ data class LabeledRowItem(
     override val data: Any,
     val label: String,
     val value: String
-) : ListItem {
-}
+) : ListItem

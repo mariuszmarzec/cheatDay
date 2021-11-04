@@ -1,15 +1,16 @@
 package com.marzec.cheatday.screen.dayscounter
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterViewModel
 import com.marzec.cheatday.view.CounterView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {

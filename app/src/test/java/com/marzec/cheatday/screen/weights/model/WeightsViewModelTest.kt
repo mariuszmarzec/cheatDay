@@ -6,7 +6,7 @@ import com.marzec.cheatday.TestCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.toContentFlow
 import com.marzec.cheatday.core.test
-import com.marzec.cheatday.extensions.emptyString
+import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
 import com.marzec.mvi.State
@@ -89,7 +89,7 @@ class WeightsViewModelTest {
         assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
-                State.Error(null, message = emptyString())
+                State.Error(null, message = EMPTY_STRING)
             )
         )
     }

@@ -3,7 +3,7 @@ package com.marzec.cheatday.repository
 import androidx.datastore.core.DataStore
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
-import com.marzec.cheatday.extensions.emptyString
+import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.model.domain.CurrentUserDomain
 import com.marzec.cheatday.model.domain.CurrentUserProto
 import com.marzec.cheatday.model.domain.User
@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -49,8 +48,8 @@ class UserRepository @Inject constructor(
     suspend fun clearCurrentUser(): Unit = withContext(dispatcher) {
         currentUserStore.updateData {
             it.toBuilder()
-                .setAuthToken(emptyString())
-                .setEmail(emptyString())
+                .setAuthToken(EMPTY_STRING)
+                .setEmail(EMPTY_STRING)
                 .setId(-1)
                 .build()
         }

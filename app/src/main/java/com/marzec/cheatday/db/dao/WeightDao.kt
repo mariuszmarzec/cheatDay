@@ -8,13 +8,18 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WeightDao : BaseDao<WeightResultEntity> {
 
-    @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE user_id = :userId ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
+    @Query("SELECT * FROM ${WeightResultEntity.NAME} " +
+            "WHERE user_id = :userId " +
+            "ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
     fun observeWeights(userId: Long): Flow<List<WeightResultEntity>>
 
-    @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE user_id = :userId AND value == (SELECT MIN(value) FROM ${WeightResultEntity.NAME} WHERE user_id = :userId) ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
+    @Query("SELECT * FROM ${WeightResultEntity.NAME} " +
+            "WHERE user_id = :userId AND value == (SELECT MIN(value) FROM ${WeightResultEntity.NAME} " +
+            "WHERE user_id = :userId) ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
     fun observeMinWeight(userId: Long): Flow<WeightResultEntity?>
 
-    @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE user_id = :userId ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
+    @Query("SELECT * FROM ${WeightResultEntity.NAME} " +
+            "WHERE user_id = :userId ORDER BY ${WeightResultEntity.COLUMN_DATE} DESC")
     fun observeLastWeight(userId: Long): Flow<WeightResultEntity?>
 
     @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE id = :id")

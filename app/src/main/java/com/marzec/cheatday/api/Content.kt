@@ -21,9 +21,9 @@ sealed class Content<T> {
 suspend fun <T> asContent(request: suspend () -> T): Content<T> {
     return try {
         Content.Data(request())
-    } catch (e: Exception) {
-        Log.e("Content", e.message.orEmpty(), e)
-        Content.Error(e)
+    } catch (expected: Exception) {
+        Log.e("Content", expected.message.orEmpty(), expected)
+        Content.Error(expected)
     }
 }
 
@@ -36,8 +36,8 @@ fun <T> asContentFlow(request: suspend () -> T): Flow<Content<T>> {
         emit(Content.Loading())
         try {
             emit(Content.Data(request()))
-        } catch (e: Exception) {
-            emit(Content.Error<T>(e))
+        } catch (expected: Exception) {
+            emit(Content.Error<T>(expected))
         }
     }
 }
@@ -93,7 +93,7 @@ fun <R> combineContents(vararg contents: Content<*>, mapData: (List<*>) -> R): C
         return Content.Data(mapData(filterIsInstance<Content.Data<*>>().map { it.data }))
     }
 
-@Suppress("unchecked_cast")
+@Suppress("unchecked_cast", "MagicNumber")
 fun <T1, T2, T3, T4, R> combineContentsFlows(
     flow: Flow<Content<T1>>,
     flow2: Flow<Content<T2>>,

@@ -23,7 +23,7 @@ internal class CommonExtensionsKtTest {
 
     @Test
     fun emptyStringTest() {
-        assertThat(emptyString()).isEqualTo("")
+        assertThat(EMPTY_STRING).isEqualTo("")
     }
 
     @Test

@@ -1,13 +1,11 @@
 package com.marzec.cheatday.repository
 
 import androidx.datastore.core.DataStore
-import com.google.common.base.CharMatcher
-import com.google.common.base.CharMatcher.any
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
-import com.marzec.cheatday.extensions.emptyString
+import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.model.domain.CurrentUserDomain
 import com.marzec.cheatday.model.domain.CurrentUserProto
 import com.marzec.cheatday.model.domain.User
@@ -38,8 +36,8 @@ internal class UserRepositoryTest {
         .build()
 
     private val emptyCurrentUserProto = CurrentUserProto.getDefaultInstance().newBuilderForType()
-        .setAuthToken(emptyString())
-        .setEmail(emptyString())
+        .setAuthToken(EMPTY_STRING)
+        .setEmail(EMPTY_STRING)
         .setId(-1)
         .build()
 

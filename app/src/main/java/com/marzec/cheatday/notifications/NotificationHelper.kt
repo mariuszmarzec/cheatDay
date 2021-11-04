@@ -1,6 +1,10 @@
 package com.marzec.cheatday.notifications
 
-import android.app.*
+import android.app.AlarmManager
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -9,8 +13,8 @@ import com.marzec.cheatday.R
 import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.screen.home.MainActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
-import org.joda.time.DateTime
 import javax.inject.Inject
+import org.joda.time.DateTime
 
 interface NotificationHelper {
     fun show(title: String, content: String, id: Int)
@@ -67,7 +71,7 @@ class NotificationHelperImpl @Inject constructor(
         val alarmManager = context.getSystemService<AlarmManager>()
         val timeInMillis = DateTime.now()
             .withTimeAtStartOfDay()
-            .withHourOfDay(22)
+            .withHourOfDay(ALARM_HOUR)
             .apply {
                 if (this.isAfterNow) {
                     plusDays(1)
@@ -92,5 +96,9 @@ class NotificationHelperImpl @Inject constructor(
                 AlarmManager.INTERVAL_DAY,
                 pendingIntent
             )
+    }
+
+    companion object {
+        private const val ALARM_HOUR = 22
     }
 }
