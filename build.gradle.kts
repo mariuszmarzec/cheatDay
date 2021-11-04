@@ -18,7 +18,7 @@ buildscript {
         classpath(Dependency.BuildPlugins.crashlytics)
         classpath(Dependency.BuildPlugins.protobuf)
         classpath(Dependency.BuildPlugins.hilt)
-
+        classpath(Dependency.BuildPlugins.detektPlugin)
     }
 }
 

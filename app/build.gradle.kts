@@ -24,6 +24,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     jacoco
     id("shot")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 jacoco {
@@ -285,4 +286,14 @@ protobuf {
             }
         }
     }
+}
+
+detekt {
+    source = files(
+        "src/androidTest/java",
+        "src/main/java",
+        "src/test/java"
+    )
+
+    config = files("../config/detekt/detekt.yml")
 }

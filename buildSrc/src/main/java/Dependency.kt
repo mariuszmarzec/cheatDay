@@ -40,6 +40,7 @@ object Dependency {
     val hilt_version = "2.38.1"
     val mockk_version = "1.11.0"
     val kaspresso_version = "1.2.1"
+    val detektVersion = "1.18.1"
 
     object BuildPlugins {
         val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"
@@ -52,6 +53,7 @@ object Dependency {
         val googleServices = "com.google.gms:google-services:${google_service_version}"
         val protobuf = "com.google.protobuf:protobuf-gradle-plugin:${protobuf_version}"
         val hilt = "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
+        val detektPlugin = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
     }
 
     object Android {
