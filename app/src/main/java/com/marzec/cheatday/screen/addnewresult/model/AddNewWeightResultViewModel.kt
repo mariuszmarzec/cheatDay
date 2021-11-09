@@ -56,10 +56,14 @@ class AddNewWeightResultViewModel @Inject constructor(
     fun save() = intent<Content<Unit>> {
         onTrigger {
             state.ifDataAvailable {
-                if (weightResult.id != 0L) {
-                    weightInteractor.updateWeight(weightResult)
+                val newWeight = weightResult.copy(
+                    value = weight.toFloat(),
+                    date = date
+                )
+                if (newWeight.id != 0L) {
+                    weightInteractor.updateWeight(newWeight)
                 } else {
-                    weightInteractor.addWeight(weightResult)
+                    weightInteractor.addWeight(newWeight)
                 }
             }
         }

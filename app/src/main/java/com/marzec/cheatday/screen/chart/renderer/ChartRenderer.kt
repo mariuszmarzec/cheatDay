@@ -67,7 +67,7 @@ class ChartRenderer @Inject constructor() {
     }
 
     private fun render(data: ChartsData) {
-        val weights = data.weights
+        val weights = data.weights.reversed()
         val idToWeight = weights.mapIndexed { index, weight ->
             index to weight.date.toString(Constants.DATE_PICKER_PATTERN)
         }.toMap()
