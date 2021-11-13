@@ -23,7 +23,7 @@ class WeightInteractor @Inject constructor(
     fun observeMaxPossibleWeight(): Flow<Float> =
         userPreferencesRepository.observeMaxPossibleWeight()
 
-    fun observeMinWeight(): Flow<Content<WeightResult?>> =
+    suspend fun observeMinWeight(): Flow<Content<WeightResult?>> =
         weightResultRepository.observeMinWeight()
 
     suspend fun setTargetWeight(weight: Float) = userPreferencesRepository.setTargetWeight(weight)

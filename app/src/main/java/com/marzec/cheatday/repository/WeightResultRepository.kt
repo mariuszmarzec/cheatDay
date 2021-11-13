@@ -5,37 +5,51 @@ import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.api.asContent
 import com.marzec.cheatday.api.asContentFlow
+import com.marzec.cheatday.api.mapData
+import com.marzec.cheatday.api.unwrapData
 import com.marzec.cheatday.api.request.PutWeightRequest
 import com.marzec.cheatday.api.response.toDomain
+import com.marzec.cheatday.db.dao.WeightDao
+import com.marzec.cheatday.db.model.db.toDomain
 import com.marzec.cheatday.model.domain.WeightResult
+import com.marzec.cheatday.model.domain.toDb
 import com.marzec.cheatday.model.domain.toDto
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
 class WeightResultRepository @Inject constructor(
     private val weightApi: WeightApi,
+    private val weightDao: WeightDao,
+    private val userRepository: UserRepository,
     private val dispatcher: CoroutineDispatcher
 ) {
     suspend fun observeWeights(): Flow<Content<List<WeightResult>>> =
-        asContentFlow {
-            weightApi.getAll().map { it.toDomain() }
-        }.flowOn(dispatcher)
+        observeWeightCacheFirst()
 
-    fun observeMinWeight(): Flow<Content<WeightResult?>> =
-        asContentFlow {
-            weightApi.getAll().map { it.toDomain() }.minByOrNull { it.value }
-        }.flowOn(dispatcher)
+    suspend fun observeMinWeight(): Flow<Content<WeightResult?>> =
+        observeWeightCacheFirst().map { content ->
+            content.mapData { weights ->
+                weights.minByOrNull { it.value }
+            }
+        }
 
-    fun observeLastWeight(): Flow<Content<WeightResult?>> =
-        asContentFlow {
-            weightApi.getAll().map { it.toDomain() }.maxByOrNull { it.date }
-        }.flowOn(dispatcher)
+    suspend fun observeLastWeight(): Flow<Content<WeightResult?>> =
+        observeWeightCacheFirst().map { content ->
+            content.mapData { weights ->
+                weights.maxByOrNull { it.date }
+            }
+        }
 
     suspend fun putWeight(weightResult: WeightResult): Flow<Content<Unit>> =
-        asContentFlow {
+        asContentWithWeightsUpdate {
             weightApi.put(
                 PutWeightRequest(
                     value = weightResult.value,
@@ -45,14 +59,94 @@ class WeightResultRepository @Inject constructor(
         }.flowOn(dispatcher)
 
     suspend fun updateWeight(weightResult: WeightResult): Flow<Content<Unit>> =
-        asContentFlow {
+        asContentWithWeightsUpdate {
             weightApi.update(weightResult.id, weightResult.toDto())
         }.flowOn(dispatcher)
 
     suspend fun getWeight(id: Long): Flow<Content<WeightResult>> = asContentFlow {
-        weightApi.getAll().map { it.toDomain() }.first { it.id == id }
+        getWeightsFromApi().first { it.id == id }
     }.flowOn(dispatcher)
 
+    private suspend fun getWeightsFromApi() = weightApi.getAll().map { it.toDomain() }
+
     suspend fun removeWeight(id: Long): Flow<Content<Unit>> =
-        asContentFlow { weightApi.remove(id) }.flowOn(dispatcher)
+        asContentWithWeightsUpdate { weightApi.remove(id) }.flowOn(dispatcher)
+
+    private suspend fun cachedWeight(
+        networkCall: suspend () -> Content<List<WeightResult>>,
+    ): Flow<Content<List<WeightResult>>> {
+        val userId = userRepository.getCurrentUser().id
+        return cacheCall(
+            networkCall = networkCall,
+            cacheReadFlow = {
+                weightDao.observeWeights(userId)
+                    .map { weights -> weights.map { it.toDomain() } }
+            },
+            saveToCache = { weights ->
+                saveToCache(weights, userId)
+            }
+        )
+    }
+
+    private suspend fun saveToCache(
+        weights: List<WeightResult>,
+        userId: Long
+    ) {
+        weightDao.removeAll()
+        weightDao.insertAll(weights.map { it.toDb(userId) })
+    }
+
+    private suspend fun observeWeightCacheFirst() =
+        cachedWeight {
+            asContent { getWeightsFromApi() }
+        }.flowOn(dispatcher)
+
+    private suspend fun <MODEL : Any> cacheCall(
+        networkCall: suspend () -> Content<MODEL>,
+        cacheReadFlow: suspend () -> Flow<MODEL?>,
+        saveToCache: suspend (MODEL) -> Unit
+    ): Flow<Content<MODEL>> =
+        withContext(dispatcher) {
+            val cached = cacheReadFlow().firstOrNull()
+            val initial = if (cached != null) {
+                Content.Data(cached)
+            } else {
+                Content.Loading()
+            }
+            combine(
+                flow {
+                    emit(initial)
+                    val callResult = networkCall()
+                    if (callResult is Content.Error) {
+                        emit(callResult)
+                    } else if (callResult is Content.Data) {
+                        saveToCache(callResult.data)
+                    }
+                },
+                cacheReadFlow()
+            ) { networkCall, cache ->
+                if (cache != null) {
+                    Content.Data(cache)
+                } else {
+                    networkCall
+                }
+            }.flowOn(dispatcher)
+        }
+
+    private suspend fun refreshWeightsCache() = asContent {
+        getWeightsFromApi()
+    }.let {
+        if (it is Content.Data) {
+            saveToCache(it.data, userRepository.getCurrentUser().id)
+        }
+    }
+
+
+    private fun asContentWithWeightsUpdate(request: suspend () -> Unit) =
+        asContentFlow(request)
+            .onEach {
+                if (it is Content.Data) {
+                    refreshWeightsCache()
+                }
+            }.flowOn(dispatcher)
 }

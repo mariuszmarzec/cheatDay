@@ -43,7 +43,7 @@ fun <T> asContentFlow(request: suspend () -> T): Flow<Content<T>> {
 }
 
 suspend fun <T> Flow<Content<T>>.dataOrNull(): T? = filter { it !is Content.Loading }
-    .singleOrNull()?.mapData()
+    .singleOrNull()?.unwrapData()
 
 fun <T> Flow<Content<T>>.unwrapContent(): Flow<T?> = filter { it !is Content.Loading }
     .map {
@@ -56,8 +56,18 @@ fun <T> Flow<Content<T>>.unwrapContent(): Flow<T?> = filter { it !is Content.Loa
 
 fun <T> Content.Error<T>.getMessage(): String = exception.message.orEmpty()
 
+fun <T, R> Content<T>.mapData(mapper: (T) -> R) = when (this) {
+    is Content.Data -> try {
+        Content.Data(mapper(this.data))
+    } catch (expected: Exception) {
+        Content.Error(expected)
+    }
+    is Content.Loading -> Content.Loading(this.data?.let(mapper))
+    is Content.Error -> Content.Error(this.exception)
+}
+
 @Suppress("unchecked_cast")
-fun <T> Content<T>.mapData(): T? =
+fun <T> Content<T>.unwrapData(): T? =
     if (this is Content.Data<T>) {
         this.data
     } else {
