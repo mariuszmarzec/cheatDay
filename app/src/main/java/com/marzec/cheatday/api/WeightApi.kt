@@ -12,7 +12,7 @@ import retrofit2.http.Path
 interface WeightApi {
 
     @POST("weight")
-    suspend fun put(@Body request: PutWeightRequest)
+    suspend fun put(@Body request: PutWeightRequest): WeightDto
 
     @PATCH("weight/{id}")
     suspend fun update(@Path("id") id: Long, @Body request: WeightDto)

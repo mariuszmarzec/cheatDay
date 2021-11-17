@@ -3,6 +3,7 @@ package com.marzec.cheatday.db.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 import com.marzec.cheatday.model.domain.WeightResult
 import kotlinx.coroutines.flow.Flow
@@ -32,4 +33,10 @@ interface WeightDao : BaseDao<WeightResultEntity> {
 
     @Insert
     suspend fun insertAll(weights: List<WeightResultEntity>)
+
+    @Transaction
+    suspend fun replaceAll(weights: List<WeightResultEntity>) {
+        removeAll()
+        insertAll(weights)
+    }
 }

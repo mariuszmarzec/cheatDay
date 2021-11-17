@@ -16,6 +16,7 @@ import com.marzec.cheatday.model.domain.toDto
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -48,14 +49,14 @@ class WeightResultRepository @Inject constructor(
             }
         }
 
-    suspend fun putWeight(weightResult: WeightResult): Flow<Content<Unit>> =
+    suspend fun putWeight(weightResult: WeightResult): Flow<Content<WeightResult>> =
         asContentWithWeightsUpdate {
             weightApi.put(
                 PutWeightRequest(
                     value = weightResult.value,
                     date = weightResult.date.toString(Api.DATE_FORMAT)
                 )
-            )
+            ).toDomain()
         }.flowOn(dispatcher)
 
     suspend fun updateWeight(weightResult: WeightResult): Flow<Content<Unit>> =
@@ -92,8 +93,7 @@ class WeightResultRepository @Inject constructor(
         weights: List<WeightResult>,
         userId: Long
     ) {
-        weightDao.removeAll()
-        weightDao.insertAll(weights.map { it.toDb(userId) })
+        weightDao.replaceAll(weights.map { it.toDb(userId) })
     }
 
     private suspend fun observeWeightCacheFirst() =
@@ -124,9 +124,7 @@ class WeightResultRepository @Inject constructor(
                         saveToCache(callResult.data)
                     }
                 },
-                cacheReadFlow().mapNotNull {
-                        Content.Data(it) as Content<MODEL>
-                }
+                cacheReadFlow().filterNotNull().map { Content.Data(it) }
             ).flowOn(dispatcher)
         }
 
@@ -139,7 +137,7 @@ class WeightResultRepository @Inject constructor(
     }
 
 
-    private fun asContentWithWeightsUpdate(request: suspend () -> Unit) =
+    private fun <T> asContentWithWeightsUpdate(request: suspend () -> T) =
         asContentFlow(request)
             .onEach {
                 if (it is Content.Data) {

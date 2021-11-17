@@ -31,7 +31,9 @@ class WeightInteractorTest {
         coEvery { weightResultRepository.observeMinWeight() } returns flowOf(Content.Data(null))
         coEvery { targetRepository.observeMaxPossibleWeight() } returns (flowOf(0f))
 
-        coEvery { weightResultRepository.putWeight(any()) } returns flowOf(Content.Data(Unit))
+        coEvery { weightResultRepository.putWeight(any()) } returns flowOf(Content.Data(
+            stubWeightResult())
+        )
         coEvery { weightResultRepository.updateWeight(any()) } returns flowOf(Content.Data(Unit))
 
         coEvery { daysInteractor.incrementCheatDays(any()) } returns Unit
@@ -88,7 +90,7 @@ class WeightInteractorTest {
     fun addWeight() = runBlockingTest {
         coEvery { weightResultRepository.putWeight(stubWeightResult()) } returns flowOf(
             Content.Data(
-                Unit
+                stubWeightResult()
             )
         )
 
@@ -99,10 +101,8 @@ class WeightInteractorTest {
 
     @Test
     fun updateWeight() = runBlockingTest {
-        coEvery { weightResultRepository.putWeight(stubWeightResult()) } returns flowOf(
-            Content.Data(
-                Unit
-            )
+        coEvery { weightResultRepository.updateWeight(stubWeightResult()) } returns flowOf(
+            Content.Data(Unit)
         )
 
         interactor.updateWeight(stubWeightResult())
@@ -113,7 +113,7 @@ class WeightInteractorTest {
     @Test
     fun `if added weight is not today, then don't change cheat days count`() = runBlockingTest {
         coEvery { weightResultRepository.putWeight(stubWeightResult(value = 90.5f)) } returns flowOf(
-            Content.Data(Unit)
+            Content.Data(stubWeightResult(value = 90.5f))
         )
 
         interactor.addWeight(
@@ -249,7 +249,7 @@ class WeightInteractorTest {
         @Test
         fun `if old value not available, then don't cheat days count`() = runBlockingTest {
             coEvery { weightResultRepository.putWeight(stubWeightResult(value = 90.5f)) } returns flowOf(
-                Content.Data(Unit)
+                Content.Data(stubWeightResult(value = 90.5f))
             )
             coEvery { weightResultRepository.observeLastWeight() } returns flowOf(Content.Data(null))
             coEvery { targetRepository.observeTargetWeight() } returns (flowOf(90f))

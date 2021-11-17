@@ -6,10 +6,10 @@ import com.marzec.cheatday.extensions.asInstanceAndReturnOther
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.singleOrNull
 
 sealed class Content<T> {
 
@@ -43,7 +43,7 @@ fun <T> asContentFlow(request: suspend () -> T): Flow<Content<T>> {
 }
 
 suspend fun <T> Flow<Content<T>>.dataOrNull(): T? = filter { it !is Content.Loading }
-    .singleOrNull()?.unwrapData()
+    .firstOrNull()?.unwrapData()
 
 fun <T> Flow<Content<T>>.unwrapContent(): Flow<T?> = filter { it !is Content.Loading }
     .map {

@@ -125,7 +125,11 @@ internal class WeightResultRepositoryTest {
                     date = "2021-06-07T00:00:00"
                 )
             )
-        } returns Unit
+        } returns stubWeightDto(
+            value = 5f,
+            date = "2021-06-07T00:00:00"
+        )
+
 
         val result = repository.putWeight(
             stubWeightResult(
@@ -137,7 +141,12 @@ internal class WeightResultRepositoryTest {
         assertThat(result).isEqualTo(
             listOf(
                 Content.Loading(),
-                Content.Data(Unit)
+                Content.Data(
+                    stubWeightResult(
+                        value = 5f,
+                        date = "2021-06-07T00:00:00".toDateTime()
+                    )
+                )
             )
         )
     }
