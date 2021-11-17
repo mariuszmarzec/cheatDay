@@ -12,18 +12,23 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
+import com.marzec.cheatday.common.StateObserver
+import com.marzec.cheatday.common.StateObserver.Companion.testState
 import com.marzec.cheatday.extensions.DialogInputOptions
 import com.marzec.cheatday.extensions.DialogOptions
 import com.marzec.cheatday.extensions.showAnswerDialog
 import com.marzec.cheatday.extensions.showErrorDialog
 import com.marzec.cheatday.extensions.showInputDialog
+import com.marzec.cheatday.screen.weights.model.WeightsData
 import com.marzec.cheatday.screen.weights.model.WeightsSideEffects
 import com.marzec.cheatday.screen.weights.model.WeightsViewModel
+import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
-class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
+class WeightsFragment : BaseFragment(R.layout.fragment_weights), StateObserver<State<WeightsData>> {
 
     @Inject
     lateinit var renderer: WeightsRenderer
@@ -48,9 +53,7 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-
-
-        viewModel.state.observe(renderer::render)
+        observeState(viewModel.state, renderer::render)
 
         viewModel.sideEffects.observe { effect ->
             when (effect) {
@@ -83,7 +86,7 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
                 }
             }
         }
-        savedInstanceState ?: viewModel.load()
+        savedInstanceState ?: testState ?: viewModel.load()
     }
 
     private fun showTargetWeightDialog() {
@@ -133,6 +136,13 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
             R.id.chart -> viewModel.goToChart().run { true }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun bindStateObserver(
+        stateFlow: Flow<State<WeightsData>>,
+        action: (State<WeightsData>) -> Unit
+    ) {
+        stateFlow.observe(action)
     }
 }
 

@@ -60,20 +60,20 @@ class UserRepository @Inject constructor(
         addUserToDbIfNeeded(user.email)
     }
 
-    private suspend fun addUserToDbIfNeeded(email: String) {
-        val userExist = userDao.observeUser(email).firstOrNull() != null
-        if (!userExist) {
+    private suspend fun addUserToDbIfNeeded(email: String): UserEntity {
+        return userDao.observeUser(email).firstOrNull() ?: run {
             userDao.insert(UserEntity(0, email))
+            userDao.getUser(email)
         }
     }
 
     suspend fun setCurrentUserWithAuth(newUser: CurrentUserDomain): Unit = withContext(dispatcher) {
-        addUserToDbIfNeeded(newUser.email)
+        val userEntity = addUserToDbIfNeeded(newUser.email)
         currentUserStore.updateData {
             it.toBuilder()
                 .setAuthToken(newUser.auth)
                 .setEmail(newUser.email)
-                .setId(newUser.id)
+                .setId(userEntity.id.toInt())
                 .build()
         }
         Unit

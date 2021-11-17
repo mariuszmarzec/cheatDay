@@ -7,6 +7,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.marzec.cheatday.R
+import com.marzec.cheatday.common.getId
 import io.github.kakaocup.kakao.common.actions.BaseActions
 import io.github.kakaocup.kakao.common.assertions.BaseAssertions
 import io.github.kakaocup.kakao.common.builders.ViewBuilder
@@ -40,7 +41,7 @@ interface CounterViewAssertions : BaseAssertions {
 interface CounterViewActions : BaseActions {
 
     fun performIncrease() {
-        KView {
+        KView(withId(view.getId())) {
             withId(R.id.increase_button)
         }.invoke {
             isDisplayed()
@@ -49,8 +50,8 @@ interface CounterViewActions : BaseActions {
     }
 
     fun performDecrease() {
-        KView {
-            withId(R.id.increase_button)
+        KView(withId(view.getId())) {
+            withId(R.id.decrease_button)
         }.invoke {
             isDisplayed()
             click()

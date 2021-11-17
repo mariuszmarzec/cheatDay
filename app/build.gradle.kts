@@ -42,7 +42,7 @@ android {
         versionCode = Dependency.Android.versionCode
         versionName = Dependency.Android.versionName
         testInstrumentationRunner = "com.marzec.cheatday.MockTestRunner"
-        testInstrumentationRunnerArgument("listener", "leakcanary.FailTestOnLeakRunListener")
+//        testInstrumentationRunnerArgument("listener", "leakcanary.FailTestOnLeakRunListener")
         testInstrumentationRunnerArguments(mapOf("clearPackageData" to "true"))
         testInstrumentationRunnerArguments(mapOf("useTestStorageService" to "true"))
 

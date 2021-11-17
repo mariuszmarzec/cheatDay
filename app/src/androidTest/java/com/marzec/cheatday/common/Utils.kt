@@ -8,6 +8,7 @@ import com.kaspersky.kaspresso.screens.KScreen
 import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.model.domain.CurrentUserDomain
 import com.marzec.cheatday.screen.home.MainActivity
+import io.github.kakaocup.kakao.delegate.ViewInteractionDelegate
 import io.github.kakaocup.kakao.edit.KEditText
 import okhttp3.mockwebserver.MockResponse
 
@@ -67,3 +68,9 @@ fun updateWeightResponse() = okStatusResponse()
 
 private fun okStatusResponse() = MockResponse()
     .setHeader(Api.Headers.AUTHORIZATION, "token")
+
+fun ViewInteractionDelegate.getId(): Int {
+    var id = -1
+    check { view, _ -> id = view.id }
+    return id
+}
