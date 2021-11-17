@@ -5,14 +5,23 @@ import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.api.request.PutWeightRequest
 import com.marzec.cheatday.core.test
+import com.marzec.cheatday.db.dao.WeightDao
+import com.marzec.cheatday.db.model.db.WeightResultEntity
 import com.marzec.cheatday.extensions.toDateTime
+import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.stubs.stubWeightDto
 import com.marzec.cheatday.stubs.stubWeightResult
+import com.marzec.cheatday.stubs.stubWeightResultEntity
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
+import org.joda.time.DateTime
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -21,22 +30,32 @@ internal class WeightResultRepositoryTest {
 
     val weightApi: WeightApi = mockk()
     val dispatcher: CoroutineDispatcher = TestCoroutineDispatcher()
+    val weightDao: WeightDao = mockk(relaxed = true)
+    val userRepository: UserRepository = mockk()
 
-
-    lateinit var repository: WeightResultRepository
+    var repository = WeightResultRepository(
+        weightApi = weightApi,
+        weightDao = weightDao,
+        userRepository = userRepository,
+        dispatcher = dispatcher
+    )
 
     @BeforeEach
     fun setUp() {
-        repository = WeightResultRepository(weightApi, dispatcher)
+        coEvery { userRepository.getCurrentUser() } returns User(0, "user@email.com")
     }
 
     @Test
     fun observeWeights() = runBlockingTest {
         coEvery { weightApi.getAll() } returns listOf(stubWeightDto())
+        coEvery { weightDao.observeWeights(0) }.returnsMany(
+            flowOf(emptyList()),
+            flowOf(listOf(stubWeightResultEntity()))
+        )
 
-        val values = repository.observeWeights().test(this)
-
-        values.isEqualTo(
+        val test = repository.observeWeights().test(this)
+        advanceUntilIdle()
+        test.isEqualTo(
             Content.Loading(),
             Content.Data(listOf(stubWeightResult()))
         )
@@ -48,6 +67,10 @@ internal class WeightResultRepositoryTest {
             stubWeightDto(value = 10f),
             stubWeightDto(value = 5f)
         )
+        coEvery { weightDao.observeWeights(0) }.returnsMany(
+            flowOf(emptyList()),
+            flowOf(listOf(stubWeightResultEntity(value = 5f)))
+        )
 
         assertThat(repository.observeMinWeight().test(this).values()).isEqualTo(
             listOf(
@@ -58,23 +81,38 @@ internal class WeightResultRepositoryTest {
     }
 
     @Test
-    fun observeLastWeight() = runBlockingTest {
-        coEvery { weightApi.getAll() } returns listOf(
-            stubWeightDto(value = 10f),
-            stubWeightDto(value = 5f, date = "2021-06-07T00:00:00")
-        )
+    fun observeLastWeight() {
+        val date: Long = DateTime()
+            .withDate(2021, 6, 7)
+            .withTimeAtStartOfDay().millis
+        runBlockingTest {
+            coEvery { weightApi.getAll() } returns listOf(
+                stubWeightDto(value = 10f),
+                stubWeightDto(value = 5f, date = "2021-06-07T00:00:00")
+            )
 
-        repository.observeLastWeight().test(this).isEqualTo(
-            listOf(
-                Content.Loading(),
-                Content.Data(
-                    stubWeightResult(
-                        value = 5f,
-                        date = "2021-06-07T00:00:00".toDateTime()
+            coEvery { weightDao.observeWeights(0) }.returnsMany(
+                flowOf(emptyList()),
+                flowOf(
+                    listOf(
+                        stubWeightResultEntity(value = 10f),
+                        stubWeightResultEntity(value = 5f, date = date)
                     )
                 )
             )
-        )
+
+            repository.observeLastWeight().test(this).isEqualTo(
+                listOf(
+                    Content.Loading(),
+                    Content.Data(
+                        stubWeightResult(
+                            value = 5f,
+                            date = "2021-06-07T00:00:00".toDateTime()
+                        )
+                    )
+                )
+            )
+        }
     }
 
 

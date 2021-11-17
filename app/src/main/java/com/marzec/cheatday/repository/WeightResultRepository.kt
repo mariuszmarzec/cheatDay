@@ -6,7 +6,6 @@ import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.api.asContent
 import com.marzec.cheatday.api.asContentFlow
 import com.marzec.cheatday.api.mapData
-import com.marzec.cheatday.api.unwrapData
 import com.marzec.cheatday.api.request.PutWeightRequest
 import com.marzec.cheatday.api.response.toDomain
 import com.marzec.cheatday.db.dao.WeightDao
@@ -17,11 +16,12 @@ import com.marzec.cheatday.model.domain.toDto
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
@@ -80,7 +80,7 @@ class WeightResultRepository @Inject constructor(
             networkCall = networkCall,
             cacheReadFlow = {
                 weightDao.observeWeights(userId)
-                    .map { weights -> weights.map { it.toDomain() } }
+                    .map { weights -> weights.map { it.toDomain() }.takeIf { it.isNotEmpty() } }
             },
             saveToCache = { weights ->
                 saveToCache(weights, userId)
@@ -101,6 +101,7 @@ class WeightResultRepository @Inject constructor(
             asContent { getWeightsFromApi() }
         }.flowOn(dispatcher)
 
+    @Suppress("unchecked_cast")
     private suspend fun <MODEL : Any> cacheCall(
         networkCall: suspend () -> Content<MODEL>,
         cacheReadFlow: suspend () -> Flow<MODEL?>,
@@ -113,7 +114,7 @@ class WeightResultRepository @Inject constructor(
             } else {
                 Content.Loading()
             }
-            combine(
+            merge(
                 flow {
                     emit(initial)
                     val callResult = networkCall()
@@ -123,14 +124,10 @@ class WeightResultRepository @Inject constructor(
                         saveToCache(callResult.data)
                     }
                 },
-                cacheReadFlow()
-            ) { networkCall, cache ->
-                if (cache != null) {
-                    Content.Data(cache)
-                } else {
-                    networkCall
+                cacheReadFlow().mapNotNull {
+                        Content.Data(it) as Content<MODEL>
                 }
-            }.flowOn(dispatcher)
+            ).flowOn(dispatcher)
         }
 
     private suspend fun refreshWeightsCache() = asContent {
