@@ -93,7 +93,7 @@ class WeightResultRepository @Inject constructor(
         weights: List<WeightResult>,
         userId: Long
     ) {
-        weightDao.replaceAll(weights.map { it.toDb(userId) })
+        weightDao.replaceAll(weights.map { it.toDb(userId, zeroId = true) })
     }
 
     private suspend fun observeWeightCacheFirst() =

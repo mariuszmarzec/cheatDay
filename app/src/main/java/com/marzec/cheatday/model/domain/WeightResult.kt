@@ -13,13 +13,11 @@ data class WeightResult(
 
 fun WeightResultEntity.toDomain() = WeightResult(id, value, DateTime(date))
 
-fun WeightResult.toDb(userId: Long) = WeightResultEntity(
-    id,
+fun WeightResult.toDb(userId: Long, zeroId: Boolean = false) = WeightResultEntity(
+    if (zeroId) 0 else id,
     value,
     date.millis,
     userId
 )
 
-fun WeightResult.toDto(): WeightDto {
-    return WeightDto(id.toInt(), value, date.toString(Api.DATE_FORMAT))
-}
+fun WeightResult.toDto(): WeightDto = WeightDto(id.toInt(), value, date.toString(Api.DATE_FORMAT))
