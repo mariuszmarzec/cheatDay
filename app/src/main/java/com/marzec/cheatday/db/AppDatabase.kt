@@ -12,6 +12,7 @@ import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.db.migrations.MIGRATION_1_TO_2
 import com.marzec.cheatday.db.migrations.MIGRATION_2_TO_3
+import com.marzec.cheatday.db.migrations.MIGRATION_3_TO_4
 import com.marzec.cheatday.db.model.db.DayEntity
 import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.db.model.db.WeightResultEntity
@@ -22,7 +23,7 @@ import com.marzec.cheatday.db.model.db.WeightResultEntity
         DayEntity::class,
         WeightResultEntity::class
     ],
-    version = 3
+    version = 4
 )
 @TypeConverters(DateTimeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -45,7 +46,8 @@ abstract class AppDatabase : RoomDatabase() {
                     "database"
                 ).addMigrations(
                     MIGRATION_1_TO_2,
-                    MIGRATION_2_TO_3
+                    MIGRATION_2_TO_3,
+                    MIGRATION_3_TO_4
                 ).build()
             }
             return db

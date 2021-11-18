@@ -20,7 +20,7 @@ import org.joda.time.DateTime
     ]
 )
 data class WeightResultEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long,
+    @PrimaryKey(autoGenerate = false) val id: Long,
     @ColumnInfo(name = COLUMN_VALUE) val value: Float,
     @ColumnInfo(name = COLUMN_DATE) val date: Long,
     @ColumnInfo(name = COLUMN_USER_ID) val userId: Long

@@ -13,8 +13,8 @@ data class WeightResult(
 
 fun WeightResultEntity.toDomain() = WeightResult(id, value, DateTime(date))
 
-fun WeightResult.toDb(userId: Long, zeroId: Boolean = false) = WeightResultEntity(
-    if (zeroId) 0 else id,
+fun WeightResult.toDb(userId: Long) = WeightResultEntity(
+    id,
     value,
     date.millis,
     userId

@@ -8,6 +8,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.db.migrations.MIGRATION_1_TO_2
 import com.marzec.cheatday.db.migrations.MIGRATION_2_TO_3
+import com.marzec.cheatday.db.migrations.MIGRATION_3_TO_4
 import com.marzec.cheatday.db.model.db.DayEntity
 import com.marzec.cheatday.db.model.db.UserEntity
 import org.junit.Rule
@@ -72,6 +73,12 @@ class MigrationTest {
             )
 
         }
+    }
+
+    @Test
+    fun testMigration_from_3_to_4() {
+        testHelper.createDatabase(dbName, 3)
+        testHelper.runMigrationsAndValidate(dbName, 4, true, MIGRATION_3_TO_4)
     }
 
     private fun SupportSQLiteDatabase.getUsers(): MutableList<UserEntity> {

@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
@@ -93,7 +92,7 @@ class WeightResultRepository @Inject constructor(
         weights: List<WeightResult>,
         userId: Long
     ) {
-        weightDao.replaceAll(weights.map { it.toDb(userId, zeroId = true) })
+        weightDao.replaceAll(weights.map { it.toDb(userId) })
     }
 
     private suspend fun observeWeightCacheFirst() =
