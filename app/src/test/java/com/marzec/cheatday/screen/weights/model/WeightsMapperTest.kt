@@ -37,6 +37,7 @@ internal class WeightsMapperTest {
     fun mapWeights() {
         val list = mapper.mapWeights(
             minWeight = stubWeightResult(value = 1f),
+            weekAverage = 3f,
             maxPossibleValue = 2f,
             targetWeight = 0f,
             weights = listOf(
@@ -47,6 +48,7 @@ internal class WeightsMapperTest {
         assertThat(list).isEqualTo(
             listOf(
                 stubMinWeightItem(),
+                stubWeekAverageWeightItem(),
                 stubMaxPossibleWeightItem(),
                 stubTargetWeightItem(),
                 stubWeightsItem(stubWeightResult(id = 1, value = 1f)),
@@ -56,9 +58,10 @@ internal class WeightsMapperTest {
     }
 
     @Test
-    fun mapWeightsWithoutMinWeight() {
+    fun mapWeightsWithoutMinWeightAndAverage() {
         val list = mapper.mapWeights(
             minWeight = null,
+            weekAverage = null,
             maxPossibleValue = 2f,
             targetWeight = 0f,
             weights = listOf(
@@ -87,6 +90,14 @@ internal class WeightsMapperTest {
             label = "$label $dateLabel $date"
         )
     }
+
+    private fun stubWeekAverageWeightItem(): LabeledRowItem = LabeledRowItem(
+        id = WeightsMapper.WEEK_AVERAGE_ID,
+        data = Unit,
+        value = "3.0 ${context.getString(R.string.unit_kg_short)}",
+        label = context.getString(R.string.weights_week_average_label)
+    )
+
 
     private fun stubMaxPossibleWeightItem() = LabeledRowItem(
         id = WeightsMapper.MAX_POSSIBLE_ID,

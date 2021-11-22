@@ -107,10 +107,11 @@ class WeightsViewModel @Inject constructor(
 
     private suspend fun loadData(): Flow<Content<WeightsData>> = combineContentsFlows(
         weightInteractor.observeMinWeight(),
+        weightInteractor.observeWeekAverage(),
         weightInteractor.observeMaxPossibleWeight().map { it.toContentData() },
         weightInteractor.observeTargetWeight().map { it.toContentData() },
         weightInteractor.observeWeights()
-    ) { minWeight, maxPossibleWeight, targetWeight, weights ->
-        WeightsData(minWeight, maxPossibleWeight, targetWeight, weights)
+    ) { minWeight, weekAverage, maxPossibleWeight, targetWeight, weights ->
+        WeightsData(minWeight, weekAverage, maxPossibleWeight, targetWeight, weights)
     }
 }

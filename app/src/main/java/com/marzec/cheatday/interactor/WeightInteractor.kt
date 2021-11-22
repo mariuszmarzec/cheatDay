@@ -3,6 +3,7 @@ package com.marzec.cheatday.interactor
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.asContentFlow
 import com.marzec.cheatday.api.dataOrNull
+import com.marzec.cheatday.api.mapData
 import com.marzec.cheatday.extensions.incIf
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.repository.UserPreferencesRepository
@@ -10,6 +11,7 @@ import com.marzec.cheatday.repository.WeightResultRepository
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import org.joda.time.DateTime
 
 class WeightInteractor @Inject constructor(
@@ -26,13 +28,25 @@ class WeightInteractor @Inject constructor(
     suspend fun observeMinWeight(): Flow<Content<WeightResult?>> =
         weightResultRepository.observeMinWeight()
 
+    suspend fun observeWeekAverage(): Flow<Content<Float?>> =
+        weightResultRepository.observeWeights().map { content ->
+            content.mapData { weights ->
+                weights.takeIf { it.size >= WEEK_DAYS_COUNT }
+                    ?.subList(0, WEEK_DAYS_COUNT)
+                    ?.fold(0f) { acc, weightResult ->
+                        acc + weightResult.value
+                    }?.let { it / WEEK_DAYS_COUNT }
+            }
+        }
+
     suspend fun setTargetWeight(weight: Float) = userPreferencesRepository.setTargetWeight(weight)
 
     suspend fun setMaxPossibleWeight(weight: Float) {
         userPreferencesRepository.setMaxPossibleWeight(weight)
     }
 
-    suspend fun observeWeights(): Flow<Content<List<WeightResult>>> = weightResultRepository.observeWeights()
+    suspend fun observeWeights(): Flow<Content<List<WeightResult>>> =
+        weightResultRepository.observeWeights()
 
     suspend fun addWeight(weight: WeightResult): Flow<Content<Unit>> = asContentFlow {
         val lastValue = weightResultRepository.observeLastWeight().dataOrNull()?.value
@@ -83,4 +97,8 @@ class WeightInteractor @Inject constructor(
 
     suspend fun removeWeight(id: Long): Flow<Content<Unit>> =
         weightResultRepository.removeWeight(id)
+
+    private companion object {
+        val WEEK_DAYS_COUNT = 7
+    }
 }

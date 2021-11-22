@@ -58,6 +58,8 @@ internal class UserRepositoryTest {
         repository = UserRepository(userDao, currentUserStore, dispatcher)
 
         every { currentUserStore.data } returns flowOf(currentUserProto)
+        coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
+        coEvery { userDao.getUser("email") } returns userEntity
     }
 
     @Test
@@ -115,7 +117,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun addUserToDbIfNeeded_doesntCallUserDao_ifUserExists() = runBlockingTest {
+    fun addUserToDbIfNeeded_doNotCallUserDao_ifUserExists() = runBlockingTest {
         coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
 
         repository.addUserToDbIfNeeded(user)

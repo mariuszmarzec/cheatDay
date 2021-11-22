@@ -31,8 +31,10 @@ class WeightInteractorTest {
         coEvery { weightResultRepository.observeMinWeight() } returns flowOf(Content.Data(null))
         coEvery { targetRepository.observeMaxPossibleWeight() } returns (flowOf(0f))
 
-        coEvery { weightResultRepository.putWeight(any()) } returns flowOf(Content.Data(
-            stubWeightResult())
+        coEvery { weightResultRepository.putWeight(any()) } returns flowOf(
+            Content.Data(
+                stubWeightResult()
+            )
         )
         coEvery { weightResultRepository.updateWeight(any()) } returns flowOf(Content.Data(Unit))
 
@@ -84,6 +86,53 @@ class WeightInteractorTest {
                 )
             )
         )
+    }
+
+    @Nested
+    inner class WeekAverage {
+
+        @Test
+        fun `if there is seven or more weights, then return week average`() = runBlockingTest {
+            coEvery { weightResultRepository.observeWeights() } returns flowOf(
+                Content.Data(
+                    listOf(
+                        stubWeightResult(value = 10f),
+                        stubWeightResult(value = 1f),
+                        stubWeightResult(value = 1f),
+                        stubWeightResult(value = 10f),
+                        stubWeightResult(value = 1f),
+                        stubWeightResult(value = 2f),
+                        stubWeightResult(value = 3f),
+                        stubWeightResult(value = 12f),
+                        stubWeightResult(value = 11f),
+                        stubWeightResult(value = 10f)
+                    )
+                )
+            )
+
+            interactor.observeWeekAverage().test(this).isEqualTo(
+                Content.Data(4f)
+            )
+        }
+
+        @Test
+        fun `if there is less than seven weights, then return null in data`() = runBlockingTest {
+            coEvery { weightResultRepository.observeWeights() } returns flowOf(
+                Content.Data(
+                    listOf(
+                        stubWeightResult(value = 10f),
+                        stubWeightResult(value = 0f),
+                        stubWeightResult(value = 1f),
+                        stubWeightResult(value = 10f),
+                        stubWeightResult(value = 3f),
+                    )
+                )
+            )
+
+            interactor.observeWeekAverage().test(this).isEqualTo(
+                Content.Data(null)
+            )
+        }
     }
 
     @Test

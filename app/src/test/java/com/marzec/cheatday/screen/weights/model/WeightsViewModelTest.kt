@@ -24,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 class WeightsViewModelTest {
 
     val minWeight = 5.0f
+    val weekAverage = 6.0f
     val maxPossible = 10.0f
     val target = 3.0f
     val minWeightResult = stubWeightResult(value = minWeight)
@@ -38,32 +39,39 @@ class WeightsViewModelTest {
 
     @BeforeEach
     fun before() = runBlockingTest {
-        coEvery {  weightInteractor.observeMinWeight() } returns minWeightResult.toContentFlow()
-        coEvery {  weightInteractor.observeMaxPossibleWeight() } returns flowOf(maxPossible)
-        coEvery {  weightInteractor.observeTargetWeight() } returns flowOf(target)
-        coEvery {  weightInteractor.observeWeights() } returns flowOf(Content.Data(weights))
+        coEvery { weightInteractor.observeMinWeight() } returns minWeightResult.toContentFlow()
+        coEvery { weightInteractor.observeWeekAverage() } returns weekAverage.toContentFlow()
+        coEvery { weightInteractor.observeMaxPossibleWeight() } returns flowOf(maxPossible)
+        coEvery { weightInteractor.observeTargetWeight() } returns flowOf(target)
+        coEvery { weightInteractor.observeWeights() } returns flowOf(Content.Data(weights))
     }
 
     @Test
     fun load_Data() = runBlockingTest {
-        coEvery {  weightInteractor.observeWeights() } returns flowOf(Content.Data(weights))
+        coEvery { weightInteractor.observeWeights() } returns flowOf(Content.Data(weights))
 
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
         viewModel.load()
 
-        assertThat(values.values()).isEqualTo(
-            listOf(
-                defaultState,
-                State.Data(WeightsData(minWeightResult, maxPossible, target, weights))
+        values.isEqualTo(
+            defaultState,
+            State.Data(
+                WeightsData(
+                    minWeight = minWeightResult,
+                    weekAverage = weekAverage,
+                    maxPossibleWeight = maxPossible,
+                    targetWeight = target,
+                    weights = weights
+                )
             )
         )
     }
 
     @Test
     fun load_Loading() = runBlockingTest {
-        coEvery {  weightInteractor.observeWeights() } returns flowOf(Content.Loading(weights))
+        coEvery { weightInteractor.observeWeights() } returns flowOf(Content.Loading(weights))
 
         val viewModel = viewModel()
         val values = viewModel.test(this)
@@ -79,7 +87,7 @@ class WeightsViewModelTest {
 
     @Test
     fun load_Error() = runBlockingTest {
-        coEvery {  weightInteractor.observeWeights() } returns flowOf(Content.Error(Exception()))
+        coEvery { weightInteractor.observeWeights() } returns flowOf(Content.Error(Exception()))
 
         val viewModel = viewModel()
         val values = viewModel.test(this)

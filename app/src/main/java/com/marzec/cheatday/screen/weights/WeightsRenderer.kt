@@ -61,8 +61,8 @@ class WeightsRenderer @Inject constructor(
     }
 
     private fun render(data: WeightsData) {
-        val (min, maxPossible, target, weights) = data
-        val list = mapper.mapWeights(min, maxPossible, target, weights)
+        val (min, average, maxPossible, target, weights) = data
+        val list = mapper.mapWeights(min, average, maxPossible, target, weights)
         recyclerView.withModels {
             list.forEach { item ->
                 when (item) {
