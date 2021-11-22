@@ -58,6 +58,24 @@ internal class WeightsMapperTest {
     }
 
     @Test
+    fun roundAverageWeight() {
+        val list = mapper.mapWeights(
+            minWeight = null,
+            weekAverage = 3.0121f,
+            maxPossibleValue = 2f,
+            targetWeight = 0f,
+            weights = emptyList()
+        )
+        assertThat(list).isEqualTo(
+            listOf(
+                stubWeekAverageWeightItem(),
+                stubMaxPossibleWeightItem(),
+                stubTargetWeightItem(),
+            )
+        )
+    }
+
+    @Test
     fun mapWeightsWithoutMinWeightAndAverage() {
         val list = mapper.mapWeights(
             minWeight = null,

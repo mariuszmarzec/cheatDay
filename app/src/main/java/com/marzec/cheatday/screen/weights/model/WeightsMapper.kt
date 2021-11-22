@@ -3,10 +3,10 @@ package com.marzec.cheatday.screen.weights.model
 import android.content.Context
 import com.marzec.cheatday.R
 import com.marzec.cheatday.model.domain.WeightResult
-import com.marzec.cheatday.extensions.plus
 import com.marzec.cheatday.view.model.LabeledRowItem
 import com.marzec.cheatday.view.model.ListItem
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.util.Locale
 import javax.inject.Inject
 
 class WeightsMapper @Inject constructor(
@@ -41,12 +41,15 @@ class WeightsMapper @Inject constructor(
         )
     }
 
-    private fun stubWeekAverageWeightItem(weekAverage: Float?): LabeledRowItem = LabeledRowItem(
-        id = WEEK_AVERAGE_ID,
-        data = Unit,
-        value = "$weekAverage ${context.getString(R.string.unit_kg_short)}",
-        label = context.getString(R.string.weights_week_average_label)
-    )
+    private fun stubWeekAverageWeightItem(weekAverage: Float?): LabeledRowItem {
+        val formattedAverage = "%.1f".format(Locale.ENGLISH, weekAverage)
+        return LabeledRowItem(
+            id = WEEK_AVERAGE_ID,
+            data = Unit,
+            value = "$formattedAverage ${context.getString(R.string.unit_kg_short)}",
+            label = context.getString(R.string.weights_week_average_label)
+        )
+    }
 
     private fun maxPossibleWeightItem(maxPossibleValue: Float) = LabeledRowItem(
         id = MAX_POSSIBLE_ID,
