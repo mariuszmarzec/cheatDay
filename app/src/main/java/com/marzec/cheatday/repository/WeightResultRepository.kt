@@ -80,7 +80,7 @@ class WeightResultRepository @Inject constructor(
             networkCall = networkCall,
             cacheReadFlow = {
                 weightDao.observeWeights(userId)
-                    .map { weights -> weights.map { it.toDomain() }.takeIf { it.isNotEmpty() } }
+                    .map { weights -> weights.map { it.toDomain() } }
             },
             saveToCache = { weights ->
                 saveToCache(weights, userId)

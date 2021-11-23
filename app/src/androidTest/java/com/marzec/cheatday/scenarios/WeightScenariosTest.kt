@@ -10,6 +10,7 @@ import com.marzec.cheatday.common.oneWeightsListResponse
 import com.marzec.cheatday.common.startApplication
 import com.marzec.cheatday.common.updateWeightResponse
 import com.marzec.cheatday.common.updatedFewWeightsListResponse
+import com.marzec.cheatday.di.MockWebDispatcher
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.screens.AddNewWeightsScreen
 import com.marzec.cheatday.screens.ChartScreen
@@ -46,14 +47,7 @@ class WeightScenariosTest : TestCase() {
     @Test
     fun userAddsNewWeightResult() {
         before {
-            server.enqueue(emptyWeightsListResponse())
-            server.enqueue(emptyWeightsListResponse())
-            server.enqueue(emptyWeightsListResponse())
-
-            server.enqueue(emptyWeightsListResponse())
-            server.enqueue(addWeightsResponse())
-            server.enqueue(oneWeightsListResponse())
-            server.enqueue(oneWeightsListResponse())
+            server.dispatcher = MockWebDispatcher
         }.after {
             server.shutdown()
         }.run {
@@ -72,6 +66,7 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user clicks weights tab") {
+                MockWebDispatcher.setResponse("/weights", emptyWeightsListResponse())
                 HomeScreen.weightTab.click()
             }
 
@@ -92,6 +87,8 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user clicks add button") {
+                MockWebDispatcher.setResponse("/weight", addWeightsResponse())
+                MockWebDispatcher.setResponse("/weights", oneWeightsListResponse())
                 AddNewWeightsScreen.button.click()
             }
 
@@ -113,6 +110,7 @@ class WeightScenariosTest : TestCase() {
     @Suppress("LongMethod")
     fun userUpdatesNewWeightResult() {
         before {
+            server.dispatcher = MockWebDispatcher
         }.after {
             server.shutdown()
         }.run {
@@ -123,8 +121,7 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user has weights results") {
-                server.enqueue(fewWeightsListResponse())
-                server.enqueue(fewWeightsListResponse())
+                MockWebDispatcher.setResponse("/weights", fewWeightsListResponse())
             }
 
             step("Then User launch application") {
@@ -136,11 +133,11 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user clicks weights tab") {
+                MockWebDispatcher.setResponse("/weights", oneWeightsListResponse())
                 HomeScreen.weightTab.click()
             }
 
             step("Then user sees weights screen") {
-                server.enqueue(oneWeightsListResponse())
                 WeightsScreen.isDisplayed()
             }
 
@@ -170,11 +167,8 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user clicks update button") {
-                server.enqueue(updateWeightResponse())
-                server.enqueue(updatedFewWeightsListResponse())
-                server.enqueue(updatedFewWeightsListResponse())
-                server.enqueue(updatedFewWeightsListResponse())
-                server.enqueue(updatedFewWeightsListResponse())
+                MockWebDispatcher.setResponse("/weight/1", updateWeightResponse())
+                MockWebDispatcher.setResponse("/weights", updatedFewWeightsListResponse())
                 UpdateWeightsScreen.button.click()
             }
 
@@ -205,9 +199,12 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user has weights results") {
+                // min weight
                 server.enqueue(fewWeightsListResponse())
+                // average weight
                 server.enqueue(fewWeightsListResponse())
-                server.enqueue(oneWeightsListResponse())
+                // weights
+                server.enqueue(fewWeightsListResponse())
             }
 
             step("Then User launch application") {
@@ -355,6 +352,12 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user clicks weights tab") {
+                // min weight
+                server.enqueue(fewWeightsListResponse())
+                // average weight
+                server.enqueue(fewWeightsListResponse())
+                // weights
+                server.enqueue(fewWeightsListResponse())
                 HomeScreen.weightTab.click()
             }
 
@@ -367,6 +370,8 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("Then user sees weight chart screen") {
+                // weights
+                server.enqueue(fewWeightsListResponse())
                 ChartScreen.isDisplayed()
             }
         }

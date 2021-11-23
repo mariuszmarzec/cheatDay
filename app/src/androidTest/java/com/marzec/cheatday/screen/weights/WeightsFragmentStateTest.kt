@@ -26,13 +26,13 @@ class WeightsFragmentStateTest : ScreenshotTest {
     val weightsData by lazy {
         WeightsData(
             minWeight = WeightResult(id = 9, value = 80f, date = DateTime.now()),
+            weekAverage = 83f,
             maxPossibleWeight = 85f,
             targetWeight = 78f,
             weights = listOf(
                 WeightResult(id = 9, value = 80f, date = DateTime.now()),
                 WeightResult(id = 8, value = 82f, date = DateTime.now().minusDays(1)),
                 WeightResult(id = 7, value = 83.5f, date = DateTime.now().minusDays(2))
-
             )
         )
     }

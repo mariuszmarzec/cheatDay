@@ -1,5 +1,6 @@
 package com.marzec.cheatday.di
 
+import android.util.Log
 import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.api.LoginApi
 import com.marzec.cheatday.api.WeightApi
@@ -30,6 +31,8 @@ class ApiModule {
             .readTimeout(Duration.ofMillis(TIMEOUT))
             .addNetworkInterceptor(Interceptor { chain ->
                 var request = chain.request()
+                Log.d("REQUEST", "${request.url.toString()}")
+
                 runBlocking { userRepository.getCurrentUserWithAuthToken() }?.let { user ->
                     request = request.newBuilder()
                         .addHeader(Api.Headers.AUTHORIZATION, user.auth)

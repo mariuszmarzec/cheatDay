@@ -99,6 +99,6 @@ class WeightInteractor @Inject constructor(
         weightResultRepository.removeWeight(id)
 
     private companion object {
-        val WEEK_DAYS_COUNT = 7
+        const val WEEK_DAYS_COUNT = 7
     }
 }
