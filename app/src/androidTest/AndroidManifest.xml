@@ -3,7 +3,10 @@
     package="com.marzec.cheatday.test"
     android:sharedUserId="com.marzec.cheatday.uid" >
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="false"
+        android:requestLegacyExternalStorage="true"
         />
 </manifest>
