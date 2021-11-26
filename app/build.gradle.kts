@@ -127,7 +127,8 @@ android {
     testOptions.unitTests.isReturnDefaultValues = true
     testOptions.unitTests.isIncludeAndroidResources = true
     testOptions {
-//        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+        // With enabled ANDROIDX_TEST_ORCHESTRATOR screenshot test with shot doesn't work
+        execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
 
     packagingOptions {
