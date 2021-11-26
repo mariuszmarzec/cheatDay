@@ -45,7 +45,7 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart),
             }
         }
 
-        viewModel.load()
+        StateObserver.testState ?: viewModel.load()
     }
 
     override fun bindStateObserver(
