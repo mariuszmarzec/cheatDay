@@ -5,16 +5,21 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
+import com.marzec.cheatday.common.StateObserver
 import com.marzec.cheatday.extensions.showErrorDialog
+import com.marzec.cheatday.screen.chart.model.ChartsData
 import com.marzec.cheatday.screen.chart.model.ChartsSideEffect
 import com.marzec.cheatday.screen.chart.model.ChartsViewModel
 import com.marzec.cheatday.screen.chart.renderer.ChartRenderer
+import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
-class ChartFragment : BaseFragment(R.layout.fragment_chart) {
+class ChartFragment : BaseFragment(R.layout.fragment_chart),
+    StateObserver<State<ChartsData>> {
 
     private val viewModel: ChartsViewModel by viewModels()
 
@@ -30,7 +35,7 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart) {
         }
         chartRenderer.init(view)
 
-        viewModel.state.observe(chartRenderer::render)
+        observeState(viewModel.state, chartRenderer::render)
 
         viewModel.sideEffects.observe { sideEffect ->
             when (sideEffect) {
@@ -41,5 +46,12 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart) {
         }
 
         viewModel.load()
+    }
+
+    override fun bindStateObserver(
+        stateFlow: Flow<State<ChartsData>>,
+        action: (State<ChartsData>) -> Unit
+    ) {
+        stateFlow.observe(action)
     }
 }

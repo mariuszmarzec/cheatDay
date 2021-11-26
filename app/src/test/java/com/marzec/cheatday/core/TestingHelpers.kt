@@ -7,6 +7,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.launch
 
 fun <T> Flow<T>.test(scope: CoroutineScope): TestCollector<T> {

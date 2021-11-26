@@ -6,6 +6,7 @@ import com.marzec.cheatday.common.compareStateScreenshot
 import com.marzec.cheatday.model.domain.Day
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.model.ui.DayState
+import com.marzec.cheatday.screen.chart.ChartFragment
 import com.marzec.cheatday.screen.chart.model.ChartsData
 import com.marzec.cheatday.screen.dayscounter.DaysCounterFragment
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterState
@@ -35,11 +36,11 @@ class ChartsFragmentStateTest : ScreenshotTest {
     val errorState = State.Error(null, "Error has occurred")
 
     @Test
-    fun initialState() = compareStateScreenshot<DaysCounterFragment>(chartsState)
+    fun initialState() = compareStateScreenshot<ChartFragment>(chartsState)
 
     @Test
-    fun loadingState() = compareStateScreenshot<DaysCounterFragment>(loadingState)
+    fun loadingState() = compareStateScreenshot<ChartFragment>(loadingState)
 
     @Test
-    fun errorState() = compareStateScreenshot<DaysCounterFragment>(errorState)
+    fun errorState() = compareStateScreenshot<ChartFragment>(errorState)
 }

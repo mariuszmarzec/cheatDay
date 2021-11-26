@@ -127,7 +127,7 @@ android {
     testOptions.unitTests.isReturnDefaultValues = true
     testOptions.unitTests.isIncludeAndroidResources = true
     testOptions {
-        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+//        execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
 
     packagingOptions {
