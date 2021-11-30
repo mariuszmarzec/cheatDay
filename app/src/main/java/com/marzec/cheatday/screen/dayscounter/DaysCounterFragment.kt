@@ -8,12 +8,16 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
+import com.marzec.cheatday.common.StateObserver
+import com.marzec.cheatday.screen.dayscounter.model.DaysCounterState
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterViewModel
 import com.marzec.cheatday.view.CounterView
+import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
-class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
+class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter), StateObserver<DaysCounterState> {
 
     private val viewModel: DaysCounterViewModel by viewModels()
 
@@ -39,7 +43,7 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
             viewModel.onWorkoutIncreaseClick()
         }
 
-        viewModel.state.observe { state ->
+        observeState(viewModel.state) { state ->
             dietCounter.setDay(state.diet.day)
             setClickedState(dietCounter, state.diet.clicked)
 
@@ -49,7 +53,8 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
             workoutCounter.setDay(state.workout.day)
             setClickedState(workoutCounter, state.workout.clicked)
         }
-        viewModel.loading()
+
+        StateObserver.testState ?: viewModel.loading()
     }
 
     private fun setClickedState(counterView: CounterView, isClicked: Boolean) {
@@ -70,5 +75,12 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
             R.id.logout -> viewModel.onLogoutClick().run { true }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun bindStateObserver(
+        stateFlow: Flow<DaysCounterState>,
+        action: (DaysCounterState) -> Unit
+    ) {
+        stateFlow.observe(action)
     }
 }
