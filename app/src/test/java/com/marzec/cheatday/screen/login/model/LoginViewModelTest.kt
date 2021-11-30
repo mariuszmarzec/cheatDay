@@ -47,7 +47,6 @@ internal class LoginViewModelTest {
             defaultState,
             State.Loading(defaultData),
             LoginSideEffects.OnLoginSuccessful
-
         )
     }
 
