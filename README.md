@@ -31,3 +31,6 @@ test.authHeader=Authorization-Test
 
 3. Sync project and enjoy
 
+# Architecture
+
+<img src="images/architecture.png" width="1000"/>
