@@ -4,7 +4,7 @@ object Dependency {
     val firebase_version = "26.3.0"
     val kotlin_version = "1.5.21"
     val junit4_version = "4.13"
-    val leak_canary_version = "2.5"
+    val leak_canary_version = "2.7"
     val coroutines_version = "1.5.0"
     val appcompat_version = "1.1.0"
     val material_version = "1.1.0"
