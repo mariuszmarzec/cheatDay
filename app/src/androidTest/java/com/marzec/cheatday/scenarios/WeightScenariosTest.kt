@@ -45,7 +45,7 @@ class WeightScenariosTest : TestCase() {
     }
 
     @Test
-    fun userAddsNewWeightResult() {
+    fun s09_userAddsNewWeightResult() {
         before {
             server.dispatcher = MockWebDispatcher
         }.after {
@@ -108,7 +108,7 @@ class WeightScenariosTest : TestCase() {
 
     @Test
     @Suppress("LongMethod")
-    fun userUpdatesNewWeightResult() {
+    fun s10_userUpdatesNewWeightResult() {
         before {
             server.dispatcher = MockWebDispatcher
         }.after {
@@ -187,7 +187,7 @@ class WeightScenariosTest : TestCase() {
     }
 
     @Test
-    fun userUpdateMaxPossibleWeight() {
+    fun s11_userUpdateMaxPossibleWeight() {
         before {
         }.after {
             server.shutdown()
@@ -261,7 +261,7 @@ class WeightScenariosTest : TestCase() {
     }
 
     @Test
-    fun userUpdatesTargetWeight() {
+    fun s12_userUpdatesTargetWeight() {
         before {
         }.after {
             server.shutdown()
@@ -332,7 +332,7 @@ class WeightScenariosTest : TestCase() {
     }
 
     @Test
-    fun userDisplayWeightsChart() {
+    fun s13_userDisplayWeightsChart() {
         before {
         }.after {
             server.shutdown()

@@ -40,7 +40,7 @@ class LoginScenariosTest : TestCase() {
     }
 
     @Test
-    fun loginInApplication() {
+    fun s01_loginInApplication() {
         before {
             server.enqueue(loginResponse())
         }.after {
@@ -73,7 +73,7 @@ class LoginScenariosTest : TestCase() {
     }
 
     @Test
-    fun loginInApplicationFailed() {
+    fun s02_loginInApplicationFailed() {
         before {
             server.enqueue(
                 MockResponse().setResponseCode(404)
@@ -108,7 +108,7 @@ class LoginScenariosTest : TestCase() {
     }
 
     @Test
-    fun logoutFromApplication() {
+    fun s03_logoutFromApplication() {
         before {
             server.enqueue(logoutResponse())
         }.after {

@@ -34,7 +34,7 @@ class CountersScenariosTest : TestCase() {
     }
 
     @Test
-    fun userIncreaseDietCounter() {
+    fun s04_userIncreaseDietCounter() {
         run {
             step("Given user is logged in") {
                 runBlocking {
@@ -61,7 +61,7 @@ class CountersScenariosTest : TestCase() {
     }
 
     @Test
-    fun userIncreaseWorkoutCounter() {
+    fun s05_userIncreaseWorkoutCounter() {
         run {
             step("Given user is logged in") {
                 runBlocking {
@@ -88,7 +88,7 @@ class CountersScenariosTest : TestCase() {
     }
 
     @Test
-    fun userDecreaseCheatDayCounter() {
+    fun s06_userDecreaseCheatDayCounter() {
         run {
             step("Given user is logged in") {
                 runBlocking {
@@ -115,7 +115,7 @@ class CountersScenariosTest : TestCase() {
     }
 
     @Test
-    fun userIncreaseCheatDayCounterByIncreasingDiet() {
+    fun s07_userIncreaseCheatDayCounterByIncreasingDiet() {
         run {
             step("Given user is logged in") {
                 runBlocking {
@@ -144,7 +144,7 @@ class CountersScenariosTest : TestCase() {
     }
 
     @Test
-    fun userIncreaseCheatDayCounterByIncreasingWorkout() {
+    fun s08_userIncreaseCheatDayCounterByIncreasingWorkout() {
         run {
             step("Given user is logged in") {
                 runBlocking {
