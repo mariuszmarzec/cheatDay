@@ -20,8 +20,10 @@ object Dependency {
     val truth_version = "1.1.3"
     val viewmodel_version = "1.1.1"
     val room_version = "2.3.0"
-    val android_test_version = "1.4.0"
-    val android_test_runner_version = "1.1.0"
+    val android_test_version = "1.1.4-alpha03"
+    val android_test_services_version = "1.1.4-alpha03"
+    val android_test_runner_version = "1.1.4-alpha03"
+    val runner_version = "1.4.1-alpha03"
     val paris_version = "1.3.0"
     val arch_testing_version = "2.1.0"
     val epoxy_version = "3.11.0"
@@ -59,7 +61,7 @@ object Dependency {
     object Android {
         val compileSdkVersion = 29
         val applicationId = "com.marzec.cheatday"
-        val minSdkVersion = 29
+        val minSdkVersion = 28
         val targetSdkVersion = 29
         val versionCode = 1
         val versionName = "1.0"

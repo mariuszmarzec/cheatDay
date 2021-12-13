@@ -17,6 +17,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -49,7 +50,7 @@ internal class WeightResultRepositoryTest {
     fun observeWeights() = runBlockingTest {
         coEvery { weightApi.getAll() } returns listOf(stubWeightDto())
         coEvery { weightDao.observeWeights(0) }.returnsMany(
-            flowOf(emptyList()),
+            emptyFlow(),
             flowOf(listOf(stubWeightResultEntity()))
         )
 
@@ -68,7 +69,7 @@ internal class WeightResultRepositoryTest {
             stubWeightDto(value = 5f)
         )
         coEvery { weightDao.observeWeights(0) }.returnsMany(
-            flowOf(emptyList()),
+            emptyFlow(),
             flowOf(listOf(stubWeightResultEntity(value = 5f)))
         )
 
@@ -92,7 +93,7 @@ internal class WeightResultRepositoryTest {
             )
 
             coEvery { weightDao.observeWeights(0) }.returnsMany(
-                flowOf(emptyList()),
+                emptyFlow(),
                 flowOf(
                     listOf(
                         stubWeightResultEntity(value = 10f),
