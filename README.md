@@ -125,7 +125,6 @@ gradlew stageDebugExecuteScreenshotTests
 
 ### Known issues
 
-- Now recording on Windows is broken according to [this issue](https://github.com/pedrovgs/Shot/issues/140).
 - Screenshot testing is broken too due to lack of support test orchestrator, 
   [issue](https://github.com/pedrovgs/Shot/issues/140), current workaround: disabling orchestrator, 
   commenting out all tests excepts screenshot ones
