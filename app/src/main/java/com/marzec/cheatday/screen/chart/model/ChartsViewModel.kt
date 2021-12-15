@@ -6,6 +6,7 @@ import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.mvi.State
 import com.marzec.mvi.StoreViewModel
+import com.marzec.mvi.reduceData
 import com.marzec.mvi.reduceDataWithContent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -17,7 +18,13 @@ class ChartsViewModel @Inject constructor(
 ) : StoreViewModel<State<ChartsData>, ChartsSideEffect>(defaultState) {
 
     fun load() = intent<Content<List<WeightResult>>> {
-        onTrigger { weightInteractor.observeWeights() }
+        onTrigger {
+            if (state.data?.showAverage == true) {
+                weightInteractor.observeAverageWeights()
+            } else {
+                weightInteractor.observeWeights()
+            }
+        }
 
         reducer {
             state.reduceDataWithContent(resultNonNull()) {
@@ -30,5 +37,23 @@ class ChartsViewModel @Inject constructor(
         }
     }
 
+    fun onWeightChartTypeSelected() = intent<Unit> {
+        reducer {
+            state.reduceData { copy(showAverage = false) }
+        }
 
+        sideEffect {
+            load()
+        }
+    }
+
+    fun onAverageWeightChartTypeSelected() = intent<Unit> {
+        reducer {
+            state.reduceData { copy(showAverage = true) }
+        }
+
+        sideEffect {
+            load()
+        }
+    }
 }

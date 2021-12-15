@@ -76,7 +76,12 @@ class ChartRenderer @Inject constructor() {
             weights.mapIndexed { index, weight -> Entry(index.toFloat(), weight.value) }
         val lineDataSet = LineDataSet(values, "")
 
-        lineDataSet.setColors(chart.context.getColor(R.color.chartDataSet))
+        val color = if (data.showAverage) {
+            chart.context.getColor(R.color.colorAccent)
+        } else {
+            chart.context.getColor(R.color.chartDataSet)
+        }
+        lineDataSet.setColors(color)
         lineDataSet.valueTextColor = chart.context.getColor(R.color.colorPrimaryDark)
         lineDataSet.valueTextSize = TEXT_SIZE
         chart.data = LineData(lineDataSet)

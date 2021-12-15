@@ -13,6 +13,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -43,8 +44,33 @@ internal class ChartsViewModelTest {
     }
 
     @Test
+    fun loadData_getAverage() = runBlockingTest {
+        val defaultState: State<ChartsData> = State.Loading(
+            ChartsData(
+                weights = emptyList(),
+                showAverage = true
+            )
+        )
+        coEvery { weightInteractor.observeAverageWeights() } returns flowOf(
+            Content.Data(listOf(stubWeightResult()))
+        )
+
+        val viewModel = viewModel(defaultState)
+        val values = viewModel.test(this)
+
+        viewModel.load()
+
+        assertThat(values.values()).isEqualTo(
+            listOf(
+                defaultState,
+                State.Data(ChartsData(listOf(element = stubWeightResult()), showAverage = true))
+            )
+        )
+    }
+
+    @Test
     fun loadData_error() = runBlockingTest {
-        coEvery { weightInteractor.observeWeights() }returns flowOf(
+        coEvery { weightInteractor.observeWeights() } returns flowOf(
             Content.Error(Exception())
         )
         val viewModel = viewModel()
@@ -61,5 +87,63 @@ internal class ChartsViewModelTest {
         )
     }
 
-    private fun viewModel(): ChartsViewModel = ChartsViewModel(weightInteractor, defaultState)
+    @Nested
+    inner class SwitchingChart {
+
+        @Test
+        fun switchIntoAverageChart() = runBlockingTest {
+            val defaultState: State<ChartsData> = State.Loading(
+                ChartsData(
+                    weights = emptyList(),
+                    showAverage = false
+                )
+            )
+
+            coEvery { weightInteractor.observeAverageWeights() } returns flowOf(
+                Content.Data(listOf(stubWeightResult()))
+            )
+
+            val viewModel = viewModel(defaultState)
+            val values = viewModel.test(this)
+
+            viewModel.onAverageWeightChartTypeSelected()
+
+            assertThat(values.values()).isEqualTo(
+                listOf(
+                    defaultState,
+                    State.Loading(ChartsData(weights = emptyList(), showAverage = true)),
+                    State.Data(ChartsData(weights = listOf(stubWeightResult()), showAverage = true))
+                )
+            )
+        }
+
+        @Test
+        fun switchIntoNormalChart() = runBlockingTest {
+            val defaultState: State<ChartsData> = State.Loading(
+                ChartsData(
+                    weights = emptyList(),
+                    showAverage = true
+                )
+            )
+            coEvery { weightInteractor.observeWeights() } returns flowOf(
+                Content.Data(listOf(stubWeightResult()))
+            )
+
+            val viewModel = viewModel(defaultState)
+            val values = viewModel.test(this)
+
+            viewModel.onWeightChartTypeSelected()
+
+            assertThat(values.values()).isEqualTo(
+                listOf(
+                    defaultState,
+                    State.Loading(ChartsData(weights = emptyList(), showAverage = false)),
+                    State.Data(ChartsData(listOf(element = stubWeightResult()), showAverage = false))
+                )
+            )
+        }
+    }
+
+    private fun viewModel(defaultState: State<ChartsData> = this.defaultState): ChartsViewModel =
+        ChartsViewModel(weightInteractor, defaultState)
 }
