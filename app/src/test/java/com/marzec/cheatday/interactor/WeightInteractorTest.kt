@@ -88,37 +88,6 @@ class WeightInteractorTest {
         )
     }
 
-    @Test
-    fun observeAverageWeights() = runBlockingTest {
-        coEvery { weightResultRepository.observeWeights() } returns flowOf(
-            Content.Data(
-                listOf(
-                    stubWeightResult(value = 56f),
-                    stubWeightResult(value = 7f),
-                    stubWeightResult(value = 7f),
-                    stubWeightResult(value = 7f),
-                    stubWeightResult(value = 7f),
-                    stubWeightResult(value = 7f),
-                    stubWeightResult(value = 7f),
-                    stubWeightResult(value = 7f),
-                    stubWeightResult(value = 7f),
-                )
-            )
-        )
-
-        assertThat(interactor.observeAverageWeights().test(this).values()).isEqualTo(
-            listOf(
-                Content.Data(
-                    listOf(
-                        stubWeightResult(value = 14f),
-                        stubWeightResult(value = 7f),
-                        stubWeightResult(value = 7f)
-                    )
-                )
-            )
-        )
-    }
-
     @Nested
     inner class WeekAverage {
 
@@ -162,6 +131,37 @@ class WeightInteractorTest {
 
             interactor.observeWeekAverage().test(this).isEqualTo(
                 Content.Data(null)
+            )
+        }
+
+        @Test
+        fun observeAverageWeights() = runBlockingTest {
+            coEvery { weightResultRepository.observeWeights() } returns flowOf(
+                Content.Data(
+                    listOf(
+                        stubWeightResult(value = 56f),
+                        stubWeightResult(value = 7f),
+                        stubWeightResult(value = 7f),
+                        stubWeightResult(value = 7f),
+                        stubWeightResult(value = 7f),
+                        stubWeightResult(value = 7f),
+                        stubWeightResult(value = 7f),
+                        stubWeightResult(value = 7f),
+                        stubWeightResult(value = 7f),
+                    )
+                )
+            )
+
+            assertThat(interactor.observeAverageWeights().test(this).values()).isEqualTo(
+                listOf(
+                    Content.Data(
+                        listOf(
+                            stubWeightResult(value = 14f),
+                            stubWeightResult(value = 7f),
+                            stubWeightResult(value = 7f)
+                        )
+                    )
+                )
             )
         }
     }
