@@ -29,4 +29,6 @@ class ChartsViewModel @Inject constructor(
             resultNonNull().asErrorAndReturn { ChartsSideEffect.ShowErrorDialog }
         }
     }
+
+
 }

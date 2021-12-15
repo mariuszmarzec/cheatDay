@@ -31,11 +31,7 @@ class WeightInteractor @Inject constructor(
     suspend fun observeWeekAverage(): Flow<Content<Float?>> =
         weightResultRepository.observeWeights().map { content ->
             content.mapData { weights ->
-                weights.takeIf { it.size >= WEEK_DAYS_COUNT }
-                    ?.subList(0, WEEK_DAYS_COUNT)
-                    ?.fold(0f) { acc, weightResult ->
-                        acc + weightResult.value
-                    }?.let { it / WEEK_DAYS_COUNT }
+                weights.averageWeekWeightOrNull()
             }
         }
 
@@ -47,6 +43,17 @@ class WeightInteractor @Inject constructor(
 
     suspend fun observeWeights(): Flow<Content<List<WeightResult>>> =
         weightResultRepository.observeWeights()
+
+    suspend fun observeAverageWeights(): Flow<Content<List<WeightResult>>> =
+        weightResultRepository.observeWeights().map { content ->
+            content.mapData { weights ->
+                weights.mapIndexedNotNull { index, weight ->
+                    weights.drop(index).averageWeekWeightOrNull()?.let {
+                        weight.copy(value = it)
+                    }
+                }
+            }
+        }
 
     suspend fun addWeight(weight: WeightResult): Flow<Content<Unit>> = asContentFlow {
         val lastValue = weightResultRepository.observeLastWeight().dataOrNull()?.value
@@ -97,6 +104,13 @@ class WeightInteractor @Inject constructor(
 
     suspend fun removeWeight(id: Long): Flow<Content<Unit>> =
         weightResultRepository.removeWeight(id)
+
+    private fun List<WeightResult>.averageWeekWeightOrNull(): Float? =
+        takeIf { it.size >= WEEK_DAYS_COUNT }
+            ?.subList(0, WEEK_DAYS_COUNT)
+            ?.fold(0f) { acc, weightResult ->
+                acc + weightResult.value
+            }?.let { it / WEEK_DAYS_COUNT }
 
     private companion object {
         const val WEEK_DAYS_COUNT = 7
