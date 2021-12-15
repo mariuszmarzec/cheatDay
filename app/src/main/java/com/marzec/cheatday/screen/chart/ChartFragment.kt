@@ -33,6 +33,12 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart),
         chartRenderer.onTryAgainButtonClickListener = {
             viewModel.load()
         }
+        chartRenderer.onWeightsChartChipClickListener = {
+            viewModel.onWeightChartTypeSelected()
+        }
+        chartRenderer.onAverageChartChipClickListener = {
+            viewModel.onAverageWeightChartTypeSelected()
+        }
         chartRenderer.init(view)
 
         observeState(viewModel.state, chartRenderer::render)

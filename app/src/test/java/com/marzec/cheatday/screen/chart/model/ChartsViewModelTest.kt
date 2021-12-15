@@ -29,6 +29,9 @@ internal class ChartsViewModelTest {
         coEvery { weightInteractor.observeWeights() } returns flowOf(
             Content.Data(listOf(stubWeightResult()))
         )
+        coEvery { weightInteractor.observeAverageWeights() } returns flowOf(
+            Content.Data(listOf(stubWeightResult()))
+        )
 
         val viewModel = viewModel()
         val values = viewModel.test(this)
@@ -38,32 +41,7 @@ internal class ChartsViewModelTest {
         assertThat(values.values()).isEqualTo(
             listOf(
                 defaultState,
-                State.Data(ChartsData(listOf(stubWeightResult())))
-            )
-        )
-    }
-
-    @Test
-    fun loadData_getAverage() = runBlockingTest {
-        val defaultState: State<ChartsData> = State.Loading(
-            ChartsData(
-                weights = emptyList(),
-                showAverage = true
-            )
-        )
-        coEvery { weightInteractor.observeAverageWeights() } returns flowOf(
-            Content.Data(listOf(stubWeightResult()))
-        )
-
-        val viewModel = viewModel(defaultState)
-        val values = viewModel.test(this)
-
-        viewModel.load()
-
-        assertThat(values.values()).isEqualTo(
-            listOf(
-                defaultState,
-                State.Data(ChartsData(listOf(element = stubWeightResult()), showAverage = true))
+                State.Data(ChartsData(listOf(stubWeightResult()), listOf(stubWeightResult())))
             )
         )
     }
@@ -95,13 +73,18 @@ internal class ChartsViewModelTest {
             val defaultState: State<ChartsData> = State.Loading(
                 ChartsData(
                     weights = emptyList(),
+                    averageWeights = emptyList(),
                     showAverage = false
                 )
             )
 
+            coEvery { weightInteractor.observeWeights() } returns flowOf(
+                Content.Data(listOf(stubWeightResult()))
+            )
             coEvery { weightInteractor.observeAverageWeights() } returns flowOf(
                 Content.Data(listOf(stubWeightResult()))
             )
+
 
             val viewModel = viewModel(defaultState)
             val values = viewModel.test(this)
@@ -111,8 +94,12 @@ internal class ChartsViewModelTest {
             assertThat(values.values()).isEqualTo(
                 listOf(
                     defaultState,
-                    State.Loading(ChartsData(weights = emptyList(), showAverage = true)),
-                    State.Data(ChartsData(weights = listOf(stubWeightResult()), showAverage = true))
+                    State.Loading(
+                        ChartsData(
+                            weights = emptyList(), averageWeights = emptyList(),
+                            showAverage = true
+                        )
+                    ),
                 )
             )
         }
@@ -122,12 +109,17 @@ internal class ChartsViewModelTest {
             val defaultState: State<ChartsData> = State.Loading(
                 ChartsData(
                     weights = emptyList(),
+                    averageWeights = emptyList(),
                     showAverage = true
                 )
             )
             coEvery { weightInteractor.observeWeights() } returns flowOf(
                 Content.Data(listOf(stubWeightResult()))
             )
+            coEvery { weightInteractor.observeAverageWeights() } returns flowOf(
+                Content.Data(listOf(stubWeightResult()))
+            )
+
 
             val viewModel = viewModel(defaultState)
             val values = viewModel.test(this)
@@ -137,8 +129,12 @@ internal class ChartsViewModelTest {
             assertThat(values.values()).isEqualTo(
                 listOf(
                     defaultState,
-                    State.Loading(ChartsData(weights = emptyList(), showAverage = false)),
-                    State.Data(ChartsData(listOf(element = stubWeightResult()), showAverage = false))
+                    State.Loading(
+                        ChartsData(
+                            weights = emptyList(), averageWeights = emptyList(),
+                            showAverage = false
+                        )
+                    )
                 )
             )
         }

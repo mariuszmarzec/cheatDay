@@ -35,4 +35,6 @@
     <string name="button_try_again">Try again</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
+    <string name="weights_chip">Weights chart</string>
+    <string name="average_chip">Average weights chart</string>
 </resources>

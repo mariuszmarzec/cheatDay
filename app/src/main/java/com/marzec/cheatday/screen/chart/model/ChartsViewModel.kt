@@ -2,6 +2,7 @@ package com.marzec.cheatday.screen.chart.model
 
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.asErrorAndReturn
+import com.marzec.cheatday.api.combineContentsFlows
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.mvi.State
@@ -17,19 +18,20 @@ class ChartsViewModel @Inject constructor(
     defaultState: State<ChartsData>
 ) : StoreViewModel<State<ChartsData>, ChartsSideEffect>(defaultState) {
 
-    fun load() = intent<Content<List<WeightResult>>> {
+    fun load() = intent<Content<Pair<List<WeightResult>, List<WeightResult>>>> {
         onTrigger {
-            if (state.data?.showAverage == true) {
+            combineContentsFlows(
+                weightInteractor.observeWeights(),
                 weightInteractor.observeAverageWeights()
-            } else {
-                weightInteractor.observeWeights()
+            ) { weights, averageWeights ->
+                weights to averageWeights
             }
         }
 
         reducer {
             state.reduceDataWithContent(resultNonNull()) {
                 val data = this ?: ChartsData.INITIAL
-                data.copy(weights = it)
+                data.copy(weights = it.first, averageWeights = it.second)
             }
         }
         emitSideEffect {
@@ -41,19 +43,11 @@ class ChartsViewModel @Inject constructor(
         reducer {
             state.reduceData { copy(showAverage = false) }
         }
-
-        sideEffect {
-            load()
-        }
     }
 
     fun onAverageWeightChartTypeSelected() = intent<Unit> {
         reducer {
             state.reduceData { copy(showAverage = true) }
-        }
-
-        sideEffect {
-            load()
         }
     }
 }
