@@ -2,6 +2,7 @@ package com.marzec.cheatday.screen.addnewresult
 
 import androidx.core.os.bundleOf
 import com.karumi.shot.ScreenshotTest
+import com.marzec.cheatday.common.PolicySetupRule
 import com.marzec.cheatday.common.compareStateScreenshot
 import com.marzec.cheatday.screen.addnewresult.model.AddWeightData
 import com.marzec.mvi.State
@@ -14,6 +15,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class AddNewResultFragmentStateTest : ScreenshotTest {
+
+    @get:Rule
+    var policySetupRule = PolicySetupRule()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

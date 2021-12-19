@@ -1,6 +1,7 @@
 package com.marzec.cheatday.screen.login
 
 import com.karumi.shot.ScreenshotTest
+import com.marzec.cheatday.common.PolicySetupRule
 import com.marzec.cheatday.common.compareStateScreenshot
 import com.marzec.cheatday.screen.login.model.LoginData
 import com.marzec.cheatday.screen.login.view.LoginFragment
@@ -12,6 +13,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class LoginStateTest : ScreenshotTest {
+
+    @get:Rule
+    var policySetupRule = PolicySetupRule()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

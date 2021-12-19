@@ -1,6 +1,7 @@
 package com.marzec.cheatday.screen.weights
 
 import com.karumi.shot.ScreenshotTest
+import com.marzec.cheatday.common.PolicySetupRule
 import com.marzec.cheatday.common.compareStateScreenshot
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.screen.weights.model.WeightsData
@@ -19,6 +20,9 @@ import org.junit.Test
  * Screenshottests device - Pixel 3 API 29
  */
 class WeightsFragmentStateTest : ScreenshotTest {
+
+    @get:Rule
+    var policySetupRule = PolicySetupRule()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

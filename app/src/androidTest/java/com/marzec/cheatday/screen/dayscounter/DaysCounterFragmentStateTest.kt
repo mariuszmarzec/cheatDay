@@ -1,6 +1,7 @@
-package com.marzec.cheatday.screen.home.dayscounter
+package com.marzec.cheatday.screen.dayscounter
 
 import com.karumi.shot.ScreenshotTest
+import com.marzec.cheatday.common.PolicySetupRule
 import com.marzec.cheatday.common.compareStateScreenshot
 import com.marzec.cheatday.model.domain.Day
 import com.marzec.cheatday.model.ui.DayState
@@ -14,6 +15,9 @@ import org.junit.Test
 
 @HiltAndroidTest
 class DaysCounterFragmentStateTest : ScreenshotTest {
+
+    @get:Rule
+    var policySetupRule = PolicySetupRule()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
