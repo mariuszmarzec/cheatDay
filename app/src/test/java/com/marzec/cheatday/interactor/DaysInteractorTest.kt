@@ -45,7 +45,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun getDays() = runBlockingTest {
+    fun `given observe days returns data, when days are observed, then days are returned`() = runBlockingTest {
         coEvery { daysRepository.observeDaysByUser(0) } returns flowOf(
             stubDaysGroup(),
             stubDaysGroup(stubDay(count = 10))
@@ -60,7 +60,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun updateDay_cheatDay() = runBlockingTest {
+    fun `when cheat day is updated, then repositories are called`() = runBlockingTest {
         interactor.updateDay(stubDay(type = Day.Type.CHEAT))
 
         coVerify { userRepository.getCurrentUser() }
@@ -68,7 +68,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun updateDay_workoutDay_withoutCheatUpdate() = runBlockingTest {
+    fun `when workout day is updated, then repositories are called`() = runBlockingTest {
         interactor.updateDay(stubDay(type = Day.Type.WORKOUT))
 
         coVerify { userRepository.getCurrentUser() }
@@ -76,7 +76,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun updateDay_workoutDay_withCheatUpdate() = runBlockingTest {
+    fun `given days data is available, when workout day reached max count, then workout is updated and cheat day increased`() = runBlockingTest {
         coEvery { daysRepository.observeDaysByUser(0) } returns flowOf(stubDaysGroup())
 
         interactor.updateDay(stubDay(type = Day.Type.WORKOUT, count = 3L))
@@ -86,7 +86,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun updateDay_dietDay_withCheatUpdate() = runBlockingTest {
+    fun `given days data is available, when diet day reached max count, then workout is updated and diet day increased`() = runBlockingTest {
         coEvery { daysRepository.observeDaysByUser(0) } returns flowOf(stubDaysGroup())
 
         interactor.updateDay(stubDay(type = Day.Type.DIET, count = 5L))
@@ -98,7 +98,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun updateDay_workoutDay_withoutDietUpdate() = runBlockingTest {
+    fun `when diet day is updated, then repositories are called`() = runBlockingTest {
         interactor.updateDay(stubDay(type = Day.Type.DIET))
 
         coVerify { userRepository.getCurrentUser() }
@@ -116,7 +116,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun incrementCheatDays_plusDaysCount() = runBlockingTest {
+    fun `given days are available, when increment cheat days count, then days repository is called`() = runBlockingTest {
         coEvery { daysRepository.observeDaysByUser(0) } returns flowOf(stubDaysGroup())
 
         interactor.incrementCheatDays(7)
@@ -125,7 +125,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun incrementCheatDays_minusDaysCount() = runBlockingTest {
+    fun `given days are available, when increment cheat days count with minus value, then days repository is called`() = runBlockingTest {
         coEvery { daysRepository.observeDaysByUser(0) } returns flowOf(stubDaysGroup())
 
         interactor.incrementCheatDays(-7)

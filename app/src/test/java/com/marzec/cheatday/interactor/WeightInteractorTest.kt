@@ -48,7 +48,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun observeTargetWeight() = runBlockingTest {
+    fun `given target weight is available, when target weight is observed, then value is returned as flow`() = runBlockingTest {
         coEvery { targetRepository.observeTargetWeight() } returns flowOf(1f, 2f)
 
         assertThat(interactor.observeTargetWeight().test(this).values()).isEqualTo(
@@ -57,7 +57,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun setTargetWeight() = runBlockingTest {
+    fun `when target weight is updated, then target weight is called`() = runBlockingTest {
         coEvery { targetRepository.setTargetWeight(1f) } returns Unit
 
         interactor.setTargetWeight(1f)
@@ -92,7 +92,7 @@ class WeightInteractorTest {
     inner class WeekAverage {
 
         @Test
-        fun `if there is seven or more weights, then return week average`() = runBlockingTest {
+        fun `given seven or more weights are available, when observing average weight, then week average is returned`() = runBlockingTest {
             coEvery { weightResultRepository.observeWeights() } returns flowOf(
                 Content.Data(
                     listOf(
@@ -116,7 +116,7 @@ class WeightInteractorTest {
         }
 
         @Test
-        fun `if there is less than seven weights, then return null in data`() = runBlockingTest {
+        fun `given seven or more weights are available, when observing average weight, then no data are available`() = runBlockingTest {
             coEvery { weightResultRepository.observeWeights() } returns flowOf(
                 Content.Data(
                     listOf(
@@ -135,7 +135,7 @@ class WeightInteractorTest {
         }
 
         @Test
-        fun observeAverageWeights() = runBlockingTest {
+        fun `given seven or more weights are available, when observing average weights, then they are returned`() = runBlockingTest {
             coEvery { weightResultRepository.observeWeights() } returns flowOf(
                 Content.Data(
                     listOf(
@@ -167,7 +167,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun addWeight() = runBlockingTest {
+    fun `when adding weight, then weight result repository is called`() = runBlockingTest {
         coEvery { weightResultRepository.putWeight(stubWeightResult()) } returns flowOf(
             Content.Data(
                 stubWeightResult()
@@ -180,7 +180,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun updateWeight() = runBlockingTest {
+    fun `when updating weight, then weight result repository is called`() = runBlockingTest {
         coEvery { weightResultRepository.updateWeight(stubWeightResult()) } returns flowOf(
             Content.Data(Unit)
         )
@@ -191,7 +191,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun `if added weight is not today, then don't change cheat days count`() = runBlockingTest {
+    fun `when added weight is not today, then don't change cheat days count`() = runBlockingTest {
         coEvery { weightResultRepository.putWeight(stubWeightResult(value = 90.5f)) } returns flowOf(
             Content.Data(stubWeightResult(value = 90.5f))
         )
@@ -214,7 +214,7 @@ class WeightInteractorTest {
 
         @Test
         @Suppress("MaxLineLength")
-        fun `if new weight is greater than older and target weight, then decrease cheat day, and additionally decrease cheat day with diff from integers values of weights`() =
+        fun `given new weight is greater than older and target weight, when adding new weight, then decrease cheat day, and additionally decrease cheat day with diff from integers values of weights`() =
             runBlockingTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     Content.Data(stubWeightResult(value = 93.4f))
@@ -233,7 +233,7 @@ class WeightInteractorTest {
 
         @Test
         @Suppress("MaxLineLength")
-        fun `if new weight is greater than older with diff smaller than 1 kg than and then target weight, then decrease cheat day`() =
+        fun `given new weight is greater than older with diff smaller than 1 kg than and then target weight, when adding new weight, then decrease cheat day`() =
             runBlockingTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     Content.Data(stubWeightResult(value = 93.4f))
@@ -252,7 +252,7 @@ class WeightInteractorTest {
 
         @Test
         @Suppress("MaxLineLength")
-        fun `if new weight is greater than older, but not than target weight, then don't change cheat days count`() =
+        fun `given new weight is greater than older, but not than target weight, when adding new weight, then don't change cheat days count`() =
             runBlockingTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     Content.Data(stubWeightResult(value = 93.4f))
@@ -271,7 +271,7 @@ class WeightInteractorTest {
 
         @Test
         @Suppress("MaxLineLength")
-        fun `if new weight is smaller than older, then increase cheat day, and additionally increase cheat day with diff from integers values of weights`() =
+        fun `given new weight is smaller than older, when adding new weight, then increase cheat day and additionally increase cheat day with diff from integers values of weights`() =
             runBlockingTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     stubWeightResult(value = 93.4f).toContentData()
@@ -290,7 +290,7 @@ class WeightInteractorTest {
             }
 
         @Test
-        fun `if new weight is smaller than older with diff smaller than 1 kg, then increase cheat day`() =
+        fun `given new weight is smaller than older with diff smaller than 1 kg, when adding new weight, then increase cheat day`() =
             runBlockingTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     stubWeightResult(value = 93.4f).toContentData()
@@ -309,7 +309,7 @@ class WeightInteractorTest {
             }
 
         @Test
-        fun `if new weight is smaller than min weight, then increase cheat day with one extra day`() =
+        fun `given new weight is smaller than min weight, when adding new weight, then increase cheat day with one extra day`() =
             runBlockingTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
                     stubWeightResult(value = 91.1f).toContentData()
@@ -327,7 +327,7 @@ class WeightInteractorTest {
             }
 
         @Test
-        fun `if old value not available, then don't cheat days count`() = runBlockingTest {
+        fun `given old value not available, when adding new weight, then don't cheat days count`() = runBlockingTest {
             coEvery { weightResultRepository.putWeight(stubWeightResult(value = 90.5f)) } returns flowOf(
                 Content.Data(stubWeightResult(value = 90.5f))
             )

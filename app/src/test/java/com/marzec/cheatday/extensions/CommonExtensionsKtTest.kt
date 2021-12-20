@@ -37,12 +37,12 @@ internal class CommonExtensionsKtTest {
     }
 
     @Test
-    fun incIfIncreaseWhenTrue() {
+    fun `when condition is true, then increase`() {
         assertThat(1.incIf { true }).isEqualTo(2)
     }
 
     @Test
-    fun incIfDoNotIncreaseIfFalse() {
+    fun `when condition is false, then decrease`() {
         assertThat(1.incIf { false }).isEqualTo(1)
     }
 
@@ -86,13 +86,13 @@ internal class CommonExtensionsKtTest {
     }
 
     @Test
-    fun testToDateTimeReturnsNullIfNotDate() {
+    fun `when string doesn't contain date, then toDateTime throws exception`() {
         val thrown = assertThrows(IllegalArgumentException::class.java) { "".toDateTime() }
         assertThat(thrown).isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
-    fun testToDateTime() {
+    fun `when string contains date, then toDateTime throws DateTime`() {
         assertThat("2021-07-08T09:31:12".toDateTime()).isEqualTo(
             DateTime(2021, 7, 8, 9, 31, 12)
         )
