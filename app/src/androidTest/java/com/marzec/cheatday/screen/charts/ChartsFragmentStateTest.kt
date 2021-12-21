@@ -1,5 +1,7 @@
 package com.marzec.cheatday.screen.charts
 
+import androidx.test.rule.GrantPermissionRule
+import android.Manifest
 import com.karumi.shot.ScreenshotTest
 import com.marzec.cheatday.common.PolicySetupRule
 import com.marzec.cheatday.common.compareStateScreenshot
@@ -15,6 +17,10 @@ import org.junit.Test
 
 @HiltAndroidTest
 class ChartsFragmentStateTest : ScreenshotTest {
+
+    @get:Rule
+    var runtimePermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     @get:Rule
     var policySetupRule = PolicySetupRule()

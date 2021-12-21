@@ -1,5 +1,7 @@
 package com.marzec.cheatday.scenarios
 
+import android.Manifest
+import androidx.test.rule.GrantPermissionRule
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.marzec.cheatday.common.currentUser
 import com.marzec.cheatday.common.loginResponse
@@ -23,6 +25,10 @@ import org.junit.Test
 @HiltAndroidTest
 @UninstallModules(ApiUrlsModule::class)
 class LoginScenariosTest : TestCase() {
+
+    @get:Rule
+    var runtimePermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

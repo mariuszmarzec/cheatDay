@@ -1,5 +1,7 @@
 package com.marzec.cheatday.scenarios
 
+import androidx.test.rule.GrantPermissionRule
+import android.Manifest
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.addWeightsResponse
@@ -29,6 +31,10 @@ import org.junit.Test
 
 @HiltAndroidTest
 class WeightScenariosTest : TestCase() {
+
+    @get:Rule
+    var runtimePermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

@@ -1,13 +1,13 @@
 package com.marzec.cheatday.screen.dayscounter
 
+import android.Manifest
+import androidx.test.rule.GrantPermissionRule
 import com.karumi.shot.ScreenshotTest
 import com.marzec.cheatday.common.PolicySetupRule
 import com.marzec.cheatday.common.compareStateScreenshot
 import com.marzec.cheatday.model.domain.Day
 import com.marzec.cheatday.model.ui.DayState
-import com.marzec.cheatday.screen.dayscounter.DaysCounterFragment
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterState
-import com.marzec.cheatday.screen.login.view.LoginFragment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
@@ -15,6 +15,10 @@ import org.junit.Test
 
 @HiltAndroidTest
 class DaysCounterFragmentStateTest : ScreenshotTest {
+
+    @get:Rule
+    var runtimePermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     @get:Rule
     var policySetupRule = PolicySetupRule()

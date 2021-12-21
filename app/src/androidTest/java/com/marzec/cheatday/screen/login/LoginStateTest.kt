@@ -1,5 +1,7 @@
 package com.marzec.cheatday.screen.login
 
+import androidx.test.rule.GrantPermissionRule
+import android.Manifest
 import com.karumi.shot.ScreenshotTest
 import com.marzec.cheatday.common.PolicySetupRule
 import com.marzec.cheatday.common.compareStateScreenshot
@@ -13,6 +15,10 @@ import org.junit.Test
 
 @HiltAndroidTest
 class LoginStateTest : ScreenshotTest {
+
+    @get:Rule
+    var runtimePermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     @get:Rule
     var policySetupRule = PolicySetupRule()

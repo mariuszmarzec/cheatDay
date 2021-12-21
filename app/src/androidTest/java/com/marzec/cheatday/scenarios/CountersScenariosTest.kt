@@ -1,19 +1,15 @@
 package com.marzec.cheatday.scenarios
 
+import androidx.test.rule.GrantPermissionRule
+import android.Manifest
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.marzec.cheatday.common.currentUser
 import com.marzec.cheatday.common.startApplication
-import com.marzec.cheatday.db.dao.DayDao
-import com.marzec.cheatday.db.dao.UserDao
-import com.marzec.cheatday.model.domain.Day
-import com.marzec.cheatday.repository.DayRepository
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.screens.HomeScreen
-import com.marzec.cheatday.screens.LoginScreen
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -21,6 +17,10 @@ import org.junit.Test
 
 @HiltAndroidTest
 class CountersScenariosTest : TestCase() {
+
+    @get:Rule
+    var runtimePermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

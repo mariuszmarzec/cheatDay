@@ -51,6 +51,10 @@ internal class ChartsViewModelTest {
         coEvery { weightInteractor.observeWeights() } returns flowOf(
             Content.Error(Exception())
         )
+        coEvery { weightInteractor.observeAverageWeights() } returns flowOf(
+            Content.Data(listOf(stubWeightResult()))
+        )
+
         val viewModel = viewModel()
         val test = viewModel.test(this)
 

@@ -44,6 +44,8 @@ android {
         testInstrumentationRunner = "com.marzec.cheatday.MockTestRunner"
         testInstrumentationRunnerArgument("listener", "leakcanary.FailTestOnLeakRunListener")
         testInstrumentationRunnerArguments(mapOf("clearPackageData" to "true"))
+        testInstrumentationRunnerArguments(mapOf("coverage" to "true"))
+        testInstrumentationRunnerArguments(mapOf("coverageFilePath" to "/sdcard/coverage/"))
         testInstrumentationRunnerArguments(mapOf("useTestStorageService" to "true"))
 
         javaCompileOptions {
