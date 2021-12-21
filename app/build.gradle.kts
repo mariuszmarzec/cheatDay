@@ -266,7 +266,7 @@ dependencies {
 
     // test runner
     androidTestImplementation("androidx.test:runner:${Dependency.runner_version}")
-    androidTestUtil("androidx.test:orchestrator:${Dependency.runner_version}")
+    androidTestUtil("androidx.test:orchestrator:${Dependency.orchestrator_version}")
     androidTestUtil("androidx.test.services:test-services:${Dependency.android_test_services_version}")
     androidTestImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
 
