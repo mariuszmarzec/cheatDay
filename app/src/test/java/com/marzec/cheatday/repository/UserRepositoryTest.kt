@@ -75,7 +75,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun getCurrentUserWithAuth_returnsNull_ifEmailEmpty() = runBlockingTest {
+    fun `given current user mail is empty, when getting auth token, returns null`() = runBlockingTest {
         every { currentUserStore.data } returns flowOf(
             currentUserProto.toBuilder().setEmail("").build()
         )
@@ -83,32 +83,29 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun observeCurrentUser() = runBlockingTest {
+    fun `given user data is available, when getting current user, returns domain user`() = runBlockingTest {
         coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
 
-        assertThat(repository.observeCurrentUser().test(this).values()).isEqualTo(listOf(user))
+        repository.observeCurrentUser().test(this).isEqualTo(listOf(user))
     }
 
     @Test
-    fun observeIfUserLogged() = runBlockingTest {
-        assertThat(repository.observeIfUserLogged().test(this).values()).isEqualTo(listOf(true))
+    fun `given current user mail is empty, when getting if user logged, returns true`() = runBlockingTest {
+        repository.observeIfUserLogged().test(this).isEqualTo(listOf(true))
     }
 
     @Test
-    fun observeIfUserLogged_returnsFalse_ifNoAuthTokenAndEmail() = runBlockingTest {
+    fun `given current user mail and token are empty, when getting if user logged, returns false`() = runBlockingTest {
         every { currentUserStore.data } returns flowOf(
             currentUserProto,
             currentUserProto.toBuilder().setEmail("").setAuthToken("").build()
         )
 
-        assertThat(repository.observeIfUserLogged().test(this).values())
-            .isEqualTo(
-                listOf(true, false)
-            )
+        repository.observeIfUserLogged().test(this).isEqualTo(listOf(true, false))
     }
 
     @Test
-    fun addUserToDbIfNeeded() = runBlockingTest {
+    fun `given user mail is not stored in database, when adding user, then user is added`() = runBlockingTest {
         coEvery { userDao.observeUser("email") } returns flowOf()
 
         repository.addUserToDbIfNeeded(user)
@@ -117,7 +114,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun addUserToDbIfNeeded_doNotCallUserDao_ifUserExists() = runBlockingTest {
+    fun `given user mail is stored in database, when adding user, then new user is not added`() = runBlockingTest {
         coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
 
         repository.addUserToDbIfNeeded(user)

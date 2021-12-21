@@ -55,7 +55,6 @@ internal class UserPreferencesRepositoryTest {
             lambda<suspend (Preferences) -> Preferences>().coInvoke(preferences)
             preferences
         }
-
     }
 
     @Test
@@ -102,7 +101,7 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun observeWasClickToday_returnsFalse() = runBlockingTest {
+    fun `Given last day change was in different time as today, when getting clicked today status, then returns false`() = runBlockingTest {
         DateTimeUtils.setCurrentMillisFixed(0)
         every { preferences[preferencesKey<Long>("1_CHEAT")] } returns 123
 
