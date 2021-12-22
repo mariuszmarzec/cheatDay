@@ -14,7 +14,6 @@ import com.marzec.cheatday.screen.chart.renderer.ChartRenderer
 import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
@@ -26,7 +25,6 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart),
     @Inject
     lateinit var chartRenderer: ChartRenderer
 
-    @InternalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

@@ -17,6 +17,7 @@
         android:name=".App"
         android:theme="@style/AppTheme">
         <activity
+            android:exported="true"
             android:name=".screen.home.MainActivity"
             android:launchMode="singleInstance"
             >
@@ -29,7 +30,9 @@
 
         <receiver android:name=".notifications.EveryDayNotificationReceiver" />
 
-        <receiver android:name=".receivers.BootReceiver">
+        <receiver
+            android:exported="true"
+            android:name=".receivers.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>

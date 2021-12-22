@@ -5,8 +5,7 @@ buildscript {
     repositories {
         google()
         mavenLocal()
-        jcenter()
-
+        mavenCentral()
     }
     dependencies {
         classpath(Dependency.BuildPlugins.androidBuildPlugin)

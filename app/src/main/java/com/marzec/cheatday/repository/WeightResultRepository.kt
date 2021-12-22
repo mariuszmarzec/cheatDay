@@ -108,7 +108,7 @@ class WeightResultRepository @Inject constructor(
     ): Flow<Content<MODEL>> =
         withContext(dispatcher) {
             val cached = cacheReadFlow().firstOrNull()
-            val initial = if (cached != null) {
+            val initial: Content<MODEL> = if (cached != null) {
                 Content.Data(cached)
             } else {
                 Content.Loading()
@@ -123,7 +123,7 @@ class WeightResultRepository @Inject constructor(
                         saveToCache(callResult.data)
                     }
                 },
-                cacheReadFlow().filterNotNull().map { Content.Data(it) }
+                cacheReadFlow().filterNotNull().map { Content.Data(it) as Content<MODEL> }
             ).flowOn(dispatcher)
         }
 

@@ -2,7 +2,7 @@ object Dependency {
 
     val crashlytics_version = "2.4.1"
     val firebase_version = "26.3.0"
-    val kotlin_version = "1.5.21"
+    val kotlin_version = "1.6.10"
     val junit4_version = "4.13"
     val leak_canary_version = "2.7"
     val coroutines_version = "1.5.0"
@@ -20,15 +20,15 @@ object Dependency {
     val truth_version = "1.1.3"
     val viewmodel_version = "1.1.1"
     val room_version = "2.3.0"
-    val android_test_version = "1.1.4-alpha03"
+    val android_test_version = "1.1.3"
     val android_test_services_version = "1.4.1"
-    val android_test_runner_version = "1.1.4-alpha03"
+    val android_test_runner_version = "1.1.3"
     val runner_version = "1.4.0"
     val orchestrator_version = "1.4.1"
     val paris_version = "1.3.0"
     val arch_testing_version = "2.1.0"
     val epoxy_version = "3.11.0"
-    val espresso_core = "3.2.0"
+    val espresso_core = "3.4.0"
     val fragment_version = "1.3.3"
     val activity_version = "1.1.0"
     val screenshot_testing_version = "5.12.1"
@@ -40,9 +40,9 @@ object Dependency {
     val datastore_version = "1.0.0-alpha05"
     val google_service_version = "4.3.4"
     val protobuf_version = "0.8.14"
-    val hilt_version = "2.38.1"
+    val hilt_version = "2.40.5"
     val mockk_version = "1.11.0"
-    val kaspresso_version = "1.2.1"
+    val kaspresso_version = "1.4.0"
     val detektVersion = "1.18.1"
 
     object BuildPlugins {
@@ -60,10 +60,10 @@ object Dependency {
     }
 
     object Android {
-        val compileSdkVersion = 29
+        val compileSdkVersion = 31
         val applicationId = "com.marzec.cheatday"
         val minSdkVersion = 28
-        val targetSdkVersion = 29
+        val targetSdkVersion = 31
         val versionCode = 1
         val versionName = "1.0"
     }

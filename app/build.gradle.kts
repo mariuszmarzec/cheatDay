@@ -47,7 +47,6 @@ android {
                 "listener" to "leakcanary.FailTestOnLeakRunListener",
                 "clearPackageData" to "true",
                 "coverage" to "true",
-                "coverageFilePath" to "/sdcard/coverage/",
                 "useTestStorageService" to "true"
             )
         )
@@ -135,6 +134,10 @@ android {
     testOptions {
         // With enabled ANDROIDX_TEST_ORCHESTRATOR screenshot test with shot doesn't work
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
+    }
+
+    testCoverage {
+        jacocoVersion = "0.8.7"
     }
 
     packagingOptions {
@@ -242,6 +245,7 @@ dependencies {
 
     // hilt
     implementation("com.google.dagger:hilt-android:${Dependency.hilt_version}")
+    debugImplementation("com.google.dagger:hilt-android-testing:${Dependency.hilt_version}")
     kapt("com.google.dagger:hilt-compiler:${Dependency.hilt_version}")
 
     androidTestImplementation("com.google.dagger:hilt-android-testing:${Dependency.hilt_version}")
@@ -265,6 +269,7 @@ dependencies {
     androidTestImplementation("com.google.truth:truth:${Dependency.truth_version}")
 
     // test runner
+    androidTestImplementation("androidx.test:core:${Dependency.runner_version}")
     androidTestImplementation("androidx.test:runner:${Dependency.runner_version}")
     androidTestUtil("androidx.test:orchestrator:${Dependency.orchestrator_version}")
     androidTestUtil("androidx.test.services:test-services:${Dependency.android_test_services_version}")
@@ -276,6 +281,9 @@ dependencies {
 
     // kaspresso
     androidTestImplementation("com.kaspersky.android-components:kaspresso:${Dependency.kaspresso_version}")
+
+    // Temporary added for fix
+    api("org.checkerframework:checker-qual:3.13.0")
 }
 
 protobuf {

@@ -14,7 +14,7 @@ import io.github.kakaocup.kakao.common.builders.ViewBuilder
 import io.github.kakaocup.kakao.common.views.KBaseView
 import io.github.kakaocup.kakao.common.views.KView
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.allOf
+import org.hamcrest.core.AllOf.allOf
 
 class KCounterView : KBaseView<KCounterView>, CounterViewAssertions, CounterViewActions {
     constructor(function: ViewBuilder.() -> Unit) : super(function)
