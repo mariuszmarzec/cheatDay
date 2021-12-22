@@ -5,6 +5,8 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.app.PendingIntent.FLAG_MUTABLE
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -43,7 +45,7 @@ class NotificationHelperImpl @Inject constructor(
                     context,
                     0,
                     Intent(context, MainActivity::class.java),
-                    0
+                    FLAG_IMMUTABLE
                 )
             ).build()
         context.getSystemService<NotificationManager>()?.notify(
@@ -84,7 +86,7 @@ class NotificationHelperImpl @Inject constructor(
             context,
             Constants.ALARM_ID_NOTIFICATION_EVERY_DAY,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         alarmManager?.cancel(pendingIntent)

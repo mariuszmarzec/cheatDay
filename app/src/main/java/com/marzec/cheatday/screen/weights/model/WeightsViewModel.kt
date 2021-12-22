@@ -7,6 +7,7 @@ import com.marzec.cheatday.api.toContentData
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.MAX_POSSIBLE_ID
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.TARGET_ID
+import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.WEEK_AVERAGE_ID
 import com.marzec.mvi.State
 import com.marzec.mvi.StoreViewModel
 import com.marzec.mvi.reduceContentAsSideAction
@@ -42,6 +43,7 @@ class WeightsViewModel @Inject constructor(
                 MAX_POSSIBLE_ID -> {
                     WeightsSideEffects.ShowMaxPossibleWeightDialog
                 }
+                WEEK_AVERAGE_ID -> null
                 else -> {
                     WeightsSideEffects.OpenWeightAction(listId)
                 }
