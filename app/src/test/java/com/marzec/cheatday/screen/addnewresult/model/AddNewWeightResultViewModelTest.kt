@@ -10,18 +10,15 @@ import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.extensions.asFlow
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
-import com.marzec.mvi.IntentBuilder
 import com.marzec.mvi.State
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlin.Exception
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 
