@@ -36,7 +36,8 @@ test.authHeader=Authorization-Test
 <img src="images/architecture.png" width="1000"/>
 
 ## MVI and Store
-Architecture is built upon my own implementation of MVI. Whole concept is based on `Store` class wrapped
+Architecture is built upon my own implementation of MVI. More about in my other repository - 
+[QuickMVI](https://github.com/mariuszmarzec/QuickMVI). Whole concept is based on `Store` class wrapped
 into android view model. To fire any action everything you need is declaring intent method which 
 trigger actions. Reducer and sideEffect are tied closely with fired action.
 
