@@ -19,7 +19,7 @@ class LoginViewModel @Inject constructor(
 ) {
 
     fun onLoginButtonClicked() = intent<Content<User>> {
-        onTrigger(isCancellableFlowTrigger = true) {
+        onTrigger {
             state.ifDataAvailable {
                 loginRepository.login(login, password)
                     .cancelFlowsIf { it is Content.Data }

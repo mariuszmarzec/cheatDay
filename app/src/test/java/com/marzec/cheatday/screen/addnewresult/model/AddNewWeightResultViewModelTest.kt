@@ -10,6 +10,7 @@ import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.extensions.asFlow
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
+import com.marzec.mvi.IntentBuilder
 import com.marzec.mvi.State
 import io.mockk.coEvery
 import io.mockk.mockk
