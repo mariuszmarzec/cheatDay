@@ -38,9 +38,9 @@ open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewMo
         store.cancelFlowsIf(this, function)
 
 
-    fun <Result : Any> intent(buildFun: IntentBuilder<State, Result>.() -> Unit) {
+    fun <Result : Any> intent(id: String = "", buildFun: IntentBuilder<State, Result>.() -> Unit) {
         viewModelScope.launch {
-            store.intent(buildFun)
+            store.intent(id, buildFun)
         }
     }
 

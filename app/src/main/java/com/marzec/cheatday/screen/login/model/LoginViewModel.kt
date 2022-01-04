@@ -18,7 +18,7 @@ class LoginViewModel @Inject constructor(
     initialState
 ) {
 
-    fun onLoginButtonClicked() = intent<Content<User>> {
+    fun onLoginButtonClicked() = intent<Content<User>>("login") {
         onTrigger {
             state.ifDataAvailable {
                 loginRepository.login(login, password)
