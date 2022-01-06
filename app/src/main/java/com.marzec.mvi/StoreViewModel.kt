@@ -34,10 +34,6 @@ open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewMo
         viewModelScope.launch { store.init() }
     }
 
-    protected fun <T> Flow<T>.cancelFlowsIf(function: (T) -> Boolean): Flow<T> =
-        store.cancelFlowsIf(this, function)
-
-
     fun <Result : Any> intent(id: String = "", buildFun: IntentBuilder<State, Result>.() -> Unit) {
         viewModelScope.launch {
             store.intent(id, buildFun)

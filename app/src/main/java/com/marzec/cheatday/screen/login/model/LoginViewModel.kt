@@ -22,8 +22,11 @@ class LoginViewModel @Inject constructor(
         onTrigger {
             state.ifDataAvailable {
                 loginRepository.login(login, password)
-                    .cancelFlowsIf { it is Content.Data }
             }
+        }
+
+        cancelTrigger(runSideEffectAfterCancel = true) {
+            resultNonNull() is Content.Data
         }
 
         reducer {
