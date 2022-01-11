@@ -36,7 +36,6 @@ internal class MainViewModelTest {
         val values = viewModel.test(this)
 
         viewModel.loadState()
-        advanceUntilIdle()
 
         values.isEqualTo(
             defualtState,

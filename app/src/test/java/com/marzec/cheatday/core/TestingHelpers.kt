@@ -9,17 +9,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 
-fun <T> Flow<T>.test(scope: CoroutineScope): TestCollector<T> {
+fun <T> Flow<T>.test(scope: TestScope): TestCollector<T> {
     return TestCollector(scope, this).test()
 }
 
-fun <State : Any, SideEffect> StoreViewModel<State, SideEffect>.test(scope: CoroutineScope) =
+fun <State : Any, SideEffect> StoreViewModel<State, SideEffect>.test(scope: TestScope) =
     merge(state, sideEffects).test(scope)
 
 class TestCollector<T>(
-    private val scope: CoroutineScope,
+    private val scope: TestScope,
     private val flow: Flow<T>
 ) {
     private val values = mutableListOf<T>()
@@ -48,6 +49,7 @@ class TestCollector<T>(
     }
 
     private fun cancelIfActive() {
+        scope.advanceUntilIdle()
         if (job.isActive) {
             job.cancel()
         }
