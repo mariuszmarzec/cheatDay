@@ -9,8 +9,8 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.model.db.UserEntity
 import kotlinx.coroutines.asExecutor
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+CoroutineDispatcher
+
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -38,7 +38,7 @@ class UserDaoTest {
     }
 
     @Test
-    fun getUser() = runBlockingTest {
+    fun getUser() = test {
         userDao.insert(UserEntity(0, "email"))
 
         val user = userDao.getUser("email")
@@ -52,7 +52,7 @@ class UserDaoTest {
     }
 
     @Test
-    fun updateUser() = runBlockingTest {
+    fun updateUser() = test {
         userDao.insert(UserEntity(0, "email"))
         userDao.update(UserEntity(1, "email2"))
 

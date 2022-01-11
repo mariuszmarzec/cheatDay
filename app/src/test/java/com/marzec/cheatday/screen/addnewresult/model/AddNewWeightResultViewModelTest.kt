@@ -2,7 +2,7 @@ package com.marzec.cheatday.screen.addnewresult.model
 
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
-import com.marzec.cheatday.TestCoroutineExecutorExtension
+import com.marzec.cheatday.TestUnconfinedCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.toContentFlow
 import com.marzec.cheatday.core.test
@@ -14,7 +14,7 @@ import com.marzec.mvi.State
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import org.junit.jupiter.api.BeforeEach
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 
-@ExtendWith(value = [InstantExecutorExtension::class, TestCoroutineExecutorExtension::class])
+@ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 internal class AddNewWeightResultViewModelTest {
 
     val weightInteractor = mockk<WeightInteractor>()
@@ -39,12 +39,12 @@ internal class AddNewWeightResultViewModelTest {
     )
 
     @BeforeEach
-    fun setup() = runBlockingTest {
+    fun setup() = test {
         DateTimeUtils.setCurrentMillisFixed(0)
     }
 
     @Test
-    fun load() = runBlockingTest {
+    fun load() = test {
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 
@@ -58,7 +58,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun load_withId() = runBlockingTest {
+    fun load_withId() = test {
         coEvery { weightInteractor.getWeight(1) } returns stubWeightResult(
             value = 10f,
             date = DateTime(10)
@@ -84,7 +84,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun load_withId_failed() = runBlockingTest {
+    fun load_withId_failed() = test {
         coEvery { weightInteractor.getWeight(1) } returns flowOf(Content.Error(Exception()))
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
@@ -101,7 +101,7 @@ internal class AddNewWeightResultViewModelTest {
 
 
     @Test
-    fun setDate() = runBlockingTest {
+    fun setDate() = test {
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 
@@ -116,7 +116,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun onDatePickerClick() = runBlockingTest {
+    fun onDatePickerClick() = test {
         val viewModel = viewModel()
         val states = viewModel.test(this)
 
@@ -131,7 +131,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_addNewResult() = runBlockingTest {
+    fun save_addNewResult() = test {
         coEvery { weightInteractor.addWeight(stubWeightResult()) } returns Content.Data(Unit)
             .asFlow()
         val viewModel = viewModel()
@@ -148,7 +148,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_addNewResult_error() = runBlockingTest {
+    fun save_addNewResult_error() = test {
         coEvery { weightInteractor.addWeight(stubWeightResult()) } returns Content.Error<Unit>(
             Exception()
         ).asFlow()
@@ -167,7 +167,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_updateResult() = runBlockingTest {
+    fun save_updateResult() = test {
         coEvery { weightInteractor.updateWeight(stubWeightResult(id = 1)) } returns Content.Data(
             Unit
         ).asFlow()
@@ -187,7 +187,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_updateResult_error() = runBlockingTest {
+    fun save_updateResult_error() = test {
         coEvery { weightInteractor.updateWeight(stubWeightResult(id = 1)) } returns Content.Error<Unit>(
             Exception()
         ).asFlow()
@@ -209,7 +209,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun setNewWeight() = runBlockingTest {
+    fun setNewWeight() = test {
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 

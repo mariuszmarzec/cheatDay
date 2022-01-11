@@ -87,7 +87,7 @@ mocks, then action is made and result is saved in variable, which will be assert
 
 ```kotlin
     @Test
-    fun onLoginButtonClicked() = runBlockingTest {
+    fun onLoginButtonClicked() = test {
         val viewModel = viewModel(defaultState)
         val states = viewModel.test(this)
 

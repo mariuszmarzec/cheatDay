@@ -13,8 +13,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import okhttp3.Headers
 import org.junit.jupiter.api.Test
 import retrofit2.Response
@@ -23,7 +22,7 @@ class LoginRepositoryTest {
 
     private val userRepository: UserRepository = mockk(relaxed = true)
     private val loginApi: LoginApi = mockk()
-    private val dispatcher: CoroutineDispatcher = TestCoroutineDispatcher()
+    private val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
 
     private val repository = LoginRepository(
         userRepository, loginApi, dispatcher
@@ -40,7 +39,7 @@ class LoginRepositoryTest {
     )
 
     @Test
-    fun login() = runBlockingTest {
+    fun login() = test {
         coEvery { loginApi.login(request) } returns Response.success(
             userDto,
             Headers.headersOf(Api.Headers.AUTHORIZATION, "auth_token")
@@ -66,7 +65,7 @@ class LoginRepositoryTest {
     }
 
     @Test
-    fun logout() = runBlockingTest {
+    fun logout() = test {
         coEvery { loginApi.logout() } returns Unit
 
         val result = repository.logout()

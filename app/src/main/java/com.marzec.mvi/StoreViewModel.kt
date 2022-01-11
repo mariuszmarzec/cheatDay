@@ -35,9 +35,7 @@ open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewMo
     }
 
     fun <Result : Any> intent(id: String = "", buildFun: IntentBuilder<State, Result>.() -> Unit) {
-        viewModelScope.launch {
-            store.intent(id, buildFun)
-        }
+        store.intent(id, buildFun)
     }
 
     fun <Result : Any> IntentBuilder<State, Result>.emitSideEffect(

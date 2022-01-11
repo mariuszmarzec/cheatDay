@@ -2,7 +2,7 @@ package com.marzec.cheatday.screen.weights.model
 
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
-import com.marzec.cheatday.TestCoroutineExecutorExtension
+import com.marzec.cheatday.TestUnconfinedCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.toContentFlow
 import com.marzec.cheatday.core.test
@@ -14,13 +14,13 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import java.lang.Exception
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+
 import org.junit.jupiter.api.BeforeEach
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(value = [InstantExecutorExtension::class, TestCoroutineExecutorExtension::class])
+@ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 class WeightsViewModelTest {
 
     val minWeight = 5.0f
@@ -38,7 +38,7 @@ class WeightsViewModelTest {
     val weightInteractor: WeightInteractor = mockk(relaxed = true)
 
     @BeforeEach
-    fun before() = runBlockingTest {
+    fun before() = test {
         coEvery { weightInteractor.observeMinWeight() } returns minWeightResult.toContentFlow()
         coEvery { weightInteractor.observeWeekAverage() } returns weekAverage.toContentFlow()
         coEvery { weightInteractor.observeMaxPossibleWeight() } returns flowOf(maxPossible)
@@ -47,7 +47,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun load_Data() = runBlockingTest {
+    fun load_Data() = test {
         coEvery { weightInteractor.observeWeights() } returns flowOf(Content.Data(weights))
 
         val viewModel = viewModel()
@@ -70,7 +70,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun load_Loading() = runBlockingTest {
+    fun load_Loading() = test {
         coEvery { weightInteractor.observeWeights() } returns flowOf(Content.Loading(weights))
 
         val viewModel = viewModel()
@@ -86,7 +86,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun load_Error() = runBlockingTest {
+    fun load_Error() = test {
         coEvery { weightInteractor.observeWeights() } returns flowOf(Content.Error(Exception()))
 
         val viewModel = viewModel()
@@ -103,7 +103,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun onClick_targetId() = runBlockingTest {
+    fun onClick_targetId() = test {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -118,7 +118,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun onClick_maxPossibleId() = runBlockingTest {
+    fun onClick_maxPossibleId() = test {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -133,7 +133,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun onClick_openWeight() = runBlockingTest {
+    fun onClick_openWeight() = test {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -148,7 +148,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun onLongClick() = runBlockingTest {
+    fun onLongClick() = test {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -163,7 +163,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun onFloatingButtonClick() = runBlockingTest {
+    fun onFloatingButtonClick() = test {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -178,7 +178,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun changeTargetWeight() = runBlockingTest {
+    fun changeTargetWeight() = test {
         coEvery { weightInteractor.setTargetWeight(5.0f) } returns Unit
         val viewModel = viewModel()
         val values = viewModel.test(this)
@@ -193,7 +193,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun changeTargetWeight_Error() = runBlockingTest {
+    fun changeTargetWeight_Error() = test {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -208,7 +208,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun changeMaxWeight() = runBlockingTest {
+    fun changeMaxWeight() = test {
         coEvery { weightInteractor.setMaxPossibleWeight(5.0f) } returns Unit
         val viewModel = viewModel()
         val values = viewModel.test(this)
@@ -223,7 +223,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun changeMaxWeight_Error() = runBlockingTest {
+    fun changeMaxWeight_Error() = test {
         coEvery { weightInteractor.setMaxPossibleWeight(5.0f) } returns Unit
         val viewModel = viewModel()
         val values = viewModel.test(this)
@@ -239,7 +239,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun goToChart() = runBlockingTest {
+    fun goToChart() = test {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -254,7 +254,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun removeWeight() = runBlockingTest {
+    fun removeWeight() = test {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 

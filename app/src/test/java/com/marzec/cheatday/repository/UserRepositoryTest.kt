@@ -16,8 +16,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -25,7 +24,7 @@ internal class UserRepositoryTest {
 
     private val userDao: UserDao = mockk(relaxed = true)
     private val currentUserStore: DataStore<CurrentUserProto> = mockk()
-    private val dispatcher = TestCoroutineDispatcher()
+    private val dispatcher = UnconfinedTestDispatcher()
 
     lateinit var repository: UserRepository
 
@@ -63,19 +62,19 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun getCurrentUser() = runBlockingTest {
+    fun getCurrentUser() = test {
         coEvery { userDao.getUser("email") } returns userEntity
 
         assertThat(repository.getCurrentUser()).isEqualTo(user)
     }
 
     @Test
-    fun getCurrentUserWithAuth() = runBlockingTest {
+    fun getCurrentUserWithAuth() = test {
         assertThat(repository.getCurrentUserWithAuthToken()).isEqualTo(currentUserDomain)
     }
 
     @Test
-    fun `given current user mail is empty, when getting auth token, returns null`() = runBlockingTest {
+    fun `given current user mail is empty, when getting auth token, returns null`() = test {
         every { currentUserStore.data } returns flowOf(
             currentUserProto.toBuilder().setEmail("").build()
         )
@@ -83,19 +82,19 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun `given user data is available, when getting current user, returns domain user`() = runBlockingTest {
+    fun `given user data is available, when getting current user, returns domain user`() = test {
         coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
 
         repository.observeCurrentUser().test(this).isEqualTo(listOf(user))
     }
 
     @Test
-    fun `given current user mail is empty, when getting if user logged, returns true`() = runBlockingTest {
+    fun `given current user mail is empty, when getting if user logged, returns true`() = test {
         repository.observeIfUserLogged().test(this).isEqualTo(listOf(true))
     }
 
     @Test
-    fun `given current user mail and token are empty, when getting if user logged, returns false`() = runBlockingTest {
+    fun `given current user mail and token are empty, when getting if user logged, returns false`() = test {
         every { currentUserStore.data } returns flowOf(
             currentUserProto,
             currentUserProto.toBuilder().setEmail("").setAuthToken("").build()
@@ -105,7 +104,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun `given user mail is not stored in database, when adding user, then user is added`() = runBlockingTest {
+    fun `given user mail is not stored in database, when adding user, then user is added`() = test {
         coEvery { userDao.observeUser("email") } returns flowOf()
 
         repository.addUserToDbIfNeeded(user)
@@ -114,7 +113,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun `given user mail is stored in database, when adding user, then new user is not added`() = runBlockingTest {
+    fun `given user mail is stored in database, when adding user, then new user is not added`() = test {
         coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
 
         repository.addUserToDbIfNeeded(user)
@@ -123,7 +122,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun clearCurrentUser() = runBlockingTest {
+    fun clearCurrentUser() = test {
         val captor = slot<suspend (CurrentUserProto) -> CurrentUserProto>()
         coEvery { currentUserStore.updateData(capture(captor)) } answers {
             CurrentUserProto.getDefaultInstance()
@@ -135,7 +134,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun setCurrentUserWithAuth() = runBlockingTest {
+    fun setCurrentUserWithAuth() = test {
         val captor = slot<suspend (CurrentUserProto) -> CurrentUserProto>()
         coEvery { currentUserStore.updateData(capture(captor)) } answers {
             CurrentUserProto.getDefaultInstance()

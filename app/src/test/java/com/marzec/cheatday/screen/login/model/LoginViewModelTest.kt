@@ -2,7 +2,7 @@ package com.marzec.cheatday.screen.login.model
 
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
-import com.marzec.cheatday.TestCoroutineExecutorExtension
+import com.marzec.cheatday.TestUnconfinedCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.model.domain.User
@@ -11,11 +11,10 @@ import com.marzec.mvi.State
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(value = [InstantExecutorExtension::class, TestCoroutineExecutorExtension::class])
+@ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 internal class LoginViewModelTest {
 
     val loginRepository: LoginRepository = mockk()
@@ -30,7 +29,7 @@ internal class LoginViewModelTest {
     )
 
     @Test
-    fun onLoginButtonClicked() = runBlockingTest {
+    fun onLoginButtonClicked() = test {
         val viewModel = viewModel(defaultState)
         val states = viewModel.test(this)
 
@@ -51,7 +50,7 @@ internal class LoginViewModelTest {
     }
 
     @Test
-    fun onLoginChanged() = runBlockingTest {
+    fun onLoginChanged() = test {
         val viewModel = viewModel(defaultState)
         val states = viewModel.test(this)
 
@@ -66,7 +65,7 @@ internal class LoginViewModelTest {
     }
 
     @Test
-    fun onPasswordChanged() = runBlockingTest {
+    fun onPasswordChanged() = test {
         val viewModel = viewModel(defaultState)
         val states = viewModel.test(this)
 

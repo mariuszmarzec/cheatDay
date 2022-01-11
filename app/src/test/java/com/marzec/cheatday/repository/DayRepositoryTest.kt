@@ -12,21 +12,22 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
+
 import org.junit.jupiter.api.Test
 
 internal class DayRepositoryTest {
 
     private val dayDao: DayDao = mockk(relaxed = true)
-    private val dispatcher: CoroutineDispatcher = TestCoroutineDispatcher()
+    private val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
 
     private val repository = DayRepository(
         dayDao, dispatcher
     )
 
     @Test
-    fun observeDaysByUser() = runBlockingTest {
+    fun observeDaysByUser() = runTest(dispatcher) {
         coEvery { dayDao.getDay(0, "CHEAT") } returns stubDayEntity(type = "CHEAT")
         coEvery { dayDao.getDay(0, "WORKOUT") } returns stubDayEntity(type = "WORKOUT")
         coEvery { dayDao.getDay(0, "DIET") } returns stubDayEntity(type = "DIET")
@@ -37,16 +38,12 @@ internal class DayRepositoryTest {
             )
         )
         coEvery {
-            dayDao.observeDay(
-                0,
-                Day.Type.WORKOUT.name
-            )
+            dayDao.observeDay(0, Day.Type.WORKOUT.name)
         } returns flowOf(stubDayEntity(type = "WORKOUT"))
-        coEvery { dayDao.observeDay(0, Day.Type.DIET.name) } returns flowOf(
-            stubDayEntity(
-                type = "DIET"
-            )
-        )
+
+        coEvery {
+            dayDao.observeDay(0, Day.Type.DIET.name)
+        } returns flowOf(stubDayEntity(type = "DIET"))
 
         val result = repository.observeDaysByUser(0).test(this)
 
@@ -63,7 +60,7 @@ internal class DayRepositoryTest {
     }
 
     @Test
-    fun update() = runBlockingTest {
+    fun update() = test {
         repository.update(0, stubDay())
 
         coVerify { dayDao.createOrUpdate(stubDayEntity(userId = 0)) }

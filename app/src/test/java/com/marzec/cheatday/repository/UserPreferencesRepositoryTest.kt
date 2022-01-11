@@ -17,19 +17,17 @@ import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 internal class UserPreferencesRepositoryTest {
 
     private val dataStore: DataStore<Preferences> = mockk()
     private val userRepository: UserRepository = mockk()
-    private val dispatcher: CoroutineDispatcher = TestCoroutineDispatcher()
+    private val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
 
     private val preferences = mockk<Preferences>()
     private val mutablePreferences = mockk<MutablePreferences>(relaxed = true)
@@ -43,7 +41,7 @@ internal class UserPreferencesRepositoryTest {
     )
 
     @BeforeEach
-    fun setUp() = runBlockingTest {
+    fun setUp() = test {
         mockkStatic("androidx.datastore.preferences.core.PreferencesKt")
         coEvery { userRepository.getCurrentUser() } returns user
         coEvery { userRepository.observeCurrentUser() } returns flowOf(user)
@@ -58,14 +56,14 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun setMaxPossibleWeight() = runBlockingTest {
+    fun setMaxPossibleWeight() = test {
         repository.setMaxPossibleWeight(10f)
 
         verify { mutablePreferences[preferencesKey<Float>("1_max_possible_weight")] = eq(10f) }
     }
 
     @Test
-    fun observeMaxPossibleWeight() = runBlockingTest {
+    fun observeMaxPossibleWeight() = test {
         every { preferences[preferencesKey<Float>("1_max_possible_weight")] } returns 5f
 
         val result = repository.observeMaxPossibleWeight().test(this)
@@ -74,14 +72,14 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun setTargetWeight() = runBlockingTest {
+    fun setTargetWeight() = test {
         repository.setTargetWeight(10f)
 
         verify { mutablePreferences[preferencesKey<Float>("1_weight")] = eq(10f) }
     }
 
     @Test
-    fun observeTargetWeight() = runBlockingTest {
+    fun observeTargetWeight() = test {
         every { preferences[preferencesKey<Float>("1_weight")] } returns 5f
 
         val result = repository.observeTargetWeight().test(this)
@@ -90,7 +88,7 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun observeWasClickToday() = runBlockingTest {
+    fun observeWasClickToday() = test {
         DateTimeUtils.setCurrentMillisFixed(0)
         every { preferences[preferencesKey<Long>("1_CHEAT")] } returns DateTime.now()
             .withTimeAtStartOfDay().millis
@@ -101,7 +99,7 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun `Given last day change was in different time as today, when getting clicked today status, then returns false`() = runBlockingTest {
+    fun `Given last day change was in different time as today, when getting clicked today status, then returns false`() = test {
         DateTimeUtils.setCurrentMillisFixed(0)
         every { preferences[preferencesKey<Long>("1_CHEAT")] } returns 123
 
@@ -111,7 +109,7 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun setWasClickedToday() = runBlockingTest {
+    fun setWasClickedToday() = test {
         DateTimeUtils.setCurrentMillisFixed(0)
 
         repository.setWasClickedToday(Day.Type.CHEAT)

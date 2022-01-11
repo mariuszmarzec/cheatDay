@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.view.model.ListItem
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+
 import org.joda.time.DateTime
 import org.junit.Assert.assertThrows
 import org.junit.jupiter.api.Test
@@ -62,19 +62,19 @@ internal class CommonExtensionsKtTest {
     }
 
     @Test
-    fun combinePair() = runBlockingTest {
+    fun combinePair() = test {
         val combine = combine(flowOf(1), flowOf("a"))
         assertThat(combine.test(this).values()).isEqualTo(listOf(Pair(1, "a")))
     }
 
     @Test
-    fun combineTriple() = runBlockingTest {
+    fun combineTriple() = test {
         val combine = combine(flowOf(1), flowOf("a"), flowOf(1L))
         assertThat(combine.test(this).values()).isEqualTo(listOf(Triple(1, "a", 1L)))
     }
 
     @Test
-    fun combineQuadruple() = runBlockingTest {
+    fun combineQuadruple() = test {
         val combine = combine(
             flowOf(1),
             flowOf("a"),

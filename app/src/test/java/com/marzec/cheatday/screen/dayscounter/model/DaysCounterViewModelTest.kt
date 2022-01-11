@@ -2,7 +2,7 @@ package com.marzec.cheatday.screen.dayscounter.model
 
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
-import com.marzec.cheatday.TestCoroutineExecutorExtension
+import com.marzec.cheatday.TestUnconfinedCoroutineExecutorExtension
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.interactor.DaysInteractor
 import com.marzec.cheatday.model.domain.ClickedStates
@@ -13,11 +13,11 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(value = [InstantExecutorExtension::class, TestCoroutineExecutorExtension::class])
+@ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 class DaysCounterViewModelTest {
 
     val daysInteractor: DaysInteractor = mockk(relaxed = true)
@@ -26,7 +26,7 @@ class DaysCounterViewModelTest {
     val defaultState: DaysCounterState = DaysCounterState.DEFAULT_STATE
 
     @Test
-    fun loading() = runBlockingTest {
+    fun loading() = test {
         coEvery { daysInteractor.observeDays() } returns flowOf(
             stubDaysGroup(
                 cheat = defaultState.cheat.day.copy(
@@ -60,7 +60,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onCheatDecreaseClick() = runBlockingTest {
+    fun onCheatDecreaseClick() = test {
         val viewModel = viewModel()
 
         viewModel.onCheatDecreaseClick()
@@ -69,7 +69,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onDietIncreaseClick() = runBlockingTest {
+    fun onDietIncreaseClick() = test {
         val viewModel = viewModel()
 
         viewModel.onDietIncreaseClick()
@@ -78,7 +78,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onWorkoutIncreaseClick() = runBlockingTest {
+    fun onWorkoutIncreaseClick() = test {
         val viewModel = viewModel()
 
         viewModel.onWorkoutIncreaseClick()

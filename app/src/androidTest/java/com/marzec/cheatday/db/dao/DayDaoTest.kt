@@ -13,7 +13,7 @@ import com.marzec.cheatday.db.model.db.UserEntity
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.test.runBlockingTest
+
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -73,7 +73,7 @@ class DayDaoTest {
     }
 
     @Test
-    fun getDay() = runBlockingTest {
+    fun getDay() = test {
         dayDao.insert(
             DayEntity(
                 1,
@@ -106,7 +106,7 @@ class DayDaoTest {
     }
 
     @Test
-    fun createOrUpdate() = runBlockingTest {
+    fun createOrUpdate() = test {
         dayDao.insert(testEntity)
         dayDao.createOrUpdate(testEntity.copy(count = 20))
 
@@ -116,7 +116,7 @@ class DayDaoTest {
     }
 
     @Test
-    fun cascadeDeleteWithUser() = runBlockingTest {
+    fun cascadeDeleteWithUser() = test {
         dayDao.insert(testEntity)
         val user = userDao.getUser("email")
         userDao.remove(user)

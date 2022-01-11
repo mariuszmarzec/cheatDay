@@ -2,7 +2,7 @@ package com.marzec.cheatday.screen.chart.model
 
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
-import com.marzec.cheatday.TestCoroutineExecutorExtension
+import com.marzec.cheatday.TestUnconfinedCoroutineExecutorExtension
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.extensions.EMPTY_STRING
@@ -12,12 +12,12 @@ import com.marzec.mvi.State
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(value = [InstantExecutorExtension::class, TestCoroutineExecutorExtension::class])
+@ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 internal class ChartsViewModelTest {
 
     val weightInteractor = mockk<WeightInteractor>()
@@ -25,7 +25,7 @@ internal class ChartsViewModelTest {
     val defaultState: State<ChartsData> = State.Loading()
 
     @Test
-    fun loadData() = runBlockingTest {
+    fun loadData() = test {
         coEvery { weightInteractor.observeWeights() } returns flowOf(
             Content.Data(listOf(stubWeightResult()))
         )
@@ -47,7 +47,7 @@ internal class ChartsViewModelTest {
     }
 
     @Test
-    fun loadData_error() = runBlockingTest {
+    fun loadData_error() = test {
         coEvery { weightInteractor.observeWeights() } returns flowOf(
             Content.Error(Exception())
         )
@@ -73,7 +73,7 @@ internal class ChartsViewModelTest {
     inner class SwitchingChart {
 
         @Test
-        fun switchIntoAverageChart() = runBlockingTest {
+        fun switchIntoAverageChart() = test {
             val defaultState: State<ChartsData> = State.Loading(
                 ChartsData(
                     weights = emptyList(),
@@ -109,7 +109,7 @@ internal class ChartsViewModelTest {
         }
 
         @Test
-        fun switchIntoNormalChart() = runBlockingTest {
+        fun switchIntoNormalChart() = test {
             val defaultState: State<ChartsData> = State.Loading(
                 ChartsData(
                     weights = emptyList(),

@@ -11,8 +11,8 @@ import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+CoroutineDispatcher
+
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -68,7 +68,7 @@ class WeightDaoTest {
 
     @Before
     fun setUp() {
-        runBlockingTest {
+        test {
             val context = ApplicationProvider.getApplicationContext<Context>()
             db = inMemoryDatabaseBuilder(context, AppDatabase::class.java)
                 .setTransactionExecutor(testDispatcher.asExecutor())
@@ -88,14 +88,14 @@ class WeightDaoTest {
     }
 
     @Test
-    fun getWeight() = runBlockingTest {
+    fun getWeight() = test {
         val actual = weightDao.getWeight(2)
 
         assertThat(actual).isEqualTo(weight2)
     }
 
     @Test
-    fun observeWeights() = runBlockingTest {
+    fun observeWeights() = test {
         val actual = weightDao.observeWeights(userEntity.id).first()
             .toList()
         assertThat(actual).isEqualTo(listOf(weight3, weight, weight2))
@@ -103,14 +103,14 @@ class WeightDaoTest {
 
 
     @Test
-    fun observeMinWeight() = runBlockingTest {
+    fun observeMinWeight() = test {
         val actual = weightDao.observeMinWeight(userEntity.id).first()
         
         assertThat(actual).isEqualTo(weight)
     }
 
     @Test
-    fun observeLastWeight() = runBlockingTest {
+    fun observeLastWeight() = test {
         val actual = weightDao.observeLastWeight(userEntity.id).first()
 
         assertThat(actual).isEqualTo(weight3)
