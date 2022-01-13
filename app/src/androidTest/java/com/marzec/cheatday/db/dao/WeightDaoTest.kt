@@ -11,7 +11,9 @@ import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.flow.first
-CoroutineDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 
 import org.junit.Before
 import org.junit.Rule
@@ -57,7 +59,7 @@ class WeightDaoTest {
         otherUser.id
     )
 
-    val testDispatcher = TestCoroutineDispatcher()
+    val testDispatcher = UnconfinedTestDispatcher()
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -68,7 +70,7 @@ class WeightDaoTest {
 
     @Before
     fun setUp() {
-        test {
+        runTest(testDispatcher) {
             val context = ApplicationProvider.getApplicationContext<Context>()
             db = inMemoryDatabaseBuilder(context, AppDatabase::class.java)
                 .setTransactionExecutor(testDispatcher.asExecutor())
@@ -88,14 +90,14 @@ class WeightDaoTest {
     }
 
     @Test
-    fun getWeight() = test {
+    fun getWeight() = runTest(testDispatcher) {
         val actual = weightDao.getWeight(2)
 
         assertThat(actual).isEqualTo(weight2)
     }
 
     @Test
-    fun observeWeights() = test {
+    fun observeWeights() = runTest(testDispatcher) {
         val actual = weightDao.observeWeights(userEntity.id).first()
             .toList()
         assertThat(actual).isEqualTo(listOf(weight3, weight, weight2))
@@ -103,14 +105,14 @@ class WeightDaoTest {
 
 
     @Test
-    fun observeMinWeight() = test {
+    fun observeMinWeight() = runTest(testDispatcher) {
         val actual = weightDao.observeMinWeight(userEntity.id).first()
         
         assertThat(actual).isEqualTo(weight)
     }
 
     @Test
-    fun observeLastWeight() = test {
+    fun observeLastWeight() = runTest(testDispatcher) {
         val actual = weightDao.observeLastWeight(userEntity.id).first()
 
         assertThat(actual).isEqualTo(weight3)

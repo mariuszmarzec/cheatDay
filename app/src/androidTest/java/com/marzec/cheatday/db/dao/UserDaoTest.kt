@@ -9,8 +9,8 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.model.db.UserEntity
 import kotlinx.coroutines.asExecutor
-CoroutineDispatcher
-
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,7 +25,7 @@ class UserDaoTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    val testDispatcher = TestCoroutineDispatcher()
+    val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setUp() {
@@ -38,7 +38,7 @@ class UserDaoTest {
     }
 
     @Test
-    fun getUser() = test {
+    fun getUser() = runTest(testDispatcher) {
         userDao.insert(UserEntity(0, "email"))
 
         val user = userDao.getUser("email")
@@ -52,7 +52,7 @@ class UserDaoTest {
     }
 
     @Test
-    fun updateUser() = test {
+    fun updateUser() = runTest(testDispatcher) {
         userDao.insert(UserEntity(0, "email"))
         userDao.update(UserEntity(1, "email2"))
 
