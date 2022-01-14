@@ -28,7 +28,7 @@ object Dependency {
     val paris_version = "1.3.0"
     val arch_testing_version = "2.1.0"
     val epoxy_version = "3.11.0"
-    val espresso_core = "3.4.0"
+    val espresso_core = "3.5.0-alpha03"
     val fragment_version = "1.3.3"
     val activity_version = "1.1.0"
     val screenshot_testing_version = "5.12.1"
