@@ -189,7 +189,6 @@ dependencies {
     implementation("androidx.fragment:fragment:${Dependency.fragment_version}")
     debugImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
     implementation("androidx.activity:activity:${Dependency.activity_version}")
-    androidTestImplementation("androidx.test:rules:${Dependency.android_test_version}")
     androidTestImplementation("androidx.arch.core:core-testing:${Dependency.arch_testing_version}")
 
     // room
@@ -271,6 +270,7 @@ dependencies {
     // test runner
     androidTestImplementation("androidx.test:core:${Dependency.runner_version}")
     androidTestImplementation("androidx.test:runner:${Dependency.runner_version}")
+    androidTestImplementation("androidx.test:rules:${Dependency.runner_version}")
     androidTestUtil("androidx.test:orchestrator:${Dependency.orchestrator_version}")
     androidTestUtil("androidx.test.services:test-services:${Dependency.android_test_services_version}")
     androidTestImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
@@ -282,8 +282,6 @@ dependencies {
     // kaspresso
     androidTestImplementation("com.kaspersky.android-components:kaspresso:${Dependency.kaspresso_version}")
 
-    // Temporary added for fix
-    api("org.checkerframework:checker-qual:3.13.0")
 }
 
 protobuf {
