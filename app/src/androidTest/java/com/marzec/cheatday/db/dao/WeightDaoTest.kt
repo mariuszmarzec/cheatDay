@@ -72,10 +72,7 @@ class WeightDaoTest {
     fun setUp() {
         runTest(testDispatcher) {
             val context = ApplicationProvider.getApplicationContext<Context>()
-            db = inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-                .setTransactionExecutor(testDispatcher.asExecutor())
-                .setQueryExecutor(testDispatcher.asExecutor())
-                .build()
+            db = inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
             userDao = db.getUserDao()
             weightDao = db.getWeightDao()
             userDao.insert(userEntity)

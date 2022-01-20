@@ -30,10 +30,7 @@ class UserDaoTest {
     @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        db = inMemoryDatabaseBuilder(context, AppDatabase::class.java)
-            .setTransactionExecutor(testDispatcher.asExecutor())
-            .setQueryExecutor(testDispatcher.asExecutor())
-            .build()
+        db = inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
         userDao = db.getUserDao()
     }
 
