@@ -123,12 +123,6 @@ To verify UI with recorded earlier screenshots:
 ```bash
 gradlew stageDebugExecuteScreenshotTests
 ```
-
-### Known issues
-
-- Screenshot testing is broken too due to lack of support test orchestrator, 
-  [issue](https://github.com/pedrovgs/Shot/issues/140), current workaround: disabling orchestrator, 
-  commenting out all tests excepts screenshot ones
   
 ## Espresso testing with Kaspresso
 
@@ -151,9 +145,6 @@ To run generate code coverage test report:
 ```bash
 gradlew jacocoTestReport
 ```
-
-### Known issues 
-Due to broken screenshot tests, code coverage is broken too.
 
 # Data sources and cache strategy
 
