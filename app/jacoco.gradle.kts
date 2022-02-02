@@ -1,11 +1,14 @@
 
 val kotlinTree = fileTree("${project.buildDir}/tmp/kotlin-classes/stageDebug") {
-    exclude("**/com/paris/**")
+    exclude(
+        "**/com/paris/**",
+        "**/com/airbnb/paris/extensions/**"
+    )
 }
 
 val kotlinSrc = "${project.projectDir}/src/main/java"
 
-tasks.create("jacocoMergeTestReport", JacocoMerge::class) {
+tasks.create("jacocoMergeTestReportStageDebug", JacocoMerge::class) {
     dependsOn("connectedStageDebugAndroidTest")
     dependsOn("testStageDebugUnitTest")
 
@@ -19,8 +22,8 @@ tasks.create("jacocoMergeTestReport", JacocoMerge::class) {
     }
 }
 
-tasks.create("jacocoTestReport", JacocoReport::class) {
-    dependsOn("jacocoMergeTestReport")
+tasks.create("jacocoTestReportStageDebug", JacocoReport::class) {
+    dependsOn("jacocoMergeTestReportStageDebug")
 
     reports {
         xml.isEnabled = false
@@ -30,13 +33,15 @@ tasks.create("jacocoTestReport", JacocoReport::class) {
     }
 
     classDirectories.setFrom(files(kotlinTree))
+
+    additionalSourceDirs.setFrom(files(kotlinSrc))
     sourceDirectories.setFrom(files(kotlinSrc))
     executionData.setFrom(
         fileTree(
             baseDir = project.projectDir
         ) {
             include(
-                "**/jacocoMergeTestReport.exec"
+                "**/jacocoMergeTestReportStageDebug.exec"
             )
             exclude(
                 "**/*UnitTest.exec",
