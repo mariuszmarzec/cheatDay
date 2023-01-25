@@ -25,7 +25,7 @@ class LabeledRowView @JvmOverloads constructor(
         label = findViewById(R.id.label)
         value = findViewById(R.id.value)
 
-        setBackgroundResource(attr(R.attr.selectableItemBackground).resourceId)
+        setBackgroundResource(attr(android.R.attr.selectableItemBackground).resourceId)
         orientation = HORIZONTAL
         setPadding(context.resources.getDimensionPixelSize(R.dimen.default_padding))
     }

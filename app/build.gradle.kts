@@ -34,6 +34,8 @@ jacoco {
 apply(from = "jacoco.gradle.kts")
 
 android {
+    namespace = "com.marzec.cheatday"
+
     compileSdkVersion(Dependency.Android.compileSdkVersion)
     defaultConfig {
         applicationId = Dependency.Android.applicationId
@@ -82,6 +84,10 @@ android {
             storePassword = properties.getProperty("storePassword")
             keyPassword = properties.getProperty("keyPassword")
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
