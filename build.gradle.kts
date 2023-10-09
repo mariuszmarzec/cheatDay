@@ -19,6 +19,7 @@ buildscript {
         classpath(Dependency.BuildPlugins.protobuf)
         classpath(Dependency.BuildPlugins.hilt)
         classpath(Dependency.BuildPlugins.detektPlugin)
+        classpath(Dependency.BuildPlugins.butterKnife)
     }
 }
 

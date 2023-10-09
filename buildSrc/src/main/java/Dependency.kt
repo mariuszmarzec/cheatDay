@@ -2,10 +2,10 @@ object Dependency {
 
     val crashlytics_version = "2.4.1"
     val firebase_version = "26.3.0"
-    val kotlin_version = "1.6.10"
+    val kotlin_version = "1.8.22"
     val junit4_version = "4.13"
     val leak_canary_version = "2.7"
-    val coroutines_version = "1.6.0"
+    val coroutines_version = "1.7.2"
     val appcompat_version = "1.1.0"
     val material_version = "1.2.0"
     val ktx_version = "2.3.0-alpha02"
@@ -19,7 +19,7 @@ object Dependency {
     val joda_version = "2.10.3"
     val truth_version = "1.1.3"
     val viewmodel_version = "1.1.1"
-    val room_version = "2.3.0"
+    val room_version = "2.5.2"
     val android_test_version = "1.1.3"
     val android_test_services_version = "1.4.1"
     val android_test_runner_version = "1.1.3"
@@ -27,7 +27,7 @@ object Dependency {
     val orchestrator_version = "1.4.1"
     val paris_version = "1.3.0"
     val arch_testing_version = "2.1.0"
-    val epoxy_version = "3.11.0"
+    val epoxy_version = "5.1.3"
     val espresso_core = "3.3.0"
     val fragment_version = "1.3.2"
     val activity_version = "1.1.0"
@@ -36,16 +36,17 @@ object Dependency {
     val nav_version = "2.5.0"
     val chart_version = "v3.1.0"
     val junit5_plugin_version = "1.7.1.1"
-    val android_gradle_plugin = "8.0.0-alpha09"
-    val datastore_version = "1.0.0-alpha05"
+    val android_gradle_plugin = "8.1.2"
+    val datastore_version = "1.0.0"
     val google_service_version = "4.3.4"
-    val protobuf_version = "0.8.14"
-    val hilt_version = "2.40.5"
+    val protobuf_version = "0.9.4"
+    val hilt_version = "2.48.1"
     val mockk_version = "1.11.0"
     val kaspresso_version = "1.3.0"
     val detektVersion = "1.18.1"
     val androidTestMonitorVersion = "1.4.0"
     val hamcrestVersion = "1.3"
+    val butterKnifeVersion = "10.1.0"
 
     object BuildPlugins {
         val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"
@@ -59,13 +60,14 @@ object Dependency {
         val protobuf = "com.google.protobuf:protobuf-gradle-plugin:${protobuf_version}"
         val hilt = "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         val detektPlugin = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
+        val butterKnife = "com.jakewharton:butterknife-gradle-plugin:$butterKnifeVersion"
     }
 
     object Android {
-        val compileSdkVersion = 32
+        val compileSdkVersion = 33
         val applicationId = "com.marzec.cheatday"
         val minSdkVersion = 28
-        val targetSdkVersion = 32
+        val targetSdkVersion = 33
         val versionCode = 1
         val versionName = "1.0"
     }

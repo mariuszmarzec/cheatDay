@@ -22,14 +22,15 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("com.google.protobuf")
     id("dagger.hilt.android.plugin")
-    jacoco
+//    jacoco
     id("shot")
     id("io.gitlab.arturbosch.detekt")
+    id("com.jakewharton.butterknife")
 }
 
-jacoco {
-    toolVersion = "0.8.7"
-}
+//jacoco {
+//    toolVersion = "0.8.7"
+//}
 
 apply(from = "jacoco.gradle.kts")
 
@@ -63,12 +64,12 @@ android {
         }
 
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_1_8
-            targetCompatibility = JavaVersion.VERSION_1_8
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
         }
 
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = "17"
         }
     }
 
@@ -100,7 +101,8 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         getByName("debug") {
-            isTestCoverageEnabled = true
+//            enableUnitTestCoverage = true
+//            enableAndroidTestCoverage = true
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
             isMinifyEnabled = false
@@ -176,7 +178,7 @@ dependencies {
     androidTestImplementation("com.squareup.leakcanary:leakcanary-android-instrumentation:${Dependency.leak_canary_version}")
 
     // kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Dependency.kotlin_version}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Dependency.kotlin_version}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependency.coroutines_version}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Dependency.coroutines_version}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
@@ -200,9 +202,9 @@ dependencies {
     // room
     implementation("androidx.room:room-runtime:${Dependency.room_version}")
     implementation("androidx.room:room-ktx:${Dependency.room_version}")
+    implementation("androidx.room:room-common:${Dependency.room_version}")
     kapt("androidx.room:room-compiler:${Dependency.room_version}")
     androidTestImplementation("androidx.room:room-testing:${Dependency.room_version}")
-    androidTestImplementation("androidx.room:room-runtime:${Dependency.room_version}")
 
     // android views
     implementation("androidx.constraintlayout:constraintlayout:${Dependency.constraint_layout_version}")

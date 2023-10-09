@@ -15,6 +15,7 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.extensions.style
 import com.marzec.cheatday.R
+import com.marzec.cheatday.R2
 import com.marzec.cheatday.extensions.enumValueOfOrDefault
 import com.marzec.cheatday.extensions.gone
 import com.marzec.cheatday.extensions.setVisible
@@ -63,7 +64,7 @@ class CounterView @JvmOverloads constructor(
         }
     }
 
-    @Attr(R.styleable.CounterView_cv_mode)
+    @Attr(R2.styleable.CounterView_cv_mode)
     fun setMode(newMode: String) {
         mode = enumValueOfOrDefault(newMode, CountMode.DECREASE)
         drawValue()
@@ -71,30 +72,30 @@ class CounterView @JvmOverloads constructor(
         decreaseButton.setVisible(mode == CountMode.DECREASE)
     }
 
-    @Attr(R.styleable.CounterView_cv_title)
+    @Attr(R2.styleable.CounterView_cv_title)
     fun setTitle(@StringRes resId: Int) {
         titleTextView.setText(resId)
     }
 
-    @Attr(R.styleable.CounterView_cv_value)
+    @Attr(R2.styleable.CounterView_cv_value)
     fun setValue(value: Int) {
         this.value = value
         drawValue()
     }
 
-    @Attr(R.styleable.CounterView_cv_max)
+    @Attr(R2.styleable.CounterView_cv_max)
     fun setMax(max: Int) {
         this.max = max
         drawValue()
     }
 
-    @Attr(R.styleable.CounterView_cv_title_text_size)
+    @Attr(R2.styleable.CounterView_cv_title_text_size)
     fun setTextSize(@Px textSize: Int) {
         this.titleTextSize = textSize
         titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize.toFloat())
     }
 
-    @Attr(R.styleable.CounterView_cv_button_color)
+    @Attr(R2.styleable.CounterView_cv_button_color)
     fun setButtonColor(@ColorInt color: Int) {
         increaseButton.setColorFilter(color)
         decreaseButton.setColorFilter(color)

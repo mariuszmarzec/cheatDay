@@ -13,6 +13,7 @@ import com.airbnb.paris.annotations.Attr
 import com.airbnb.paris.annotations.Styleable
 import com.airbnb.paris.extensions.style
 import com.marzec.cheatday.R
+import com.marzec.cheatday.R2
 
 @ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_MATCH_HEIGHT)
 @Styleable("ErrorView")
@@ -36,13 +37,13 @@ class ErrorView @JvmOverloads constructor(
         style(attrs)
     }
 
-    @Attr(R.styleable.ErrorView_ev_message)
+    @Attr(R2.styleable.ErrorView_ev_message)
     @TextProp
     fun setErrorMessage(message: CharSequence) {
         errorMessageTextView.text = message
     }
 
-    @Attr(R.styleable.ErrorView_ev_button_label)
+    @Attr(R2.styleable.ErrorView_ev_button_label)
     @TextProp
     fun setButtonLabel(buttonLabel: CharSequence) {
         button.text = buttonLabel
