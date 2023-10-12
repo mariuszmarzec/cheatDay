@@ -2,9 +2,9 @@ package com.marzec.cheatday.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.createDataStore
+import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.createDataStore
+import androidx.datastore.preferences.preferencesDataStore
 import com.marzec.cheatday.common.CurrentUserProtoSerializer
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.dao.DayDao
@@ -24,6 +24,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 
+private val Context.userPreferencesStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
+
+private val Context.userDataStore: DataStore<CurrentUserProto> by dataStore(
+    "user_preferences",
+    CurrentUserProtoSerializer
+)
+
 @Module
 @InstallIn(SingletonComponent::class)
 interface AppModule {
@@ -39,7 +46,8 @@ interface AppModule {
 
         @Provides
         @Singleton
-        fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase = AppDatabase.getInstance(context)
+        fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
+            AppDatabase.getInstance(context)
 
         @Provides
         @Singleton
@@ -56,15 +64,12 @@ interface AppModule {
         @Provides
         @Singleton
         fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
-            context.createDataStore(name = "user_preferences")
+            context.userPreferencesStore
 
         @Provides
         @Singleton
         fun provideCurrentUserDataStore(@ApplicationContext context: Context): DataStore<CurrentUserProto> =
-            context.createDataStore(
-                fileName = "CurrentUserProto.pb",
-                serializer = CurrentUserProtoSerializer
-            )
+            context.userDataStore
     }
 }
 

@@ -2,7 +2,7 @@ object Dependency {
 
     val crashlytics_version = "2.4.1"
     val firebase_version = "26.3.0"
-    val kotlin_version = "1.8.22"
+    val kotlin_version = "1.9.10"
     val junit4_version = "4.13"
     val leak_canary_version = "2.7"
     val coroutines_version = "1.7.2"

@@ -9,8 +9,7 @@ import java.io.OutputStream
 
 object CurrentUserProtoSerializer : Serializer<CurrentUserProto> {
     override val defaultValue: CurrentUserProto = CurrentUserProto.getDefaultInstance()
-
-    override fun readFrom(input: InputStream): CurrentUserProto {
+    override suspend fun readFrom(input: InputStream): CurrentUserProto {
         try {
             return CurrentUserProto.parseFrom(input)
         } catch (exception: InvalidProtocolBufferException) {
@@ -18,8 +17,7 @@ object CurrentUserProtoSerializer : Serializer<CurrentUserProto> {
         }
     }
 
-    override fun writeTo(
-        t: CurrentUserProto,
-        output: OutputStream
-    ) = t.writeTo(output)
+    override suspend fun writeTo(t: CurrentUserProto, output: OutputStream) {
+        t.writeTo(output)
+    }
 }

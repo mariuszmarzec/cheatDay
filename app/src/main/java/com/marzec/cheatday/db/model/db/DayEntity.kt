@@ -3,7 +3,6 @@ package com.marzec.cheatday.db.model.db
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.marzec.cheatday.model.domain.Day
@@ -15,7 +14,7 @@ import com.marzec.cheatday.model.domain.Day
             entity = UserEntity::class,
             parentColumns = [UserEntity.COLUMN_ID],
             childColumns = [DayEntity.COLUMN_USER_ID],
-            onDelete = CASCADE
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [Index(value = [DayEntity.COLUMN_TYPE, DayEntity.COLUMN_USER_ID], unique = true)]

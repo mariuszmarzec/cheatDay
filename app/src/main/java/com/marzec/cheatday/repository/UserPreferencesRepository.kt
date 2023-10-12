@@ -2,12 +2,11 @@ package com.marzec.cheatday.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.preferencesKey
-import androidx.datastore.preferences.core.toMutablePreferences
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import com.marzec.cheatday.model.domain.Day
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOn
@@ -23,7 +22,7 @@ class UserPreferencesRepository @Inject constructor(
 
     suspend fun setMaxPossibleWeight(weight: Float): Unit = withContext(dispatcher) {
         val userId = userRepository.getCurrentUser().id
-        val preferencesKey = preferencesKey<Float>("${userId}_max_possible_weight")
+        val preferencesKey = floatPreferencesKey("${userId}_max_possible_weight")
         dataStore.updateData { prefs ->
             prefs.toMutablePreferences().apply { this[preferencesKey] = weight }
         }
@@ -32,14 +31,14 @@ class UserPreferencesRepository @Inject constructor(
     fun observeMaxPossibleWeight(): Flow<Float> =
         userRepository.observeCurrentUser().flatMapMerge { user ->
             dataStore.data.mapLatest { prefs ->
-                val key = preferencesKey<Float>("${user.id}_max_possible_weight")
+                val key = floatPreferencesKey("${user.id}_max_possible_weight")
                 prefs[key] ?: .0f
             }
         }.flowOn(dispatcher)
 
     suspend fun setTargetWeight(weight: Float): Unit = withContext(dispatcher) {
         val userId = userRepository.getCurrentUser().id
-        val preferencesKey = preferencesKey<Float>("${userId}_weight")
+        val preferencesKey = floatPreferencesKey("${userId}_weight")
         dataStore.updateData { prefs ->
             prefs.toMutablePreferences().apply { this[preferencesKey] = weight }
         }
@@ -48,7 +47,7 @@ class UserPreferencesRepository @Inject constructor(
     fun observeTargetWeight(): Flow<Float> =
         userRepository.observeCurrentUser().flatMapMerge { user ->
             dataStore.data.mapLatest { prefs ->
-                val key = preferencesKey<Float>("${user.id}_weight")
+                val key = floatPreferencesKey("${user.id}_weight")
                 prefs[key] ?: .0f
             }
         }.flowOn(dispatcher)
@@ -58,7 +57,7 @@ class UserPreferencesRepository @Inject constructor(
         userRepository.observeCurrentUser()
             .flatMapMerge { user ->
                 dataStore.data.mapLatest { prefs ->
-                    prefs[preferencesKey<Long>("${user.id}_$day")] ?: 0
+                    prefs[longPreferencesKey("${user.id}_$day")] ?: 0
                 }.mapLatest { savedTime ->
                     val today = DateTime.now().withTimeAtStartOfDay()
                     today == DateTime(savedTime)
@@ -69,7 +68,7 @@ class UserPreferencesRepository @Inject constructor(
         val userId = userRepository.getCurrentUser().id
         val timeInMillis = DateTime.now().withTimeAtStartOfDay().millis
         dataStore.updateData { prefs ->
-            val preferencesKey = preferencesKey<Long>("${userId}_$day")
+            val preferencesKey = longPreferencesKey("${userId}_$day")
             prefs.toMutablePreferences().apply { this[preferencesKey] = timeInMillis }
         }
     }
