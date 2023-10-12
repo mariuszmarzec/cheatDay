@@ -26,6 +26,7 @@ plugins {
     id("shot")
     id("io.gitlab.arturbosch.detekt")
     id("com.jakewharton.butterknife")
+    id("com.google.devtools.ksp")
 }
 
 //jacoco {
@@ -203,7 +204,7 @@ dependencies {
     implementation("androidx.room:room-runtime:${Dependency.room_version}")
     implementation("androidx.room:room-ktx:${Dependency.room_version}")
     implementation("androidx.room:room-common:${Dependency.room_version}")
-    kapt("androidx.room:room-compiler:${Dependency.room_version}")
+    ksp("androidx.room:room-compiler:${Dependency.room_version}")
     androidTestImplementation("androidx.room:room-testing:${Dependency.room_version}")
 
     // android views
