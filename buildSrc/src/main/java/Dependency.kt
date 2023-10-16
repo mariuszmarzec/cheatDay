@@ -22,18 +22,18 @@ object Dependency {
     val room_version = "2.6.0-rc01"
     val android_test_version = "1.1.3"
     val android_test_services_version = "1.4.1"
-    val android_test_runner_version = "1.1.3"
-    val runner_version = "1.3.0"
+    val android_test_runner_version = "1.1.5"
+    val runner_version = "1.5.0"
     val orchestrator_version = "1.4.1"
     val paris_version = "1.3.0"
-    val arch_testing_version = "2.1.0"
+    val arch_testing_version = "2.2.0"
     val epoxy_version = "5.1.3"
-    val espresso_core = "3.3.0"
-    val fragment_version = "1.3.2"
+    val espresso_core = "3.5.1"
+    val fragment_version = "1.6.1"
     val activity_version = "1.1.0"
-    val screenshot_testing_version = "5.13.0"
+    val screenshot_testing_version = "6.0.0"
     val kakao_version = "2.3.4"
-    val nav_version = "2.5.0"
+    val nav_version = "2.7.4"
     val chart_version = "v3.1.0"
     val junit5_plugin_version = "1.9.3.0"
     val android_gradle_plugin = "8.1.2"
@@ -42,7 +42,7 @@ object Dependency {
     val protobuf_version = "0.9.4"
     val hilt_version = "2.48.1"
     val mockk_version = "1.13.8"
-    val kaspresso_version = "1.3.0"
+    val kaspresso_version = "1.5.3"
     val detektVersion = "1.18.1"
     val androidTestMonitorVersion = "1.4.0"
     val hamcrestVersion = "1.3"
@@ -66,7 +66,7 @@ object Dependency {
     object Android {
         val compileSdkVersion = 34
         val applicationId = "com.marzec.cheatday"
-        val minSdkVersion = 28
+        val minSdkVersion = 30
         val targetSdkVersion = 34
         val versionCode = 1
         val versionName = "1.0"

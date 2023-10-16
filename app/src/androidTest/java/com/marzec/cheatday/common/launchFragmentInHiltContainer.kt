@@ -29,7 +29,7 @@ inline fun <reified T : Fragment> launchFragmentInDaggerContainer(
     val scenario = ActivityScenario.launch<HiltTestActivity>(startActivityIntent)
     scenario.onActivity { activity ->
         val fragment: Fragment = activity.supportFragmentManager.fragmentFactory.instantiate(
-            Preconditions.checkNotNull(T::class.java.classLoader!!),
+            T::class.java.classLoader!!,
             T::class.java.name
         )
         fragment.arguments = fragmentArgs

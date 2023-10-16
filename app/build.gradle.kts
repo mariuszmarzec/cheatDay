@@ -44,6 +44,7 @@ android {
         targetSdkVersion(Dependency.Android.targetSdkVersion)
         versionCode = Dependency.Android.versionCode
         versionName = Dependency.Android.versionName
+        testApplicationId = "com.marzec.cheatday.debug.test"
         testInstrumentationRunner = "com.marzec.cheatday.MockTestRunner"
         testInstrumentationRunnerArguments.putAll(
             mapOf(
@@ -141,7 +142,7 @@ android {
     testOptions.unitTests.isIncludeAndroidResources = true
     testOptions {
         // With enabled ANDROIDX_TEST_ORCHESTRATOR screenshot test with shot doesn't work
-        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+//        execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
 
     testCoverage {
@@ -167,7 +168,7 @@ hilt {
 }
 
 shot {
-    applicationId = "com.marzec.cheatday"
+    applicationId = "com.marzec.cheatday.debug.test"
 }
 
 dependencies {

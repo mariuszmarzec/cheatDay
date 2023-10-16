@@ -9,7 +9,7 @@ val kotlinTree = fileTree("${project.buildDir}/tmp/kotlin-classes/stageDebug") {
 val kotlinSrc = "${project.projectDir}/src/main/java"
 
 tasks.create("jacocoTestReportStageDebug", JacocoReport::class) {
-    dependsOn("connectedStageDebugAndroidTest")
+    dependsOn("createStageDebugCoverageReport")
     dependsOn("testStageDebugUnitTest")
 
     reports {

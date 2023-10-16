@@ -111,7 +111,15 @@ mocks, then action is made and result is saved in variable, which will be assert
 ## Screenshot tests
 Testing UI layer together with renderers and any mappers is built upon screenshot testing. To achieve
 that [Shot](https://github.com/pedrovgs/Shot) is used. Screenshot to compare are saved in
-[app/screenshots/stage/debug](app/screenshots/stage/debug) director.
+[app/screenshots/stage/debug](app/screenshots/stage/debug) director. Used version of emulator:
+Pixel 3 API 30 (Android 11.0 Google Play | x86).
+
+Always before running tests it is needed to fire commands for API >= 29:
+```bash
+adb shell settings put global hidden_api_policy_pre_p_apps 1
+adb shell settings put global hidden_api_policy_p_apps 1
+adb shell settings put global hidden_api_policy 1
+```
 
 To run recording new screenshot:
 ```bash
