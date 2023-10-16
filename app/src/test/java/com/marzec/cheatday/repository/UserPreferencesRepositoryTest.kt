@@ -3,8 +3,8 @@ package com.marzec.cheatday.repository
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.preferencesKey
-import androidx.datastore.preferences.core.toMutablePreferences
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.model.domain.Day
@@ -59,12 +59,12 @@ internal class UserPreferencesRepositoryTest {
     fun setMaxPossibleWeight() = test {
         repository.setMaxPossibleWeight(10f)
 
-        verify { mutablePreferences[preferencesKey<Float>("1_max_possible_weight")] = eq(10f) }
+        verify { mutablePreferences[floatPreferencesKey("1_max_possible_weight")] = eq(10f) }
     }
 
     @Test
     fun observeMaxPossibleWeight() = test {
-        every { preferences[preferencesKey<Float>("1_max_possible_weight")] } returns 5f
+        every { preferences[floatPreferencesKey("1_max_possible_weight")] } returns 5f
 
         val result = repository.observeMaxPossibleWeight().test(this)
 
@@ -75,12 +75,12 @@ internal class UserPreferencesRepositoryTest {
     fun setTargetWeight() = test {
         repository.setTargetWeight(10f)
 
-        verify { mutablePreferences[preferencesKey<Float>("1_weight")] = eq(10f) }
+        verify { mutablePreferences[floatPreferencesKey("1_weight")] = eq(10f) }
     }
 
     @Test
     fun observeTargetWeight() = test {
-        every { preferences[preferencesKey<Float>("1_weight")] } returns 5f
+        every { preferences[floatPreferencesKey("1_weight")] } returns 5f
 
         val result = repository.observeTargetWeight().test(this)
 
@@ -90,7 +90,7 @@ internal class UserPreferencesRepositoryTest {
     @Test
     fun observeWasClickToday() = test {
         DateTimeUtils.setCurrentMillisFixed(0)
-        every { preferences[preferencesKey<Long>("1_CHEAT")] } returns DateTime.now()
+        every { preferences[longPreferencesKey("1_CHEAT")] } returns DateTime.now()
             .withTimeAtStartOfDay().millis
 
         val result = repository.observeWasClickToday(Day.Type.CHEAT).test(this)
@@ -101,7 +101,7 @@ internal class UserPreferencesRepositoryTest {
     @Test
     fun `Given last day change was in different time as today, when getting clicked today status, then returns false`() = test {
         DateTimeUtils.setCurrentMillisFixed(0)
-        every { preferences[preferencesKey<Long>("1_CHEAT")] } returns 123
+        every { preferences[longPreferencesKey("1_CHEAT")] } returns 123
 
         val result = repository.observeWasClickToday(Day.Type.CHEAT).test(this)
 
@@ -115,7 +115,7 @@ internal class UserPreferencesRepositoryTest {
         repository.setWasClickedToday(Day.Type.CHEAT)
 
         verify {
-            mutablePreferences[preferencesKey<Long>("1_CHEAT")] =
+            mutablePreferences[longPreferencesKey("1_CHEAT")] =
                 DateTime.now().withTimeAtStartOfDay().millis
         }
     }

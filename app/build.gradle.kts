@@ -22,17 +22,16 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("com.google.protobuf")
     id("dagger.hilt.android.plugin")
-//    jacoco
+    jacoco
     id("shot")
     id("io.gitlab.arturbosch.detekt")
     id("com.jakewharton.butterknife")
     id("com.google.devtools.ksp")
 }
 
-//jacoco {
-//    toolVersion = "0.8.7"
-//}
-
+jacoco {
+    toolVersion = "0.8.9"
+}
 apply(from = "jacoco.gradle.kts")
 
 android {
@@ -102,8 +101,8 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         getByName("debug") {
-//            enableUnitTestCoverage = true
-//            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
             isMinifyEnabled = false
@@ -146,7 +145,7 @@ android {
     }
 
     testCoverage {
-        jacocoVersion = "0.8.7"
+        jacocoVersion = "0.8.9"
     }
 
     packagingOptions {
@@ -182,7 +181,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Dependency.kotlin_version}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependency.coroutines_version}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Dependency.coroutines_version}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
 
     // anko
