@@ -140,10 +140,6 @@ android {
     testOptions.animationsDisabled = true
     testOptions.unitTests.isReturnDefaultValues = true
     testOptions.unitTests.isIncludeAndroidResources = true
-    testOptions {
-        // With enabled ANDROIDX_TEST_ORCHESTRATOR screenshot test with shot doesn't work
-//        execution = "ANDROIDX_TEST_ORCHESTRATOR"
-    }
 
     testCoverage {
         jacocoVersion = "0.8.9"

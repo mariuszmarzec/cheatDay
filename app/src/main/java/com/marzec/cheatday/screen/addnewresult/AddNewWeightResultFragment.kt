@@ -16,8 +16,7 @@ import org.jetbrains.anko.alert
 import org.joda.time.DateTime
 
 @AndroidEntryPoint
-class AddNewWeightResultFragment :
-    BaseFragment(R.layout.fragment_add_new_weight_result) {
+class AddNewWeightResultFragment : BaseFragment(R.layout.fragment_add_new_weight_result) {
 
     @Inject
     lateinit var renderer: AddNewWeightResultRenderer

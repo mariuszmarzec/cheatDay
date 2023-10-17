@@ -1,32 +1,19 @@
 package com.marzec.cheatday.screen.addnewresult
 
-import androidx.test.rule.GrantPermissionRule
-import android.Manifest
-import androidx.core.os.bundleOf
-import com.karumi.shot.ScreenshotTest
-import com.marzec.cheatday.common.PolicySetupRule
-import com.marzec.cheatday.common.compareStateScreenshot
+import android.view.View
+import app.cash.paparazzi.Paparazzi
 import com.marzec.cheatday.screen.addnewresult.model.AddWeightData
 import com.marzec.mvi.State
-import dagger.hilt.android.testing.HiltAndroidRule
-import dagger.hilt.android.testing.HiltAndroidTest
 import org.joda.time.DateTimeUtils
+import com.marzec.cheatday.R
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@HiltAndroidTest
-class AddNewResultFragmentStateTest : ScreenshotTest {
+class AddNewResultRendererTest {
 
     @get:Rule
-    var runtimePermissionRule: GrantPermissionRule =
-        GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-
-    @get:Rule
-    var policySetupRule = PolicySetupRule()
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
+    val paparazzi = Paparazzi()
 
     val initialDate by lazy {
         AddWeightData.INITIAL
@@ -41,6 +28,8 @@ class AddNewResultFragmentStateTest : ScreenshotTest {
     val errorState by lazy {
         State.Error(initialDate, "Error has occurred")
     }
+
+    val renderer = AddNewWeightResultRenderer()
 
     @Before
     fun setUp() {
@@ -57,9 +46,9 @@ class AddNewResultFragmentStateTest : ScreenshotTest {
     fun errorState() = compare(errorState)
 
     private fun compare(state: State<AddWeightData>) {
-        compareStateScreenshot<AddNewWeightResultFragment>(
-            state,
-            fragmentArgs = bundleOf("weightId" to null)
-        )
+        val view = paparazzi.inflate<View>(R.layout.fragment_add_new_weight_result)
+        renderer.init(weightId = null, view)
+        renderer.render(state)
+        paparazzi.snapshot(view)
     }
 }
