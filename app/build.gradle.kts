@@ -23,7 +23,7 @@ plugins {
     id("com.google.protobuf")
     id("dagger.hilt.android.plugin")
     jacoco
-    id("shot")
+    id("app.cash.paparazzi")
     id("io.gitlab.arturbosch.detekt")
     id("com.jakewharton.butterknife")
     id("com.google.devtools.ksp")
@@ -165,10 +165,6 @@ kapt {
 
 hilt {
     enableTransformForLocalTests = true
-}
-
-shot {
-    applicationId = "com.marzec.cheatday.debug.test"
 }
 
 dependencies {

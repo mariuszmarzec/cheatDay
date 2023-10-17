@@ -1,4 +1,4 @@
-package com.marzec.cheatday.screen.charts
+package com.marzec.cheatday.screen.chart
 
 import androidx.test.rule.GrantPermissionRule
 import android.Manifest
