@@ -19,7 +19,6 @@ buildscript {
         classpath(Dependency.BuildPlugins.navigationSafeArgs)
         classpath(Dependency.BuildPlugins.googleServices)
         classpath(Dependency.BuildPlugins.crashlytics)
-        classpath(Dependency.BuildPlugins.protobuf)
         classpath(Dependency.BuildPlugins.hilt)
         classpath(Dependency.BuildPlugins.detektPlugin)
         classpath(Dependency.BuildPlugins.butterKnife)

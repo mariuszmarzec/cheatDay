@@ -1,6 +1,5 @@
 import java.util.Properties
 import java.io.FileInputStream
-import com.google.protobuf.gradle.*
 
 fun readProperties(): Properties {
     val properties = Properties()
@@ -20,7 +19,6 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-    id("com.google.protobuf")
     id("dagger.hilt.android.plugin")
     jacoco
     id("shot")
@@ -243,9 +241,6 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:${Dependency.datastore_version}")
     implementation("androidx.datastore:datastore:${Dependency.datastore_version}")
 
-    // protobuf
-    implementation("com.google.protobuf:protobuf-lite:3.0.0")
-
     // firebase
     implementation(platform("com.google.firebase:firebase-bom:${Dependency.firebase_version}"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
@@ -291,24 +286,6 @@ dependencies {
     // kaspresso
     androidTestImplementation("com.kaspersky.android-components:kaspresso:${Dependency.kaspresso_version}")
 
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.0.0"
-    }
-    plugins {
-        id("javalite") {
-            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
-        }
-    }
-    generateProtoTasks {
-        all().forEach { task ->
-            task.plugins {
-                id("javalite") { }
-            }
-        }
-    }
 }
 
 detekt {

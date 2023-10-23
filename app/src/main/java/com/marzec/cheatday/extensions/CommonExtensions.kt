@@ -67,3 +67,5 @@ data class Quadruple<T1, T2, T3, T4>(
 )
 
 fun <T> T.asFlow() = flowOf(this)
+
+fun Boolean?.orFalse() = this ?: false
