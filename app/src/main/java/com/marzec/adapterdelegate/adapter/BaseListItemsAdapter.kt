@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.marzec.adapterdelegate.model.ListItem
 import com.marzec.adapterdelegate.payload.ListItemDiffUtilCallback
+import com.marzec.adapterdelegate.viewholder.BaseViewHolder
 
 abstract class BaseListItemsAdapter<Item : ListItem, Holder : BaseViewHolder<Item>> :
     RecyclerView.Adapter<Holder>() {

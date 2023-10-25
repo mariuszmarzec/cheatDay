@@ -3,8 +3,8 @@ package com.marzec.cheatday.view.delegates.labeledrowitem
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.marzec.adapterdelegate.adapter.AdapterDelegate
-import com.marzec.adapterdelegate.adapter.BaseViewHolder
-import com.marzec.adapterdelegate.adapter.PayloadViewHolder
+import com.marzec.adapterdelegate.viewholder.BaseViewHolder
+import com.marzec.adapterdelegate.viewholder.PayloadViewHolder
 import com.marzec.cheatday.R
 import com.marzec.cheatday.view.LabeledRowView
 
