@@ -1,6 +1,7 @@
 package com.marzec.cheatday.view
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -9,20 +10,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.Px
-import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatImageView
-import com.airbnb.paris.annotations.Attr
-import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.extensions.style
 import com.marzec.cheatday.R
-import com.marzec.cheatday.R2
 import com.marzec.cheatday.extensions.enumValueOfOrDefault
-import com.marzec.cheatday.extensions.gone
 import com.marzec.cheatday.extensions.setVisible
 import com.marzec.cheatday.extensions.visible
 import com.marzec.cheatday.model.domain.Day
 
-@Styleable("CounterView")
 class CounterView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
@@ -31,10 +25,43 @@ class CounterView @JvmOverloads constructor(
         DECREASE, INCREASE
     }
 
-    private var value = 0
-    private var max = 1
-    private var titleTextSize = context.resources.getDimensionPixelSize(R.dimen.counter_title_text_size)
-    private var mode = CountMode.DECREASE
+    var title = ""
+        set(newValue) {
+            title(newValue)
+            field = newValue
+        }
+
+    var value = 0
+        set(newValue) {
+            value(newValue)
+            field = newValue
+        }
+
+    var max = 1
+        set(newValue) {
+            max(newValue)
+            field = newValue
+        }
+
+    @Px
+    var titleTextSize = context.resources.getDimensionPixelSize(R.dimen.counter_title_text_size)
+        set(newValue) {
+            textSize(newValue)
+            field = newValue
+        }
+
+    var mode = CountMode.DECREASE
+        set(newValue) {
+            mode(newValue)
+            field = newValue
+        }
+
+    @ColorInt
+    var buttonColor: Int = Color.BLACK
+        set(newValue) {
+            buttonColor(newValue)
+            field = newValue
+        }
 
     private val decreaseButton: AppCompatImageView
     private val increaseButton: AppCompatImageView
@@ -54,7 +81,6 @@ class CounterView @JvmOverloads constructor(
 
         orientation = VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
-        style(attrs)
 
         increaseButton.setOnClickListener {
             onIncreaseButtonClickListener?.invoke()
@@ -62,48 +88,59 @@ class CounterView @JvmOverloads constructor(
         decreaseButton.setOnClickListener {
             onDecreaseButtonClickListener?.invoke()
         }
+        style(context, attrs, defStyleAttr)
     }
 
-    @Attr(R2.styleable.CounterView_cv_mode)
-    fun setMode(newMode: String) {
-        mode = enumValueOfOrDefault(newMode, CountMode.DECREASE)
+    private fun style(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.CounterView,
+            defStyleAttr,
+            0
+        ).apply {
+            try {
+                mode = enumValueOfOrDefault(getString(R.styleable.CounterView_cv_mode).orEmpty(), CountMode.DECREASE)
+                title = getString(R.styleable.CounterView_cv_title).orEmpty()
+                value = getInt(R.styleable.CounterView_cv_value, 0)
+                max = getInt(R.styleable.CounterView_cv_max, 0)
+                buttonColor = getColor(R.styleable.CounterView_cv_button_color, Color.BLACK)
+                titleTextSize = getDimensionPixelSize(R.styleable.CounterView_cv_title_text_size, 0)
+            } finally {
+                recycle()
+            }
+        }
+    }
+
+    private fun mode(mode: CountMode) {
         drawValue()
         increaseButton.setVisible(mode == CountMode.INCREASE)
         decreaseButton.setVisible(mode == CountMode.DECREASE)
     }
 
-    @Attr(R2.styleable.CounterView_cv_title)
-    fun setTitle(@StringRes resId: Int) {
-        titleTextView.setText(resId)
+    private fun title(title: String) {
+        titleTextView.text = title
     }
 
-    @Attr(R2.styleable.CounterView_cv_value)
-    fun setValue(value: Int) {
-        this.value = value
+    private fun value(value: Int) {
         drawValue()
     }
 
-    @Attr(R2.styleable.CounterView_cv_max)
-    fun setMax(max: Int) {
-        this.max = max
+    private fun max(max: Int) {
         drawValue()
     }
 
-    @Attr(R2.styleable.CounterView_cv_title_text_size)
-    fun setTextSize(@Px textSize: Int) {
-        this.titleTextSize = textSize
+    private fun textSize(@Px textSize: Int) {
         titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize.toFloat())
     }
 
-    @Attr(R2.styleable.CounterView_cv_button_color)
-    fun setButtonColor(@ColorInt color: Int) {
+    private fun buttonColor(@ColorInt color: Int) {
         increaseButton.setColorFilter(color)
         decreaseButton.setColorFilter(color)
     }
 
     fun setDay(day: Day) {
-        setValue(day.count.toInt())
-        setMax(day.max.toInt())
+        value = day.count.toInt()
+        max = day.max.toInt()
         visible()
     }
 
@@ -111,7 +148,7 @@ class CounterView @JvmOverloads constructor(
         valueTextView.text = when (mode) {
             CountMode.DECREASE -> "${this.value}"
             CountMode.INCREASE -> {
-                val valueToDraw = this.value%max
+                val valueToDraw = this.value % max
                 "$valueToDraw/${max}"
             }
         }

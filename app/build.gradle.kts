@@ -23,7 +23,6 @@ plugins {
     jacoco
     id("shot")
     id("io.gitlab.arturbosch.detekt")
-    id("com.jakewharton.butterknife")
     id("com.google.devtools.ksp")
 }
 
@@ -219,14 +218,6 @@ dependencies {
     // joda time
     implementation("net.danlew:android.joda:${Dependency.joda_version}")
     testImplementation("joda-time:joda-time:${Dependency.joda_version}")
-
-    // paris
-    implementation("com.airbnb.android:paris:${Dependency.paris_version}")
-    kapt("com.airbnb.android:paris-processor:${Dependency.paris_version}")
-
-    // epoxy
-    implementation("com.airbnb.android:epoxy:${Dependency.epoxy_version}")
-    kapt("com.airbnb.android:epoxy-processor:${Dependency.epoxy_version}")
 
     // navigation
     implementation("androidx.navigation:navigation-fragment-ktx:${Dependency.nav_version}")

@@ -8,14 +8,14 @@ import com.marzec.adapterdelegate.viewholder.PayloadViewHolder
 import com.marzec.cheatday.R
 import com.marzec.cheatday.view.ErrorView
 
-class ErrorScreenDelegate : AdapterDelegate<Error> {
+class ErrorScreenDelegate : AdapterDelegate<ErrorScreen> {
 
     override val viewType: Int
         get() {
             return VIEW_TYPE
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup): BaseViewHolder<out Error> {
+    override fun onCreateViewHolder(parent: ViewGroup): BaseViewHolder<out ErrorScreen> {
         return LayoutInflater.from(parent.context)
             .inflate(R.layout.screen_error, parent, false)
             .let {
@@ -30,9 +30,9 @@ class ErrorScreenDelegate : AdapterDelegate<Error> {
 
 class ErrorScreenViewHolder(
     private val view: ErrorView
-) : PayloadViewHolder<Error, Error.Payload>(view) {
+) : PayloadViewHolder<ErrorScreen, ErrorScreen.Payload>(view) {
 
-    override fun onBind(item: Error) {
+    override fun onBind(item: ErrorScreen) {
         setMessage(item.message)
         setButtonLabel(item.buttonLabel)
         item.onButtonClickListener?.let {
@@ -40,7 +40,7 @@ class ErrorScreenViewHolder(
         }
     }
 
-    override fun onPayload(item: Error, payload: Error.Payload) {
+    override fun onPayload(item: ErrorScreen, payload: ErrorScreen.Payload) {
         with(payload) {
             message?.let(::setMessage)
             buttonLabel?.let(::setButtonLabel)
@@ -48,10 +48,10 @@ class ErrorScreenViewHolder(
     }
 
     private fun setMessage(message: String) {
-        view.setErrorMessage(message)
+        view.errorMessage = message
     }
 
-    fun setButtonLabel(buttonLabel: String) {
-        view.setButtonLabel(buttonLabel)
+    private fun setButtonLabel(buttonLabel: String) {
+        view.butttonLabel = buttonLabel
     }
 }

@@ -1,17 +1,22 @@
 package com.marzec.cheatday.screen.weights
 
 import android.view.View
-import com.airbnb.epoxy.EpoxyRecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.marzec.adapterdelegate.adapter.DelegateAdapter
+import com.marzec.adapterdelegate.adapter.DelegateManager
+import com.marzec.adapterdelegate.model.ListItem
 import com.marzec.cheatday.R
 import com.marzec.cheatday.extensions.gone
 import com.marzec.cheatday.extensions.visible
 import com.marzec.cheatday.screen.weights.model.WeightsData
 import com.marzec.cheatday.screen.weights.model.WeightsMapper
-import com.marzec.cheatday.view.errorView
-import com.marzec.cheatday.view.labeledRowView
-import com.marzec.cheatday.view.model.LabeledRowItem
-import com.marzec.cheatday.view.progressView
+import com.marzec.cheatday.view.delegates.errorscreen.ErrorScreen
+import com.marzec.cheatday.view.delegates.errorscreen.ErrorScreenDelegate
+import com.marzec.cheatday.view.delegates.labeledrowitem.LabeledRowAdapterDelegate
+import com.marzec.cheatday.view.delegates.progress.ProgressScreen
+import com.marzec.cheatday.view.delegates.progress.ProgressScreenDelegate
 import com.marzec.mvi.State
 import javax.inject.Inject
 
@@ -23,7 +28,14 @@ class WeightsRenderer @Inject constructor(
     var onFloatingButtonClick: () -> Unit = { }
     var onTryAgainButtonClickListener: () -> Unit = { }
 
-    private lateinit var recyclerView: EpoxyRecyclerView
+    private val delegateManager = DelegateManager<ListItem>()
+        .add(ErrorScreenDelegate())
+        .add(LabeledRowAdapterDelegate())
+        .add(ProgressScreenDelegate())
+
+    private val adapter = DelegateAdapter(delegateManager)
+
+    private lateinit var recyclerView: RecyclerView
     private lateinit var floatingButton: FloatingActionButton
     private lateinit var progressBar: View
 
@@ -35,6 +47,9 @@ class WeightsRenderer @Inject constructor(
         floatingButton.setOnClickListener {
             onFloatingButtonClick()
         }
+
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(view.context)
     }
 
     fun render(state: State<WeightsData>) = when (state) {
@@ -50,39 +65,27 @@ class WeightsRenderer @Inject constructor(
 
     private fun renderError(state: State.Error<WeightsData>) {
         progressBar.gone()
-        recyclerView.withModels {
-            errorView {
-                id("ERROR")
-                errorMessage(state.message)
-                buttonLabel(R.string.button_try_again)
-                onButtonClickListener { onTryAgainButtonClickListener() }
-            }
-        }
+        adapter.items = listOf(errorScreen(state))
     }
 
-    private fun render(data: WeightsData) {
-        val (min, average, maxPossible, target, weights) = data
-        val list = mapper.mapWeights(min, average, maxPossible, target, weights)
-        recyclerView.withModels {
-            list.forEach { item ->
-                when (item) {
-                    is LabeledRowItem -> {
-                        labeledRowView {
-                            id(item.id)
-                            label(item.label)
-                            value(item.value)
-                            onClickListener { _, _, _, _ ->
-                                onClickListener(item.id)
-                            }
-                            onLongClickListener { _, _, _, _ ->
-                                onLongClickListener(item.id)
-                                true
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    private fun errorScreen(state: State.Error<WeightsData>): ListItem = ErrorScreen(
+        id = "ERROR",
+        message = state.message,
+        buttonLabel = recyclerView.context.getString(R.string.button_try_again)
+    ).apply {
+        onButtonClickListener = { onTryAgainButtonClickListener() }
+    }
+
+    private fun render(data: WeightsData) = with(data) {
+        adapter.items = mapper.mapWeights(
+            minWeight,
+            weekAverage,
+            maxPossibleWeight,
+            targetWeight,
+            weights,
+            onClickListener,
+            onLongClickListener
+        )
     }
 
     private fun renderLoading(state: State.Loading<WeightsData>) {
@@ -91,9 +94,7 @@ class WeightsRenderer @Inject constructor(
             progressBar.visible()
             render(data)
         } else {
-            recyclerView.withModels {
-                progressView { id("PROGRESS") }
-            }
+            adapter.items = listOf(ProgressScreen("PROGRESS"))
         }
     }
 }

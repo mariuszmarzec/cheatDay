@@ -59,10 +59,8 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter), StateO
 
     private fun setClickedState(counterView: CounterView, isClicked: Boolean) {
         val context = counterView.context
-        counterView.setButtonColor(
-            context.getColor(
-                if (isClicked) R.color.colorPrimary else R.color.colorAccent
-            )
+        counterView.buttonColor = context.getColor(
+            if (isClicked) R.color.colorPrimary else R.color.colorAccent
         )
     }
 

@@ -25,9 +25,7 @@ object Dependency {
     val android_test_runner_version = "1.1.5"
     val runner_version = "1.5.0"
     val orchestrator_version = "1.4.1"
-    val paris_version = "1.3.0"
     val arch_testing_version = "2.2.0"
-    val epoxy_version = "5.1.3"
     val espresso_core = "3.5.1"
     val fragment_version = "1.6.1"
     val activity_version = "1.1.0"
@@ -45,7 +43,6 @@ object Dependency {
     val detektVersion = "1.18.1"
     val androidTestMonitorVersion = "1.4.0"
     val hamcrestVersion = "1.3"
-    val butterKnifeVersion = "10.1.0"
 
     object BuildPlugins {
         val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"
@@ -58,7 +55,6 @@ object Dependency {
         val googleServices = "com.google.gms:google-services:${google_service_version}"
         val hilt = "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         val detektPlugin = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
-        val butterKnife = "com.jakewharton:butterknife-gradle-plugin:$butterKnifeVersion"
     }
 
     object Android {

@@ -79,7 +79,7 @@ class ChartRenderer @Inject constructor() {
                 chart.gone()
                 errorView.visible()
                 progressBar.gone()
-                errorView.setErrorMessage(state.message)
+                errorView.errorMessage = state.message
             }
             is State.Loading -> {
                 chart.gone()

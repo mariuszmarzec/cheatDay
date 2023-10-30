@@ -5,7 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.R
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.stubs.stubWeightResult
-import com.marzec.cheatday.view.model.LabeledRowItem
+import com.marzec.cheatday.view.delegates.labeledrowitem.LabeledRow
 import io.mockk.every
 import io.mockk.mockk
 import java.util.Locale
@@ -43,7 +43,9 @@ internal class WeightsMapperTest {
             weights = listOf(
                 stubWeightResult(id = 1, value = 1f),
                 stubWeightResult(id = 2, value = 2f)
-            )
+            ),
+            onClickListener = onClickListener,
+            onLongClickListener = onLongClickListener
         )
         assertThat(list).isEqualTo(
             listOf(
@@ -64,7 +66,9 @@ internal class WeightsMapperTest {
             weekAverage = 3.0121f,
             maxPossibleValue = 2f,
             targetWeight = 0f,
-            weights = emptyList()
+            weights = emptyList(),
+            onClickListener = onClickListener,
+            onLongClickListener = onLongClickListener
         )
         assertThat(list).isEqualTo(
             listOf(
@@ -85,7 +89,9 @@ internal class WeightsMapperTest {
             weights = listOf(
                 stubWeightResult(id = 1, value = 1f),
                 stubWeightResult(id = 2, value = 2f)
-            )
+            ),
+            onClickListener = onClickListener,
+            onLongClickListener = onLongClickListener
         )
         assertThat(list).isEqualTo(
             listOf(
@@ -97,44 +103,39 @@ internal class WeightsMapperTest {
         )
     }
 
-    private fun stubMinWeightItem(): LabeledRowItem {
+    private fun stubMinWeightItem(): LabeledRow {
         val label = context.getString(R.string.weights_min_label)
         val dateLabel = context.getString(R.string.weight_row_date_label)
         val date = "01 Jan 1970"
-        return LabeledRowItem(
+        return LabeledRow(
             id = WeightsMapper.MIN_ID,
-            data = Unit,
             value = "1.0 ${context.getString(R.string.unit_kg_short)}",
             label = "$label $dateLabel $date"
         )
     }
 
-    private fun stubWeekAverageWeightItem(): LabeledRowItem = LabeledRowItem(
+    private fun stubWeekAverageWeightItem(): LabeledRow = LabeledRow(
         id = WeightsMapper.WEEK_AVERAGE_ID,
-        data = Unit,
         value = "3.0 ${context.getString(R.string.unit_kg_short)}",
         label = context.getString(R.string.weights_week_average_label)
     )
 
 
-    private fun stubMaxPossibleWeightItem() = LabeledRowItem(
+    private fun stubMaxPossibleWeightItem() = LabeledRow(
         id = WeightsMapper.MAX_POSSIBLE_ID,
-        data = Unit,
         value = "2.0 ${context.getString(R.string.unit_kg_short)}",
         label = context.getString(R.string.weights_max_possible_label)
     )
 
-    private fun stubTargetWeightItem() = LabeledRowItem(
+    private fun stubTargetWeightItem() = LabeledRow(
         id = WeightsMapper.TARGET_ID,
-        data = Unit,
         value = "0.0 ${context.getString(R.string.unit_kg_short)}",
         label = context.getString(R.string.weights_target_label)
     )
 
     private fun stubWeightsItem(result: WeightResult) =
-        LabeledRowItem(
+        LabeledRow(
             id = result.id.toString(),
-            data = result,
             value = "${result.value} ${context.getString(R.string.unit_kg_short)}",
             label = "${context.getString(R.string.weight_row_date_label)} 01 Jan 1970"
         )

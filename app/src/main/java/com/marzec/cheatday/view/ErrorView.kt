@@ -6,20 +6,24 @@ import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.airbnb.epoxy.ModelProp
-import com.airbnb.epoxy.ModelView
-import com.airbnb.epoxy.TextProp
-import com.airbnb.paris.annotations.Attr
-import com.airbnb.paris.annotations.Styleable
-import com.airbnb.paris.extensions.style
 import com.marzec.cheatday.R
-import com.marzec.cheatday.R2
 
-@ModelView(autoLayout = ModelView.Size.MATCH_WIDTH_MATCH_HEIGHT)
-@Styleable("ErrorView")
 class ErrorView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
+
+    var errorMessage = ""
+        set(newValue) {
+            errorMessage(newValue)
+            field = newValue
+        }
+
+    var butttonLabel = ""
+        set(newValue) {
+            butttonLabel(newValue)
+            field = newValue
+        }
+
 
     private val errorMessageTextView: TextView
     private val button: Button
@@ -34,22 +38,33 @@ class ErrorView @JvmOverloads constructor(
 
         button.setOnClickListener { onButtonClickListener() }
 
-        style(attrs)
+        style(context, attrs, defStyleAttr)
     }
 
-    @Attr(R2.styleable.ErrorView_ev_message)
-    @TextProp
-    fun setErrorMessage(message: CharSequence) {
+    private fun style(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.ErrorView,
+            defStyleAttr,
+            0
+        ).apply {
+            try {
+                errorMessage = getString(R.styleable.ErrorView_ev_message).orEmpty()
+                butttonLabel = getString(R.styleable.ErrorView_ev_button_label).orEmpty()
+            } finally {
+                recycle()
+            }
+        }
+    }
+
+    private fun errorMessage(message: String) {
         errorMessageTextView.text = message
     }
 
-    @Attr(R2.styleable.ErrorView_ev_button_label)
-    @TextProp
-    fun setButtonLabel(buttonLabel: CharSequence) {
+    private fun butttonLabel(buttonLabel: String) {
         button.text = buttonLabel
     }
 
-    @ModelProp(options = [ModelProp.Option.DoNotHash])
     fun setOnButtonClickListener(onButtonClickListener: () -> Unit) {
         this.onButtonClickListener = onButtonClickListener
     }
