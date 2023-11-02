@@ -6,7 +6,6 @@ import com.marzec.adapterdelegate.adapter.AdapterDelegate
 import com.marzec.adapterdelegate.viewholder.BaseViewHolder
 import com.marzec.adapterdelegate.viewholder.PayloadViewHolder
 import com.marzec.cheatday.R
-import com.marzec.cheatday.view.ErrorView
 
 class ErrorScreenDelegate : AdapterDelegate<ErrorScreen> {
 

@@ -1,4 +1,4 @@
-package com.marzec.cheatday.view
+package com.marzec.cheatday.view.delegates.labeledrowitem
 
 import android.content.Context
 import android.util.AttributeSet

@@ -5,8 +5,6 @@ import android.view.ViewGroup
 import com.marzec.adapterdelegate.adapter.AdapterDelegate
 import com.marzec.adapterdelegate.viewholder.BaseViewHolder
 import com.marzec.cheatday.R
-import com.marzec.cheatday.view.ErrorView
-import com.marzec.cheatday.view.ProgressView
 
 class ProgressScreenDelegate : AdapterDelegate<ProgressScreen> {
 

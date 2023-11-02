@@ -1,4 +1,4 @@
-package com.marzec.cheatday.view
+package com.marzec.cheatday.view.delegates.errorscreen
 
 import android.content.Context
 import android.util.AttributeSet
