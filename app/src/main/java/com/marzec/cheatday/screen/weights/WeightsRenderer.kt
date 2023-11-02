@@ -17,6 +17,8 @@ import com.marzec.cheatday.view.delegates.errorscreen.ErrorScreenDelegate
 import com.marzec.cheatday.view.delegates.labeledrowitem.LabeledRowAdapterDelegate
 import com.marzec.cheatday.view.delegates.progress.ProgressScreen
 import com.marzec.cheatday.view.delegates.progress.ProgressScreenDelegate
+import com.marzec.cheatday.view.delegates.withloadingscreen.WithLoadingScreen
+import com.marzec.cheatday.view.delegates.withloadingscreen.WithLoadingScreenDelegate
 import com.marzec.mvi.State
 import javax.inject.Inject
 
@@ -28,21 +30,29 @@ class WeightsRenderer @Inject constructor(
     var onFloatingButtonClick: () -> Unit = { }
     var onTryAgainButtonClickListener: () -> Unit = { }
 
-    private val delegateManager = DelegateManager<ListItem>()
-        .add(ErrorScreenDelegate())
+    private val innerDelegateManager = DelegateManager<ListItem>()
         .add(LabeledRowAdapterDelegate())
-        .add(ProgressScreenDelegate())
 
-    private val adapter = DelegateAdapter(delegateManager)
+    private val delegateManager by lazy {
+        DelegateManager<ListItem>()
+            .add(ErrorScreenDelegate())
+            .add(ProgressScreenDelegate())
+            .add(
+                WithLoadingScreenDelegate(
+                    recyclerView.recycledViewPool,
+                    innerDelegateManager
+                )
+            )
+    }
+
+    private val adapter by lazy { DelegateAdapter(delegateManager) }
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var floatingButton: FloatingActionButton
-    private lateinit var progressBar: View
 
     fun init(view: View) {
         recyclerView = view.findViewById(R.id.recycler_view)
         floatingButton = view.findViewById(R.id.floating_button)
-        progressBar = view.findViewById(R.id.progress_bar)
 
         floatingButton.setOnClickListener {
             onFloatingButtonClick()
@@ -59,12 +69,10 @@ class WeightsRenderer @Inject constructor(
     }
 
     private fun renderData(state: State.Data<WeightsData>) {
-        progressBar.gone()
         render(state.data)
     }
 
     private fun renderError(state: State.Error<WeightsData>) {
-        progressBar.gone()
         adapter.items = listOf(errorScreen(state))
     }
 
@@ -77,24 +85,37 @@ class WeightsRenderer @Inject constructor(
     }
 
     private fun render(data: WeightsData) = with(data) {
-        adapter.items = mapper.mapWeights(
-            minWeight,
-            weekAverage,
-            maxPossibleWeight,
-            targetWeight,
-            weights,
-            onClickListener,
-            onLongClickListener
+        adapter.items = listOf(
+            WithLoadingScreen(
+                id = "ITEMS",
+                items = mapData(),
+                showOverflowLoading = false
+            )
         )
     }
 
     private fun renderLoading(state: State.Loading<WeightsData>) {
         val data = state.data
         if (data != null) {
-            progressBar.visible()
-            render(data)
+            adapter.items = listOf(
+                WithLoadingScreen(
+                    id = "ITEMS",
+                    items = data.mapData(),
+                    showOverflowLoading = true
+                )
+            )
         } else {
-            adapter.items = listOf(ProgressScreen("PROGRESS"))
+            adapter.items = listOf(ProgressScreen("LOADING"))
         }
     }
+
+    private fun WeightsData.mapData() = mapper.mapWeights(
+        minWeight,
+        weekAverage,
+        maxPossibleWeight,
+        targetWeight,
+        weights,
+        onClickListener,
+        onLongClickListener
+    )
 }
