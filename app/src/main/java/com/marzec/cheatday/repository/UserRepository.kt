@@ -1,58 +1,63 @@
 package com.marzec.cheatday.repository
 
 import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.MutablePreferences
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
+import com.google.gson.Gson
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.extensions.EMPTY_STRING
+import com.marzec.cheatday.extensions.orFalse
 import com.marzec.cheatday.model.domain.CurrentUserDomain
-import com.marzec.cheatday.model.domain.CurrentUserProto
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.model.domain.toDomain
+import com.marzec.cheatday.model.domain.toUser
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
 
 class UserRepository @Inject constructor(
+    private val gson: Gson,
     private val userDao: UserDao,
-    private val currentUserStore: DataStore<CurrentUserProto>,
+    private val preferencesDataStore: DataStore<Preferences>,
     private val dispatcher: CoroutineDispatcher
 ) {
     suspend fun getCurrentUser(): User = withContext(dispatcher) {
-        val currentUserEmail = currentUserStore.data.first().email
-        userDao.getUser(currentUserEmail).toDomain()
+        val currentUser: CurrentUserDomain = preferencesDataStore.data.mapLatest { preferences ->
+            preferences.getCurrentUser() ?: currentUserNull
+        }.first()
+        userDao.getUser(currentUser.email).toDomain()
     }
 
     suspend fun getCurrentUserWithAuthToken(): CurrentUserDomain? = withContext(dispatcher) {
-        currentUserStore.data.first()
-            .takeIf { it.email.isNotEmpty() }
-            ?.let { user ->
-                CurrentUserDomain(id = user.id, auth = user.authToken, email = user.email)
-            }
+        preferencesDataStore.data.first().getCurrentUser().takeIf {
+            it?.auth?.isNotEmpty().orFalse()
+        }
     }
 
     fun observeCurrentUser(): Flow<User> {
-        return currentUserStore.data.flatMapMerge { currentUser ->
-            userDao.observeUser(currentUser.email).filterNotNull().map { it.toDomain() }
+        return preferencesDataStore.data.mapLatest {
+            it.getCurrentUserValue().toUser()
         }.flowOn(dispatcher)
     }
 
     fun observeIfUserLogged(): Flow<Boolean> =
-        currentUserStore.data.map { it.email.isNotEmpty() && it.authToken.isNotEmpty() }
+        preferencesDataStore.data.mapLatest {
+            it.getCurrentUser()?.auth?.isNotEmpty().orFalse()
+        }
 
     suspend fun clearCurrentUser(): Unit = withContext(dispatcher) {
-        currentUserStore.updateData {
-            it.toBuilder()
-                .setAuthToken(EMPTY_STRING)
-                .setEmail(EMPTY_STRING)
-                .setId(-1)
-                .build()
+        preferencesDataStore.updateData {
+            it.toMutablePreferences().apply {
+                saveCurrentUser(currentUserNull)
+            }
         }
     }
 
@@ -69,13 +74,33 @@ class UserRepository @Inject constructor(
 
     suspend fun setCurrentUserWithAuth(newUser: CurrentUserDomain): Unit = withContext(dispatcher) {
         val userEntity = addUserToDbIfNeeded(newUser.email)
-        currentUserStore.updateData {
-            it.toBuilder()
-                .setAuthToken(newUser.auth)
-                .setEmail(newUser.email)
-                .setId(userEntity.id.toInt())
-                .build()
+        preferencesDataStore.updateData {
+            it.toMutablePreferences().apply {
+                saveCurrentUser(newUser.copy(id = userEntity.id.toInt()))
+            }
         }
         Unit
+    }
+
+    private fun Preferences.getCurrentUser(): CurrentUserDomain? {
+        val json = this[stringPreferencesKey(CURRENT_USER)].orEmpty()
+        return gson.fromJson(json, CurrentUserDomain::class.java)
+    }
+
+    private fun MutablePreferences.saveCurrentUser(currentUser: CurrentUserDomain) {
+        this[stringPreferencesKey(CURRENT_USER)] = gson.toJson(currentUser)
+    }
+
+    private fun Preferences.getCurrentUserValue(): CurrentUserDomain =
+        getCurrentUser() ?: currentUserNull
+
+    companion object {
+        private val CURRENT_USER = "CURRENT_USER"
+
+        private val currentUserNull = CurrentUserDomain(
+            id = -1,
+            auth = "",
+            email = ""
+        )
     }
 }

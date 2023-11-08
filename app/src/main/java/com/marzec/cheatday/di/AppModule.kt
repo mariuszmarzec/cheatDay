@@ -2,15 +2,13 @@ package com.marzec.cheatday.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.marzec.cheatday.common.CurrentUserProtoSerializer
+import com.google.gson.Gson
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
 import com.marzec.cheatday.db.dao.WeightDao
-import com.marzec.cheatday.model.domain.CurrentUserProto
 import com.marzec.cheatday.notifications.NotificationHelper
 import com.marzec.cheatday.notifications.NotificationHelperImpl
 import dagger.Binds
@@ -26,11 +24,6 @@ import kotlinx.coroutines.Dispatchers
 
 private val Context.userPreferencesStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 
-private val Context.userDataStore: DataStore<CurrentUserProto> by dataStore(
-    "user_preferences",
-    CurrentUserProtoSerializer
-)
-
 @Module
 @InstallIn(SingletonComponent::class)
 interface AppModule {
@@ -40,6 +33,10 @@ interface AppModule {
     fun bindNotificationHelper(notificationHelper: NotificationHelperImpl): NotificationHelper
 
     companion object {
+
+        @Provides
+        @Singleton
+        fun provideGson() = Gson()
 
         @Provides
         fun provideCoroutineDispatcher(): CoroutineDispatcher = Dispatchers.IO
@@ -65,11 +62,6 @@ interface AppModule {
         @Singleton
         fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
             context.userPreferencesStore
-
-        @Provides
-        @Singleton
-        fun provideCurrentUserDataStore(@ApplicationContext context: Context): DataStore<CurrentUserProto> =
-            context.userDataStore
     }
 }
 

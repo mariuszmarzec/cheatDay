@@ -2,7 +2,6 @@ package com.marzec.cheatday.extensions
 
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.core.test
-import com.marzec.cheatday.view.model.ListItem
 import kotlinx.coroutines.flow.flowOf
 
 import org.joda.time.DateTime

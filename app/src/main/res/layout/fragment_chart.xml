@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.marzec.cheatday.view.ErrorView
+    <com.marzec.cheatday.view.delegates.errorscreen.ErrorView
         android:id="@+id/error_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

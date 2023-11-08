@@ -2,7 +2,7 @@ object Dependency {
 
     val crashlytics_version = "2.4.1"
     val firebase_version = "26.3.0"
-    val kotlin_version = "1.9.10"
+    val kotlin_version = "1.9.20"
     val junit4_version = "4.13"
     val leak_canary_version = "2.7"
     val coroutines_version = "1.7.3"
@@ -25,9 +25,7 @@ object Dependency {
     val android_test_runner_version = "1.1.5"
     val runner_version = "1.5.0"
     val orchestrator_version = "1.4.1"
-    val paris_version = "1.3.0"
     val arch_testing_version = "2.2.0"
-    val epoxy_version = "5.1.3"
     val espresso_core = "3.5.1"
     val fragment_version = "1.6.1"
     val activity_version = "1.1.0"
@@ -39,14 +37,13 @@ object Dependency {
     val android_gradle_plugin = "8.1.2"
     val datastore_version = "1.0.0"
     val google_service_version = "4.3.4"
-    val protobuf_version = "0.9.4"
     val hilt_version = "2.48.1"
     val mockk_version = "1.13.8"
     val kaspresso_version = "1.5.3"
     val detektVersion = "1.18.1"
     val androidTestMonitorVersion = "1.4.0"
     val hamcrestVersion = "1.3"
-    val butterKnifeVersion = "10.1.0"
+    val kspVersion = "1.9.20-1.0.14"
 
     object BuildPlugins {
         val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"
@@ -57,10 +54,8 @@ object Dependency {
         val screenshots = "app.cash.paparazzi:paparazzi-gradle-plugin:${screenshot_testing_version}"
         val navigationSafeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:${nav_version}"
         val googleServices = "com.google.gms:google-services:${google_service_version}"
-        val protobuf = "com.google.protobuf:protobuf-gradle-plugin:${protobuf_version}"
         val hilt = "com.google.dagger:hilt-android-gradle-plugin:$hilt_version"
         val detektPlugin = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
-        val butterKnife = "com.jakewharton:butterknife-gradle-plugin:$butterKnifeVersion"
     }
 
     object Android {

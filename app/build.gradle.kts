@@ -1,6 +1,5 @@
 import java.util.Properties
 import java.io.FileInputStream
-import com.google.protobuf.gradle.*
 
 fun readProperties(): Properties {
     val properties = Properties()
@@ -14,18 +13,15 @@ fun readProperties(): Properties {
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
     id("kotlin-parcelize")
     id("de.mannodermaus.android-junit5")
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-    id("com.google.protobuf")
     id("dagger.hilt.android.plugin")
     jacoco
     id("app.cash.paparazzi")
     id("io.gitlab.arturbosch.detekt")
-    id("com.jakewharton.butterknife")
     id("com.google.devtools.ksp")
 }
 
@@ -90,6 +86,7 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 
     buildTypes {
@@ -151,14 +148,6 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-
-    arguments {
-        arg("dagger.experimentalDaggerErrorMessages", "enabled")
-    }
-}
-
 hilt {
     enableTransformForLocalTests = true
 }
@@ -214,14 +203,6 @@ dependencies {
     implementation("net.danlew:android.joda:${Dependency.joda_version}")
     testImplementation("joda-time:joda-time:${Dependency.joda_version}")
 
-    // paris
-    implementation("com.airbnb.android:paris:${Dependency.paris_version}")
-    kapt("com.airbnb.android:paris-processor:${Dependency.paris_version}")
-
-    // epoxy
-    implementation("com.airbnb.android:epoxy:${Dependency.epoxy_version}")
-    kapt("com.airbnb.android:epoxy-processor:${Dependency.epoxy_version}")
-
     // navigation
     implementation("androidx.navigation:navigation-fragment-ktx:${Dependency.nav_version}")
     implementation("androidx.navigation:navigation-ui-ktx:${Dependency.nav_version}")
@@ -235,9 +216,6 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:${Dependency.datastore_version}")
     implementation("androidx.datastore:datastore:${Dependency.datastore_version}")
 
-    // protobuf
-    implementation("com.google.protobuf:protobuf-lite:3.0.0")
-
     // firebase
     implementation(platform("com.google.firebase:firebase-bom:${Dependency.firebase_version}"))
     implementation("com.google.firebase:firebase-crashlytics-ktx")
@@ -246,10 +224,10 @@ dependencies {
     // hilt
     implementation("com.google.dagger:hilt-android:${Dependency.hilt_version}")
     debugImplementation("com.google.dagger:hilt-android-testing:${Dependency.hilt_version}")
-    kapt("com.google.dagger:hilt-compiler:${Dependency.hilt_version}")
+    ksp("com.google.dagger:hilt-compiler:${Dependency.hilt_version}")
 
     androidTestImplementation("com.google.dagger:hilt-android-testing:${Dependency.hilt_version}")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:${Dependency.hilt_version}")
+    kspAndroidTest("com.google.dagger:hilt-android-compiler:${Dependency.hilt_version}")
 
     // junit4
     testImplementation("junit:junit:${Dependency.junit4_version}")
@@ -283,24 +261,6 @@ dependencies {
     // kaspresso
     androidTestImplementation("com.kaspersky.android-components:kaspresso:${Dependency.kaspresso_version}")
 
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.0.0"
-    }
-    plugins {
-        id("javalite") {
-            artifact = "com.google.protobuf:protoc-gen-javalite:3.0.0"
-        }
-    }
-    generateProtoTasks {
-        all().forEach { task ->
-            task.plugins {
-                id("javalite") { }
-            }
-        }
-    }
 }
 
 detekt {

@@ -23,3 +23,11 @@ fun View.setVisible(isVisible: Boolean, invisibilityMode: Boolean = false) {
         if (invisibilityMode) INVISIBLE else GONE
     }
 }
+
+internal inline fun <reified T : View> View.findParentInstance() : T {
+    var parent: View = this
+    do {
+        parent = parent.parent as View
+    } while (parent !is T)
+    return parent
+}

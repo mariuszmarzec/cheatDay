@@ -15,7 +15,7 @@ import com.marzec.cheatday.common.Constants
 import com.marzec.cheatday.extensions.gone
 import com.marzec.cheatday.extensions.visible
 import com.marzec.cheatday.screen.chart.model.ChartsData
-import com.marzec.cheatday.view.ErrorView
+import com.marzec.cheatday.view.delegates.errorscreen.ErrorView
 import com.marzec.mvi.State
 import javax.inject.Inject
 
@@ -79,7 +79,7 @@ class ChartRenderer @Inject constructor() {
                 chart.gone()
                 errorView.visible()
                 progressBar.gone()
-                errorView.setErrorMessage(state.message)
+                errorView.errorMessage = state.message
             }
             is State.Loading -> {
                 chart.gone()

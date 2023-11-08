@@ -1,10 +1,10 @@
 package com.marzec.cheatday.screen.weights.model
 
 import android.content.Context
+import com.marzec.adapterdelegate.model.ListItem
 import com.marzec.cheatday.R
 import com.marzec.cheatday.model.domain.WeightResult
-import com.marzec.cheatday.view.model.LabeledRowItem
-import com.marzec.cheatday.view.model.ListItem
+import com.marzec.cheatday.view.delegates.labeledrowitem.LabeledRow
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -12,72 +12,81 @@ import javax.inject.Inject
 class WeightsMapper @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
-    @OptIn(ExperimentalStdlibApi::class)
     fun mapWeights(
         minWeight: WeightResult?,
         weekAverage: Float?,
         maxPossibleValue: Float,
         targetWeight: Float,
-        weights: List<WeightResult>
-    ): List<ListItem> = buildList<ListItem> {
+        weights: List<WeightResult>,
+        onClickListener: (String) -> Unit,
+        onLongClickListener: (String) -> Unit
+    ): List<ListItem> = buildList {
         minWeight?.let { add(minWeightItem(it)) }
         weekAverage?.let { add(stubWeekAverageWeightItem(it)) }
-        add(maxPossibleWeightItem(maxPossibleValue))
-        add(targetWeightItem(targetWeight))
-        addAll(weightsItems(weights))
+        add(maxPossibleWeightItem(maxPossibleValue, onClickListener))
+        add(targetWeightItem(targetWeight, onClickListener))
+        addAll(weightsItems(weights, onClickListener, onLongClickListener))
     }
 
-    private fun minWeightItem(minWeight: WeightResult): LabeledRowItem {
+    private fun minWeightItem(minWeight: WeightResult): LabeledRow {
         val label = context.getString(R.string.weights_min_label)
         val dateLabel = context.getString(R.string.weight_row_date_label)
         val date = minWeight.date.toString(
             DATE_PATTERN
         )
-        return LabeledRowItem(
+        return LabeledRow(
             id = MIN_ID,
-            data = Unit,
             value = "${minWeight.value} ${context.getString(R.string.unit_kg_short)}",
             label = "$label $dateLabel $date"
         )
     }
 
-    private fun stubWeekAverageWeightItem(weekAverage: Float?): LabeledRowItem {
+    private fun stubWeekAverageWeightItem(weekAverage: Float?): LabeledRow {
         val formattedAverage = "%.1f".format(Locale.ENGLISH, weekAverage)
-        return LabeledRowItem(
+        return LabeledRow(
             id = WEEK_AVERAGE_ID,
-            data = Unit,
             value = "$formattedAverage ${context.getString(R.string.unit_kg_short)}",
             label = context.getString(R.string.weights_week_average_label)
         )
     }
 
-    private fun maxPossibleWeightItem(maxPossibleValue: Float) = LabeledRowItem(
-        id = MAX_POSSIBLE_ID,
-        data = Unit,
-        value = "$maxPossibleValue ${context.getString(R.string.unit_kg_short)}",
-        label = context.getString(R.string.weights_max_possible_label)
-    )
+    private fun maxPossibleWeightItem(maxPossibleValue: Float, onClickListener: (String) -> Unit) =
+        LabeledRow(
+            id = MAX_POSSIBLE_ID,
+            value = "$maxPossibleValue ${context.getString(R.string.unit_kg_short)}",
+            label = context.getString(R.string.weights_max_possible_label)
+        ).apply {
+            this.onClickListener = { onClickListener(id) }
+        }
 
-    private fun targetWeightItem(targetWeight: Float) = LabeledRowItem(
-        id = TARGET_ID,
-        data = Unit,
-        value = "$targetWeight ${context.getString(R.string.unit_kg_short)}",
-        label = context.getString(R.string.weights_target_label)
-    )
+    private fun targetWeightItem(targetWeight: Float, onClickListener: (String) -> Unit) =
+        LabeledRow(
+            id = TARGET_ID,
+            value = "$targetWeight ${context.getString(R.string.unit_kg_short)}",
+            label = context.getString(R.string.weights_target_label)
+        ).apply {
+            this.onClickListener = { onClickListener(id) }
+        }
 
-    private fun weightsItems(weights: List<WeightResult>) =
+    private fun weightsItems(
+        weights: List<WeightResult>,
+        onClickListener: (String) -> Unit,
+        onLongClickListener: (String) -> Unit
+    ) =
         weights.map { weightResult ->
             with(weightResult) {
-                LabeledRowItem(
+                LabeledRow(
                     id = this.id.toString(),
-                    data = this,
                     value = "$value ${context.getString(R.string.unit_kg_short)}",
                     label = "${context.getString(R.string.weight_row_date_label)} ${
                         date.toString(
                             DATE_PATTERN
                         )
                     }"
-                )
+                ).apply {
+                    this.onClickListener = { onClickListener(id) }
+                    this.onLongClickListener = { onLongClickListener(id) }
+                }
             }
         }
 

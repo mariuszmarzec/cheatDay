@@ -5,3 +5,7 @@ data class CurrentUserDomain(
     val auth: String,
     val email: String
 )
+
+fun CurrentUserDomain.toUser() = User(
+    id.toLong(), email
+)

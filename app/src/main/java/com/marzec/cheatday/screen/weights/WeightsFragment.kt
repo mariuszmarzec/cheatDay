@@ -45,7 +45,7 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights), StateObserver<S
             renderer.onLongClickListener = { viewModel.onLongClick(it) }
             renderer.onFloatingButtonClick = { viewModel.onFloatingButtonClick() }
             renderer.onTryAgainButtonClickListener = { viewModel.load() }
-            renderer.init(view = view)
+            renderer.init(view)
         }
     }
 
