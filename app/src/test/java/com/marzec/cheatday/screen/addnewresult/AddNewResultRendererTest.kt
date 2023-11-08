@@ -9,11 +9,14 @@ import com.marzec.cheatday.R
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
+@RunWith(JUnit4::class)
 class AddNewResultRendererTest {
 
     @get:Rule
-    val paparazzi = Paparazzi()
+    val paparazzi = Paparazzi(theme = "AppTheme")
 
     val initialDate by lazy {
         AddWeightData.INITIAL
@@ -29,7 +32,11 @@ class AddNewResultRendererTest {
         State.Error(initialDate, "Error has occurred")
     }
 
-    val renderer = AddNewWeightResultRenderer()
+    val renderer = AddNewWeightResultRenderer().apply {
+        onDatePickerClick = { }
+        onNewWeightChanged = { }
+        onButtonClick = { }
+    }
 
     @Before
     fun setUp() {

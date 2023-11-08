@@ -236,6 +236,7 @@ dependencies {
     // junit4
     testImplementation("junit:junit:${Dependency.junit4_version}")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:${Dependency.junit5_version}")
+
     androidTestImplementation("androidx.test.ext:junit:${Dependency.android_test_runner_version}")
     androidTestImplementation("junit:junit:${Dependency.junit4_version}")
 
@@ -275,4 +276,10 @@ detekt {
     )
 
     config = files("../config/detekt/detekt.yml")
+}
+
+// workaround from https://github.com/cashapp/paparazzi/issues/955
+// https://github.com/cashapp/paparazzi/issues?q=%22attempted+to+delete+a+method%22
+tasks.withType<Test> {
+    jvmArgs("-XX:+AllowRedefinitionToAddDeleteMethods")
 }
