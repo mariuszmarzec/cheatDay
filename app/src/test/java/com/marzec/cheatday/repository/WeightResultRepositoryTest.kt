@@ -1,5 +1,6 @@
 package com.marzec.cheatday.repository
 
+import android.util.Log
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.WeightApi
@@ -11,8 +12,13 @@ import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.stubs.stubWeightDto
 import com.marzec.cheatday.stubs.stubWeightResult
 import com.marzec.cheatday.stubs.stubWeightResultEntity
+import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.runs
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
@@ -38,6 +44,10 @@ internal class WeightResultRepositoryTest {
 
     @BeforeEach
     fun setUp() {
+        mockkStatic(Log::class)
+        every {
+            Log.e(any(), any(), any())
+        } returns 0
         coEvery { userRepository.getCurrentUser() } returns User(0, "user@email.com")
     }
 

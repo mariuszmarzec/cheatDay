@@ -134,9 +134,13 @@ android {
         }
     }
 
-    testOptions.animationsDisabled = true
-    testOptions.unitTests.isReturnDefaultValues = true
-    testOptions.unitTests.isIncludeAndroidResources = true
+    testOptions {
+        animationsDisabled = true
+        unitTests {
+            isReturnDefaultValues = true
+            isIncludeAndroidResources = true
+        }
+    }
 
     testCoverage {
         jacocoVersion = "0.8.9"
@@ -231,13 +235,13 @@ dependencies {
 
     // junit4
     testImplementation("junit:junit:${Dependency.junit4_version}")
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:${Dependency.junit5_version}")
     androidTestImplementation("androidx.test.ext:junit:${Dependency.android_test_runner_version}")
     androidTestImplementation("junit:junit:${Dependency.junit4_version}")
 
     // test5
     testImplementation("org.junit.jupiter:junit-jupiter-api:${Dependency.junit5_version}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Dependency.junit5_version}")
-
     // mocking
     testImplementation("io.mockk:mockk:${Dependency.mockk_version}")
     testImplementation("io.mockk:mockk-agent-jvm:${Dependency.mockk_version}")

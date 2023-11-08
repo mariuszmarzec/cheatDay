@@ -44,8 +44,8 @@ internal class WeightsMapperTest {
                 stubWeightResult(id = 1, value = 1f),
                 stubWeightResult(id = 2, value = 2f)
             ),
-            onClickListener = onClickListener,
-            onLongClickListener = onLongClickListener
+            onClickListener = {  },
+            onLongClickListener = {  }
         )
         assertThat(list).isEqualTo(
             listOf(
@@ -67,8 +67,8 @@ internal class WeightsMapperTest {
             maxPossibleValue = 2f,
             targetWeight = 0f,
             weights = emptyList(),
-            onClickListener = onClickListener,
-            onLongClickListener = onLongClickListener
+            onClickListener = {  },
+            onLongClickListener = {  }
         )
         assertThat(list).isEqualTo(
             listOf(
@@ -90,8 +90,8 @@ internal class WeightsMapperTest {
                 stubWeightResult(id = 1, value = 1f),
                 stubWeightResult(id = 2, value = 2f)
             ),
-            onClickListener = onClickListener,
-            onLongClickListener = onLongClickListener
+            onClickListener = {  },
+            onLongClickListener = {  }
         )
         assertThat(list).isEqualTo(
             listOf(

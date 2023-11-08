@@ -1,6 +1,7 @@
 package com.marzec.cheatday.extensions
 
 import com.google.common.truth.Truth.assertThat
+import com.marzec.adapterdelegate.model.ListItem
 import com.marzec.cheatday.core.test
 import kotlinx.coroutines.flow.flowOf
 
@@ -9,16 +10,6 @@ import org.junit.Assert.assertThrows
 import org.junit.jupiter.api.Test
 
 internal class CommonExtensionsKtTest {
-
-    val listItem1 = object : ListItem {
-        override val id: String = "list_item_1"
-        override val data: Any = Unit
-    }
-
-    val listItem2 = object : ListItem {
-        override val id: String = "list_item_2"
-        override val data: Any = Unit
-    }
 
     @Test
     fun emptyStringTest() {
@@ -43,21 +34,6 @@ internal class CommonExtensionsKtTest {
     @Test
     fun `when condition is false, then decrease`() {
         assertThat(1.incIf { false }).isEqualTo(1)
-    }
-
-    @Test
-    fun plusAddingItems() {
-        assertThat(listItem1 + listItem2).isEqualTo(listOf(listItem1, listItem2))
-    }
-
-    @Test
-    fun plusAddingItemToList() {
-        assertThat(listOf(listItem1) + listItem2).isEqualTo(listOf(listItem1, listItem2))
-    }
-
-    @Test
-    fun plusAddingListToItem() {
-        assertThat(listItem1 + listOf(listItem2)).isEqualTo(listOf(listItem1, listItem2))
     }
 
     @Test
