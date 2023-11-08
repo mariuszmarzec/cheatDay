@@ -15,9 +15,9 @@ import javax.inject.Inject
 
 class AddNewWeightResultRenderer @Inject constructor() {
 
-    lateinit var onDatePickerClick: () -> Unit
-    lateinit var onNewWeightChanged: (String) -> Unit
-    lateinit var onButtonClick: () -> Unit
+    var onDatePickerClick: () -> Unit = { }
+    var onNewWeightChanged: (String) -> Unit = { }
+    var onButtonClick: () -> Unit = { }
 
     private lateinit var weightEditText: EditText
     private lateinit var dateEditText: EditText

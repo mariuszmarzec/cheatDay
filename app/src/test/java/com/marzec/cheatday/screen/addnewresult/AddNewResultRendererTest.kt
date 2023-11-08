@@ -1,22 +1,19 @@
 package com.marzec.cheatday.screen.addnewresult
 
 import android.view.View
-import app.cash.paparazzi.Paparazzi
+import com.marzec.cheatday.R
+import com.marzec.cheatday.core.getPaparazziRule
 import com.marzec.cheatday.screen.addnewresult.model.AddWeightData
 import com.marzec.mvi.State
 import org.joda.time.DateTimeUtils
-import com.marzec.cheatday.R
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 
-@RunWith(JUnit4::class)
 class AddNewResultRendererTest {
 
     @get:Rule
-    val paparazzi = Paparazzi(theme = "AppTheme")
+    val paparazzi = getPaparazziRule()
 
     val initialDate by lazy {
         AddWeightData.INITIAL
@@ -32,11 +29,7 @@ class AddNewResultRendererTest {
         State.Error(initialDate, "Error has occurred")
     }
 
-    val renderer = AddNewWeightResultRenderer().apply {
-        onDatePickerClick = { }
-        onNewWeightChanged = { }
-        onButtonClick = { }
-    }
+    val renderer = AddNewWeightResultRenderer()
 
     @Before
     fun setUp() {
@@ -59,3 +52,4 @@ class AddNewResultRendererTest {
         paparazzi.snapshot(view)
     }
 }
+

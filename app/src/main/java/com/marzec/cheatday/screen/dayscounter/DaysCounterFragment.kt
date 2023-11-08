@@ -11,9 +11,8 @@ import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.common.StateObserver
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterState
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterViewModel
-import com.marzec.cheatday.view.CounterView
-import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
@@ -21,47 +20,29 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter), StateO
 
     private val viewModel: DaysCounterViewModel by viewModels()
 
-    private lateinit var cheatCounter: CounterView
-    private lateinit var dietCounter: CounterView
-    private lateinit var workoutCounter: CounterView
+    @Inject
+    lateinit var renderer: DaysCounterRenderer
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        cheatCounter = view.findViewById(R.id.cheat_counter)
-        dietCounter = view.findViewById(R.id.diet_counter)
-        workoutCounter = view.findViewById(R.id.workout_counter)
-
-        cheatCounter.onDecreaseButtonClickListener = {
+        renderer.onDecreaseCheatButtonClickListener = {
             viewModel.onCheatDecreaseClick()
         }
-        dietCounter.onIncreaseButtonClickListener = {
+        renderer.onIncreaseDietButtonClickListener = {
             viewModel.onDietIncreaseClick()
         }
-        workoutCounter.onIncreaseButtonClickListener = {
+        renderer.onIncreaseDaysButtonClickListener = {
             viewModel.onWorkoutIncreaseClick()
         }
 
+
         observeState(viewModel.state) { state ->
-            dietCounter.setDay(state.diet.day)
-            setClickedState(dietCounter, state.diet.clicked)
-
-            cheatCounter.setDay(state.cheat.day)
-            setClickedState(cheatCounter, state.cheat.clicked)
-
-            workoutCounter.setDay(state.workout.day)
-            setClickedState(workoutCounter, state.workout.clicked)
+            renderer.render(state)
         }
 
         StateObserver.testState ?: viewModel.loading()
-    }
-
-    private fun setClickedState(counterView: CounterView, isClicked: Boolean) {
-        val context = counterView.context
-        counterView.buttonColor = context.getColor(
-            if (isClicked) R.color.colorPrimary else R.color.colorAccent
-        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

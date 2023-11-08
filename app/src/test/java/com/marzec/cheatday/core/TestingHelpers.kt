@@ -1,5 +1,6 @@
 package com.marzec.cheatday.core
 
+import app.cash.paparazzi.Paparazzi
 import com.google.common.truth.Truth.assertThat
 import com.marzec.mvi.StoreViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -61,3 +62,6 @@ fun test(testBody: suspend TestScope.() -> Unit) {
         testBody.invoke(this)
     }
 }
+
+fun getPaparazziRule() = Paparazzi(theme = "AppTheme")
+
