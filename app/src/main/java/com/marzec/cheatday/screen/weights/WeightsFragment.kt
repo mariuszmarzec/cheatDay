@@ -12,8 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
-import com.marzec.cheatday.common.StateObserver
-import com.marzec.cheatday.common.StateObserver.Companion.testState
 import com.marzec.cheatday.extensions.DialogInputOptions
 import com.marzec.cheatday.extensions.DialogOptions
 import com.marzec.cheatday.extensions.showAnswerDialog
@@ -28,7 +26,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
-class WeightsFragment : BaseFragment(R.layout.fragment_weights), StateObserver<State<WeightsData>> {
+class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
 
     @Inject
     lateinit var renderer: WeightsRenderer
@@ -53,7 +51,7 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights), StateObserver<S
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        observeState(viewModel.state, renderer::render)
+        viewModel.state.observe(renderer::render)
 
         viewModel.sideEffects.observe { effect ->
             when (effect) {
@@ -86,7 +84,7 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights), StateObserver<S
                 }
             }
         }
-        savedInstanceState ?: testState ?: viewModel.load()
+        savedInstanceState ?: viewModel.load()
     }
 
     private fun showTargetWeightDialog() {
@@ -136,13 +134,6 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights), StateObserver<S
             R.id.chart -> viewModel.goToChart().run { true }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun bindStateObserver(
-        stateFlow: Flow<State<WeightsData>>,
-        action: (State<WeightsData>) -> Unit
-    ) {
-        stateFlow.observe(action)
     }
 }
 

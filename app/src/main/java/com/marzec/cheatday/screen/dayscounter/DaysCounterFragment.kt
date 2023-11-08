@@ -8,7 +8,6 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
-import com.marzec.cheatday.common.StateObserver
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterState
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,7 +15,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
-class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter), StateObserver<DaysCounterState> {
+class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
 
     private val viewModel: DaysCounterViewModel by viewModels()
 
@@ -26,6 +25,8 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter), StateO
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+
+        renderer.init(view)
 
         renderer.onDecreaseCheatButtonClickListener = {
             viewModel.onCheatDecreaseClick()
@@ -37,12 +38,11 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter), StateO
             viewModel.onWorkoutIncreaseClick()
         }
 
-
-        observeState(viewModel.state) { state ->
+        viewModel.state.observe { state ->
             renderer.render(state)
         }
 
-        StateObserver.testState ?: viewModel.loading()
+        viewModel.loading()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -54,12 +54,5 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter), StateO
             R.id.logout -> viewModel.onLogoutClick().run { true }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun bindStateObserver(
-        stateFlow: Flow<DaysCounterState>,
-        action: (DaysCounterState) -> Unit
-    ) {
-        stateFlow.observe(action)
     }
 }
