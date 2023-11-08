@@ -2,7 +2,7 @@ object Dependency {
 
     val crashlytics_version = "2.4.1"
     val firebase_version = "26.3.0"
-    val kotlin_version = "1.9.10"
+    val kotlin_version = "1.9.20"
     val junit4_version = "4.13"
     val leak_canary_version = "2.7"
     val coroutines_version = "1.7.3"
@@ -43,6 +43,7 @@ object Dependency {
     val detektVersion = "1.18.1"
     val androidTestMonitorVersion = "1.4.0"
     val hamcrestVersion = "1.3"
+    val kspVersion = "1.9.20-1.0.14"
 
     object BuildPlugins {
         val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"

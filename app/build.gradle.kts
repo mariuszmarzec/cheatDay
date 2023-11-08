@@ -13,7 +13,6 @@ fun readProperties(): Properties {
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
     id("kotlin-parcelize")
     id("de.mannodermaus.android-junit5")
     id("androidx.navigation.safeargs.kotlin")
@@ -153,14 +152,6 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-
-    arguments {
-        arg("dagger.experimentalDaggerErrorMessages", "enabled")
-    }
-}
-
 hilt {
     enableTransformForLocalTests = true
 }
@@ -241,10 +232,10 @@ dependencies {
     // hilt
     implementation("com.google.dagger:hilt-android:${Dependency.hilt_version}")
     debugImplementation("com.google.dagger:hilt-android-testing:${Dependency.hilt_version}")
-    kapt("com.google.dagger:hilt-compiler:${Dependency.hilt_version}")
+    ksp("com.google.dagger:hilt-compiler:${Dependency.hilt_version}")
 
     androidTestImplementation("com.google.dagger:hilt-android-testing:${Dependency.hilt_version}")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:${Dependency.hilt_version}")
+    kspAndroidTest("com.google.dagger:hilt-android-compiler:${Dependency.hilt_version}")
 
     // junit4
     testImplementation("junit:junit:${Dependency.junit4_version}")
