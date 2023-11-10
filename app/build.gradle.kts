@@ -26,7 +26,7 @@ plugins {
 }
 
 jacoco {
-    toolVersion = "0.8.9"
+    toolVersion = Dependency.jacoco_version
 }
 apply(from = "jacoco.gradle.kts")
 
@@ -143,7 +143,7 @@ android {
     }
 
     testCoverage {
-        jacocoVersion = "0.8.9"
+        jacocoVersion = Dependency.jacoco_version
     }
 
     packagingOptions {

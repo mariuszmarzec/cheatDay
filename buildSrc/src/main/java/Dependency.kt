@@ -20,7 +20,6 @@ object Dependency {
     val truth_version = "1.1.3"
     val viewmodel_version = "1.1.1"
     val room_version = "2.6.0-rc01"
-    val android_test_version = "1.1.3"
     val android_test_services_version = "1.4.1"
     val android_test_runner_version = "1.1.5"
     val runner_version = "1.5.0"
@@ -30,7 +29,6 @@ object Dependency {
     val fragment_version = "1.6.1"
     val activity_version = "1.1.0"
     val screenshot_testing_version = "1.3.1"
-    val kakao_version = "2.3.4"
     val nav_version = "2.7.4"
     val chart_version = "v3.1.0"
     val junit5_plugin_version = "1.10.0.0"
@@ -41,9 +39,8 @@ object Dependency {
     val mockk_version = "1.13.8"
     val kaspresso_version = "1.5.3"
     val detektVersion = "1.18.1"
-    val androidTestMonitorVersion = "1.4.0"
-    val hamcrestVersion = "1.3"
     val kspVersion = "1.9.20-1.0.14"
+    val jacoco_version = "0.8.9"
 
     object BuildPlugins {
         val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:${crashlytics_version}"
