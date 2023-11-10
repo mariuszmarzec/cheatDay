@@ -44,7 +44,6 @@ android {
         testInstrumentationRunner = "com.marzec.cheatday.MockTestRunner"
         testInstrumentationRunnerArguments.putAll(
             mapOf(
-                "listener" to "leakcanary.FailTestOnLeakRunListener",
                 "clearPackageData" to "true",
                 "coverage" to "true",
                 "useTestStorageService" to "true"
@@ -266,6 +265,7 @@ dependencies {
     // kaspresso
     androidTestImplementation("com.kaspersky.android-components:kaspresso:${Dependency.kaspresso_version}")
 
+    androidTestImplementation("org.hamcrest:hamcrest:${Dependency.hamcrestVersion}")
 }
 
 detekt {
