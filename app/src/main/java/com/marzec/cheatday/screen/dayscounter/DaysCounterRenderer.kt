@@ -22,7 +22,7 @@ class DaysCounterRenderer @Inject constructor() {
         workoutCounter = view.findViewById(R.id.workout_counter)
 
         cheatCounter.onDecreaseButtonClickListener = {
-            onDecreaseCheatButtonClickListener
+            onDecreaseCheatButtonClickListener()
         }
         dietCounter.onIncreaseButtonClickListener = {
             onIncreaseDietButtonClickListener()

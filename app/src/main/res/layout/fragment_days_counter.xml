@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         app:cv_mode="DECREASE"
         app:cv_title="@string/home_counter_title_cheat_day"
+        app:cv_title_text_size="@dimen/counter_title_text_small_size"
         app:cv_value="0"
         app:layout_constraintBottom_toTopOf="@+id/diet_counter"
         app:layout_constraintHorizontal_bias="0.5"

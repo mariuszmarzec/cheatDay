@@ -21,6 +21,8 @@ class CounterView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
+    private val defaultFontSize = context.resources.getDimensionPixelSize(R.dimen.counter_title_text_size)
+
     enum class CountMode {
         DECREASE, INCREASE
     }
@@ -33,18 +35,18 @@ class CounterView @JvmOverloads constructor(
 
     var value = 0
         set(newValue) {
-            value(newValue)
+            value()
             field = newValue
         }
 
     var max = 1
         set(newValue) {
-            max(newValue)
+            max()
             field = newValue
         }
 
     @Px
-    var titleTextSize = context.resources.getDimensionPixelSize(R.dimen.counter_title_text_size)
+    var titleTextSize = defaultFontSize
         set(newValue) {
             textSize(newValue)
             field = newValue
@@ -52,7 +54,7 @@ class CounterView @JvmOverloads constructor(
 
     var mode = CountMode.DECREASE
         set(newValue) {
-            mode(newValue)
+            mode()
             field = newValue
         }
 
@@ -104,28 +106,29 @@ class CounterView @JvmOverloads constructor(
                 value = getInt(R.styleable.CounterView_cv_value, 0)
                 max = getInt(R.styleable.CounterView_cv_max, 0)
                 buttonColor = getColor(R.styleable.CounterView_cv_button_color, Color.BLACK)
-                titleTextSize = getDimensionPixelSize(R.styleable.CounterView_cv_title_text_size, 0)
+                titleTextSize = getDimensionPixelSize(
+                    R.styleable.CounterView_cv_title_text_size,
+                    defaultFontSize
+                )
             } finally {
                 recycle()
             }
         }
     }
 
-    private fun mode(mode: CountMode) {
+    private fun mode() {
         drawValue()
-        increaseButton.setVisible(mode == CountMode.INCREASE)
-        decreaseButton.setVisible(mode == CountMode.DECREASE)
     }
 
     private fun title(title: String) {
         titleTextView.text = title
     }
 
-    private fun value(value: Int) {
+    private fun value() {
         drawValue()
     }
 
-    private fun max(max: Int) {
+    private fun max() {
         drawValue()
     }
 
@@ -145,6 +148,9 @@ class CounterView @JvmOverloads constructor(
     }
 
     private fun drawValue() {
+        increaseButton.setVisible(mode == CountMode.INCREASE)
+        decreaseButton.setVisible(mode == CountMode.DECREASE)
+
         valueTextView.text = when (mode) {
             CountMode.DECREASE -> "${this.value}"
             CountMode.INCREASE -> {
