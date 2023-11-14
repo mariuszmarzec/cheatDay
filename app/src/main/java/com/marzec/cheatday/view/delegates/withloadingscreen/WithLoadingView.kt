@@ -42,7 +42,7 @@ class WithLoadingView @JvmOverloads constructor(
         }
 
     init {
-        with(binding.recyclerView) {
+        with(binding.nestedRecyclerView) {
             layoutManager = LinearLayoutManager(context)
             setOnTouchListener { view, _ -> onTouch(view) }
         }
@@ -60,7 +60,7 @@ class WithLoadingView @JvmOverloads constructor(
 
     private fun delegateManager(delegateManager: DelegateManager<ListItem>) {
         this.delegateAdapter = DelegateAdapter(delegateManager)
-        binding.recyclerView.adapter = delegateAdapter
+        binding.nestedRecyclerView.adapter = delegateAdapter
     }
 
     private fun items(items: List<ListItem>) {
@@ -68,6 +68,6 @@ class WithLoadingView @JvmOverloads constructor(
     }
 
     fun setCommonRecycledViewPool(recycledViewPool: RecyclerView.RecycledViewPool) {
-        binding.recyclerView.setRecycledViewPool(recycledViewPool)
+        binding.nestedRecyclerView.setRecycledViewPool(recycledViewPool)
     }
 }

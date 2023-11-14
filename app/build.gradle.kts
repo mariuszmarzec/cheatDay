@@ -45,7 +45,6 @@ android {
         testInstrumentationRunnerArguments.putAll(
             mapOf(
                 "clearPackageData" to "true",
-                "coverage" to "true",
                 "useTestStorageService" to "true"
             )
         )
@@ -237,7 +236,7 @@ dependencies {
     testImplementation("junit:junit:${Dependency.junit4_version}")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine:${Dependency.junit5_version}")
 
-    androidTestImplementation("androidx.test.ext:junit:${Dependency.android_test_runner_version}")
+    androidTestImplementation("androidx.test.ext:junit:${Dependency.junit_ext_version}")
     androidTestImplementation("junit:junit:${Dependency.junit4_version}")
 
     // test5
@@ -252,9 +251,9 @@ dependencies {
     androidTestImplementation("com.google.truth:truth:${Dependency.truth_version}")
 
     // test runner
-    androidTestImplementation("androidx.test:core:${Dependency.runner_version}")
+    androidTestImplementation("androidx.test:core:${Dependency.test_core}")
     androidTestImplementation("androidx.test:runner:${Dependency.runner_version}")
-    androidTestImplementation("androidx.test:rules:${Dependency.runner_version}")
+    androidTestImplementation("androidx.test:rules:${Dependency.test_rules}")
     androidTestUtil("androidx.test:orchestrator:${Dependency.orchestrator_version}")
     androidTestUtil("androidx.test.services:test-services:${Dependency.android_test_services_version}")
     androidTestImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")

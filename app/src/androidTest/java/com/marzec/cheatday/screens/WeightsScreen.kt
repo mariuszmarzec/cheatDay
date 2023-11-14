@@ -31,7 +31,7 @@ object WeightsScreen : KScreen<WeightsScreen>() {
     }
 
     val weights: KRecyclerView = KRecyclerView({
-        withId(R.id.recycler_view)
+        withId(R.id.nestedRecyclerView)
     }, itemTypeBuilder = {
         itemType(::Item)
     })
