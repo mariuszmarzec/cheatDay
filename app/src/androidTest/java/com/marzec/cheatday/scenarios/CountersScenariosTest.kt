@@ -1,31 +1,20 @@
 package com.marzec.cheatday.scenarios
 
-import androidx.test.rule.GrantPermissionRule
 import android.Manifest
-import android.content.Context
-import androidx.datastore.core.DataMigration
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
-import androidx.datastore.preferences.preferencesDataStoreFile
-import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.GrantPermissionRule
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.marzec.cheatday.common.currentUser
 import com.marzec.cheatday.common.startApplication
-import com.marzec.cheatday.di.DataStoreModule
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.screens.HomeScreen
-import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@UninstallModules(DataStoreModule::class)
 @HiltAndroidTest
 class CountersScenariosTest : TestCase() {
 
@@ -38,28 +27,6 @@ class CountersScenariosTest : TestCase() {
 
     @Inject
     lateinit var userRepository: UserRepository
-
-    val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
-
-    val Context.userPreferencesStore: DataStore<Preferences> by preferencesDataStore(
-        "test_pref",
-        produceMigrations = { _ ->
-            listOf(
-                object : DataMigration<Preferences> {
-                    override suspend fun cleanUp() = Unit
-
-                    override suspend fun shouldMigrate(currentData: Preferences): Boolean = true
-
-                    override suspend fun migrate(currentData: Preferences): Preferences =
-                        currentData.toMutablePreferences().apply { clear() }
-
-                }
-            )
-        }
-    )
-
-    @BindValue
-    val dataStore: DataStore<Preferences> = context.userPreferencesStore
 
     @Before
     fun init() {
