@@ -42,12 +42,15 @@ android {
         versionName = Dependency.Android.versionName
         testApplicationId = "com.marzec.cheatday.debug.test"
         testInstrumentationRunner = "com.marzec.cheatday.MockTestRunner"
-        testInstrumentationRunnerArguments.putAll(
-            mapOf(
-                "clearPackageData" to "true",
-                "useTestStorageService" to "true"
-            )
-        )
+        // Using orchestrator is not possible, because project is affected by
+        // https://stackoverflow.com/questions/75257759/unknown-block-type-reading-jacoco-execution-data-files-from-android
+        // https://issuetracker.google.com/issues/266538654
+//        testInstrumentationRunnerArguments.putAll(
+//            mapOf(
+//                "clearPackageData" to "true",
+//                "useTestStorageService" to "true"
+//            )
+//        )
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -133,7 +136,8 @@ android {
     }
 
     testOptions {
-        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+        // Using orchestrator commented out due to jacoco issue https://issuetracker.google.com/issues/266538654
+        // execution = "ANDROIDX_TEST_ORCHESTRATOR"
         animationsDisabled = true
         unitTests {
             isReturnDefaultValues = true
