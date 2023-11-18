@@ -5,6 +5,7 @@ import androidx.test.rule.GrantPermissionRule
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.marzec.cheatday.common.currentUser
 import com.marzec.cheatday.common.startApplication
+import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.screens.HomeScreen
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -28,9 +29,13 @@ class CountersScenariosTest : TestCase() {
     @Inject
     lateinit var userRepository: UserRepository
 
+    @Inject
+    lateinit var database: AppDatabase
+
     @Before
     fun init() {
         hiltRule.inject()
+        database.clearAllTables()
     }
 
     @Test
