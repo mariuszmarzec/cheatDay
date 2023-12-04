@@ -5,9 +5,11 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.WeightApi
 import com.marzec.cheatday.api.request.PutWeightRequest
+import com.marzec.cheatday.api.request.UpdateWeightDto
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.extensions.toDateTime
+import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.stubs.stubWeightDto
 import com.marzec.cheatday.stubs.stubWeightResult
@@ -160,13 +162,14 @@ internal class WeightResultRepositoryTest {
     fun updateWeight() = test {
         coEvery {
             weightApi.update(
-                0,
-                stubWeightDto(value = 5f, date = "2021-06-07T00:00:00")
+                id = 0,
+                request = UpdateWeightDto(value = 5f, date = "2021-06-07T00:00:00")
             )
         } returns Unit
 
         val result = repository.updateWeight(
-            stubWeightResult(
+            id = 0,
+            weightResult = UpdateWeight(
                 value = 5f,
                 date = "2021-06-07T00:00:00".toDateTime()
             )

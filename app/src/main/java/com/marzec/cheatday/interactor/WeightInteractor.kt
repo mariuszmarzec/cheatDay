@@ -5,6 +5,7 @@ import com.marzec.cheatday.api.asContentFlow
 import com.marzec.cheatday.api.dataOrNull
 import com.marzec.cheatday.api.mapData
 import com.marzec.cheatday.extensions.incIf
+import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.WeightResultRepository
@@ -96,8 +97,8 @@ class WeightInteractor @Inject constructor(
         }
     }
 
-    suspend fun updateWeight(weight: WeightResult): Flow<Content<Unit>> =
-        weightResultRepository.updateWeight(weight)
+    suspend fun updateWeight(id: Long, weight: UpdateWeight): Flow<Content<Unit>> =
+        weightResultRepository.updateWeight(id, weight)
 
     suspend fun getWeight(id: Long): Flow<Content<WeightResult>> =
         weightResultRepository.getWeight(id)

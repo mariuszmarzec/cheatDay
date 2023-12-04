@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.api.toContentData
 import com.marzec.cheatday.core.test
+import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.WeightResultRepository
 import com.marzec.cheatday.stubs.stubWeightResult
@@ -11,6 +12,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
+import org.joda.time.DateTime
 
 import org.joda.time.DateTimeUtils
 import org.junit.jupiter.api.BeforeEach
@@ -36,7 +38,7 @@ class WeightInteractorTest {
                 stubWeightResult()
             )
         )
-        coEvery { weightResultRepository.updateWeight(any()) } returns flowOf(Content.Data(Unit))
+        coEvery { weightResultRepository.updateWeight(any(), any()) } returns flowOf(Content.Data(Unit))
 
         coEvery { daysInteractor.incrementCheatDays(any()) } returns Unit
 
@@ -181,13 +183,16 @@ class WeightInteractorTest {
 
     @Test
     fun `when updating weight, then weight result repository is called`() = test {
-        coEvery { weightResultRepository.updateWeight(stubWeightResult()) } returns flowOf(
+        val date = DateTime.now()
+        val updateWeight = UpdateWeight(value = 70f, date)
+        coEvery {
+            weightResultRepository.updateWeight(0, updateWeight) } returns flowOf(
             Content.Data(Unit)
         )
 
-        interactor.updateWeight(stubWeightResult())
+        interactor.updateWeight(0, updateWeight)
 
-        coVerify { weightResultRepository.updateWeight(stubWeightResult()) }
+        coVerify { weightResultRepository.updateWeight(0, updateWeight) }
     }
 
     @Test

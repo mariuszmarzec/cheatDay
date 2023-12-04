@@ -9,6 +9,7 @@ import com.marzec.cheatday.core.test
 import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.extensions.asFlow
 import com.marzec.cheatday.interactor.WeightInteractor
+import com.marzec.cheatday.stubs.stubUpdateWeight
 import com.marzec.cheatday.stubs.stubWeightResult
 import com.marzec.mvi.State
 import io.mockk.coEvery
@@ -167,31 +168,56 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_updateResult() = test {
-        coEvery { weightInteractor.updateWeight(stubWeightResult(id = 1)) } returns Content.Data(
-            Unit
-        ).asFlow()
-        val viewModel = viewModel(
-            defaultState = State.Data(defaultData.copy(weightResult = stubWeightResult(id = 1)))
+    fun save_updateResult() {
+        val data = defaultData.copy(
+            weightResult = stubWeightResult(id = 1),
+            weight = "100",
+            date = DateTime(1)
         )
-        val states = viewModel.test(this)
-
-        viewModel.save()
-
-        assertThat(states.values()).isEqualTo(
-            listOf(
-                State.Data(defaultData.copy(weightResult = stubWeightResult(id = 1))),
-                AddWeightSideEffect.SaveSuccess
+        test {
+            coEvery {
+                weightInteractor.updateWeight(
+                    id = 1, stubUpdateWeight(
+                        value = 100f,
+                        date = DateTime(1)
+                    )
+                )
+            } returns Content.Data(
+                Unit
+            ).asFlow()
+            val viewModel = viewModel(
+                defaultState = State.Data(data)
             )
-        )
+            val states = viewModel.test(this)
+
+            viewModel.save()
+
+            assertThat(states.values()).isEqualTo(
+                listOf(
+                    State.Data(data),
+                    AddWeightSideEffect.SaveSuccess
+                )
+            )
+        }
     }
 
     @Test
     fun save_updateResult_error() = test {
-        coEvery { weightInteractor.updateWeight(stubWeightResult(id = 1)) } returns Content.Error<Unit>(
+        val data = defaultData.copy(
+            weightResult = stubWeightResult(id = 1),
+            weight = "100",
+            date = DateTime(1)
+        )
+        coEvery {
+            weightInteractor.updateWeight(
+                id = 1, stubUpdateWeight(
+                    value = 100f,
+                    date = DateTime(1)
+                )
+            )
+        } returns Content.Error<Unit>(
             Exception()
         ).asFlow()
-        val data = defaultData.copy(weightResult = stubWeightResult(id = 1))
         val viewModel = viewModel(
             defaultState = State.Data(data)
         )

@@ -1,6 +1,7 @@
 package com.marzec.cheatday.api
 
 import com.marzec.cheatday.api.request.PutWeightRequest
+import com.marzec.cheatday.api.request.UpdateWeightDto
 import com.marzec.cheatday.api.response.WeightDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -11,13 +12,13 @@ import retrofit2.http.Path
 
 interface WeightApi {
 
-    @POST("weight")
+    @POST("weights")
     suspend fun put(@Body request: PutWeightRequest): WeightDto
 
-    @PATCH("weight/{id}")
-    suspend fun update(@Path("id") id: Long, @Body request: WeightDto)
+    @PATCH("weights/{id}")
+    suspend fun update(@Path("id") id: Long, @Body request: UpdateWeightDto)
 
-    @DELETE("weight/{id}")
+    @DELETE("weights/{id}")
     suspend fun remove(@Path("id") id: Long)
 
     @GET("weights")

@@ -7,9 +7,11 @@ import com.marzec.cheatday.api.asContent
 import com.marzec.cheatday.api.asContentFlow
 import com.marzec.cheatday.api.mapData
 import com.marzec.cheatday.api.request.PutWeightRequest
+import com.marzec.cheatday.api.request.UpdateWeightDto
 import com.marzec.cheatday.api.response.toDomain
 import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.db.model.db.toDomain
+import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.model.domain.toDb
 import com.marzec.cheatday.model.domain.toDto
@@ -58,9 +60,9 @@ class WeightResultRepository @Inject constructor(
             ).toDomain()
         }.flowOn(dispatcher)
 
-    suspend fun updateWeight(weightResult: WeightResult): Flow<Content<Unit>> =
+    suspend fun updateWeight(id: Long, weightResult: UpdateWeight): Flow<Content<Unit>> =
         asContentWithWeightsUpdate {
-            weightApi.update(weightResult.id, weightResult.toDto())
+            weightApi.update(id, weightResult.toDto())
         }.flowOn(dispatcher)
 
     suspend fun getWeight(id: Long): Flow<Content<WeightResult>> = asContentFlow {

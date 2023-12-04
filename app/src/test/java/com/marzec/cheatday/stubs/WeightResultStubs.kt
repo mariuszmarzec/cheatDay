@@ -3,7 +3,9 @@ package com.marzec.cheatday.stubs
 import com.marzec.cheatday.api.Api.DATE_FORMATTER
 import com.marzec.cheatday.api.response.WeightDto
 import com.marzec.cheatday.db.model.db.WeightResultEntity
+import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.model.domain.WeightResult
+import io.mockk.InternalPlatformDsl.toStr
 import org.joda.time.DateTime
 
 fun stubWeightDto(
@@ -22,6 +24,14 @@ fun stubWeightResult(
     date: DateTime = DateTime(0)
 ) = WeightResult(
     id = id,
+    value = value,
+    date = date
+)
+
+fun stubUpdateWeight(
+    value: Float = 0f,
+    date: DateTime = DateTime(0)
+) = UpdateWeight(
     value = value,
     date = date
 )

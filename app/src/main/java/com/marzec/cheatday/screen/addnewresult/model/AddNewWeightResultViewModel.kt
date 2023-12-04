@@ -2,7 +2,9 @@ package com.marzec.cheatday.screen.addnewresult.model
 
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.interactor.WeightInteractor
+import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.model.domain.WeightResult
+import com.marzec.cheatday.model.domain.toUpdate
 import com.marzec.mvi.State
 import com.marzec.mvi.StoreViewModel
 import com.marzec.mvi.reduceContentNoChanges
@@ -10,6 +12,7 @@ import com.marzec.mvi.reduceData
 import com.marzec.mvi.reduceDataWithContent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 import org.joda.time.DateTime
 
 @HiltViewModel
@@ -56,14 +59,16 @@ class AddNewWeightResultViewModel @Inject constructor(
     fun save() = intent<Content<Unit>> {
         onTrigger {
             state.ifDataAvailable {
-                val newWeight = weightResult.copy(
-                    value = weight.toFloat(),
-                    date = date
-                )
-                if (newWeight.id != 0L) {
-                    weightInteractor.updateWeight(newWeight)
+                if (weightResult.id != 0L) {
+                    weightInteractor.updateWeight(
+                        weightResult.id,
+                        UpdateWeight(
+                            value = (weight.toFloatOrNull() ?: 0f).toUpdate(weightResult.value),
+                            date = date.toUpdate(weightResult.date)
+                        )
+                    )
                 } else {
-                    weightInteractor.addWeight(newWeight)
+                    addNewWeight()
                 }
             }
         }
@@ -78,6 +83,14 @@ class AddNewWeightResultViewModel @Inject constructor(
             }
         }
     }
+
+    private suspend fun AddWeightData.addNewWeight(): Flow<Content<Unit>> =
+        weightInteractor.addWeight(
+            weightResult.copy(
+                value = weight.toFloat(),
+                date = date
+            )
+        )
 
     fun setNewWeight(newWeight: String) = intent<Unit> {
         reducer {
