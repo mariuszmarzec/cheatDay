@@ -53,6 +53,9 @@ fun logoutResponse() = MockResponse().setResponseCode(200)
 fun emptyWeightsListResponse() = okStatusResponse()
     .setBody(responseJson("empty_weights.json"))
 
+fun oneWeightResponse() = okStatusResponse()
+    .setBody(responseJson("one_weight.json"))
+
 fun oneWeightsListResponse() = okStatusResponse()
     .setBody(responseJson("one_weights.json"))
 

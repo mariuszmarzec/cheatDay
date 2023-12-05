@@ -32,12 +32,16 @@ class MockServerModule {
 
 object MockWebDispatcher : Dispatcher() {
 
-    private val map = hashMapOf<String, MockResponse>()
+    private val responses = mutableListOf<Pair<String, MockResponse>>()
 
     fun setResponse(path: String, response: MockResponse) {
-        map[path] = response
+        responses.add(path to response)
     }
 
-    override fun dispatch(request: RecordedRequest): MockResponse =
-        map.getValue(request.path.orEmpty())
+    override fun dispatch(request: RecordedRequest): MockResponse {
+        val pair = responses.first { request.path.orEmpty() == it.first }
+        responses.remove(pair)
+        return pair.second
+    }
+
 }

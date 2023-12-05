@@ -35,7 +35,7 @@ object Dependency {
     val nav_version = "2.7.4"
     val chart_version = "v3.1.0"
     val junit5_plugin_version = "1.10.0.0"
-    val android_gradle_plugin = "8.1.2"
+    val android_gradle_plugin = "8.1.3"
     val datastore_version = "1.0.0"
     val google_service_version = "4.3.4"
     val hilt_version = "2.48.1"

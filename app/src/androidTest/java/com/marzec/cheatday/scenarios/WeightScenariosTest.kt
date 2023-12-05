@@ -8,6 +8,7 @@ import com.marzec.cheatday.common.addWeightsResponse
 import com.marzec.cheatday.common.currentUser
 import com.marzec.cheatday.common.emptyWeightsListResponse
 import com.marzec.cheatday.common.fewWeightsListResponse
+import com.marzec.cheatday.common.oneWeightResponse
 import com.marzec.cheatday.common.oneWeightsListResponse
 import com.marzec.cheatday.common.startApplication
 import com.marzec.cheatday.common.updateWeightResponse
@@ -93,7 +94,7 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user clicks add button") {
-                MockWebDispatcher.setResponse("/weight", addWeightsResponse())
+                MockWebDispatcher.setResponse("/weights", addWeightsResponse())
                 MockWebDispatcher.setResponse("/weights", oneWeightsListResponse())
                 AddNewWeightsScreen.button.click()
             }
@@ -128,6 +129,8 @@ class WeightScenariosTest : TestCase() {
 
             step("And user has weights results") {
                 MockWebDispatcher.setResponse("/weights", fewWeightsListResponse())
+                MockWebDispatcher.setResponse("/weights", fewWeightsListResponse())
+                MockWebDispatcher.setResponse("/weights", fewWeightsListResponse())
             }
 
             step("Then User launch application") {
@@ -139,7 +142,6 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user clicks weights tab") {
-                MockWebDispatcher.setResponse("/weights", oneWeightsListResponse())
                 HomeScreen.weightTab.click()
             }
 
@@ -149,6 +151,7 @@ class WeightScenariosTest : TestCase() {
 
             step("And user sees weight results") {
                 WeightsScreen.weights {
+                    MockWebDispatcher.setResponse("/weights", fewWeightsListResponse())
                     childAt<Item>(position = 3) {
                         value.hasText("84.5 kg")
                     }
@@ -173,7 +176,7 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user clicks update button") {
-                MockWebDispatcher.setResponse("/weight/1", updateWeightResponse())
+                MockWebDispatcher.setResponse("/weights/0", updateWeightResponse())
                 MockWebDispatcher.setResponse("/weights", updatedFewWeightsListResponse())
                 UpdateWeightsScreen.button.click()
             }
