@@ -10,7 +10,7 @@ data class AddWeightData(
 ) {
     companion object {
         val INITIAL = AddWeightData(
-            weightResult = WeightResult(0, 0.0f, DateTime.now()),
+            weightResult = WeightResult(-1, 0.0f, DateTime.now()),
             date = DateTime.now(),
             weight = "0.0"
         )

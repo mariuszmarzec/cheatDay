@@ -1,5 +1,6 @@
 package com.marzec.cheatday.screen.addnewresult.model
 
+import android.util.Log
 import com.marzec.cheatday.api.Content
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.model.domain.UpdateWeight
@@ -59,7 +60,7 @@ class AddNewWeightResultViewModel @Inject constructor(
     fun save() = intent<Content<Unit>> {
         onTrigger {
             state.ifDataAvailable {
-                if (weightResult.id != 0L) {
+                if (weightResult.id != -1L) {
                     weightInteractor.updateWeight(
                         weightResult.id,
                         UpdateWeight(

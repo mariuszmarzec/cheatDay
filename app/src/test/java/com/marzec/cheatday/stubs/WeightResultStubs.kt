@@ -9,7 +9,7 @@ import io.mockk.InternalPlatformDsl.toStr
 import org.joda.time.DateTime
 
 fun stubWeightDto(
-    id: Int = 0,
+    id: Int = -1,
     value: Float = 0f,
     date: String = DateTime(0).toString(DATE_FORMATTER)
 ) = WeightDto(
@@ -19,7 +19,7 @@ fun stubWeightDto(
 )
 
 fun stubWeightResult(
-    id: Long = 0,
+    id: Long = -1,
     value: Float = 0f,
     date: DateTime = DateTime(0)
 ) = WeightResult(
@@ -37,7 +37,7 @@ fun stubUpdateWeight(
 )
 
 fun stubWeightResultEntity(
-    id: Long = 0,
+    id: Long = -1,
     value: Float = 0f,
     date: Long = 0,
     userId: Long = 0

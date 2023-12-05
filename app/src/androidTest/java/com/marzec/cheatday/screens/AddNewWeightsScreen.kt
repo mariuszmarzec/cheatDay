@@ -4,6 +4,7 @@ import com.kaspersky.kaspresso.screens.KScreen
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.typeAndCloseKeyboard
 import com.marzec.cheatday.screen.home.MainActivity
+import io.github.kakaocup.kakao.common.views.KView
 import io.github.kakaocup.kakao.edit.KEditText
 import io.github.kakaocup.kakao.text.KButton
 
@@ -17,6 +18,10 @@ object AddNewWeightsScreen : KScreen<AddNewWeightsScreen>() {
         withId(R.id.weight_edit_text)
     }
 
+    val progressBar = KView {
+        withId(R.id.progress_bar)
+    }
+
     val button = KButton {
         withId(R.id.button)
     }
@@ -24,6 +29,7 @@ object AddNewWeightsScreen : KScreen<AddNewWeightsScreen>() {
     fun isDisplayed() {
         weightInput.isDisplayed()
         button.isDisplayed()
+        progressBar.isNotDisplayed()
     }
 
     fun typeWeight(weight: String) = typeAndCloseKeyboard(weightInput, weight)

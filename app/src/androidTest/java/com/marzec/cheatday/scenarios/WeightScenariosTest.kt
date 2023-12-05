@@ -7,6 +7,7 @@ import com.marzec.cheatday.R
 import com.marzec.cheatday.common.addWeightsResponse
 import com.marzec.cheatday.common.currentUser
 import com.marzec.cheatday.common.emptyWeightsListResponse
+import com.marzec.cheatday.common.updatedOneWeightsListResponse
 import com.marzec.cheatday.common.fewWeightsListResponse
 import com.marzec.cheatday.common.oneWeightResponse
 import com.marzec.cheatday.common.oneWeightsListResponse
@@ -128,8 +129,11 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user has weights results") {
+                // min weight
                 MockWebDispatcher.setResponse("/weights", fewWeightsListResponse())
+                // weights
                 MockWebDispatcher.setResponse("/weights", fewWeightsListResponse())
+                // average weight
                 MockWebDispatcher.setResponse("/weights", fewWeightsListResponse())
             }
 
@@ -151,7 +155,7 @@ class WeightScenariosTest : TestCase() {
 
             step("And user sees weight results") {
                 WeightsScreen.weights {
-                    MockWebDispatcher.setResponse("/weights", fewWeightsListResponse())
+                    MockWebDispatcher.setResponse("/weights", oneWeightsListResponse())
                     childAt<Item>(position = 3) {
                         value.hasText("84.5 kg")
                     }
@@ -177,7 +181,12 @@ class WeightScenariosTest : TestCase() {
 
             step("And user clicks update button") {
                 MockWebDispatcher.setResponse("/weights/0", updateWeightResponse())
-                MockWebDispatcher.setResponse("/weights", updatedFewWeightsListResponse())
+                // min weight
+                MockWebDispatcher.setResponse("/weights", updatedOneWeightsListResponse())
+                // weights
+                MockWebDispatcher.setResponse("/weights", updatedOneWeightsListResponse())
+                // average weight
+                MockWebDispatcher.setResponse("/weights", updatedOneWeightsListResponse())
                 UpdateWeightsScreen.button.click()
             }
 
