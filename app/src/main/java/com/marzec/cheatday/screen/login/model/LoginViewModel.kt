@@ -34,7 +34,7 @@ class LoginViewModel @Inject constructor(
         }
 
         emitSideEffect {
-            (resultNonNull() as? Content.Data)?.let { LoginSideEffects.OnLoginSuccessful }
+            (resultNonNull() as? Content.Data<*>)?.let { LoginSideEffects.OnLoginSuccessful }
         }
     }
 

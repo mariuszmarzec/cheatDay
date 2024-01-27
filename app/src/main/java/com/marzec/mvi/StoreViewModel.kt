@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.runningReduce
 import kotlinx.coroutines.launch
 
-
 open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewModel() {
 
     protected val sideEffectsInternal = MutableSharedFlow<SideEffect>()
@@ -39,7 +38,7 @@ open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewMo
     }
 
     fun <Result : Any> IntentBuilder<State, Result>.emitSideEffect(
-        func: suspend IntentBuilder.IntentContext<State, Result>.() -> SideEffect?
+        func: suspend IntentContext<State, Result>.() -> SideEffect?
     ): IntentBuilder<State, Result> {
         this.sideEffect {
             func()?.let {

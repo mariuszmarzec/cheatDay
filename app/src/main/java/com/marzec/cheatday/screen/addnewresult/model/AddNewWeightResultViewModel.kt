@@ -78,9 +78,9 @@ class AddNewWeightResultViewModel @Inject constructor(
 
         emitSideEffect {
             when (resultNonNull()) {
-                is Content.Data -> AddWeightSideEffect.SaveSuccess
-                is Content.Error -> AddWeightSideEffect.ShowError
-                is Content.Loading -> null
+                is Content.Data<*> -> AddWeightSideEffect.SaveSuccess
+                is Content.Error<*> -> AddWeightSideEffect.ShowError
+                is Content.Loading<*> -> null
             }
         }
     }
