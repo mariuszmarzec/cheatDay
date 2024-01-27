@@ -39,7 +39,7 @@ class AddNewWeightResultViewModel @Inject constructor(
                         date = weightResult.date
                     )
                 }
-            } ?: state
+            } ?: State.Data(AddWeightData.INITIAL)
         }
     }
 
