@@ -34,9 +34,9 @@ class AddNewWeightResultFragment : BaseFragment(R.layout.fragment_add_new_weight
 
         viewModel.load(args.weightId)
 
-        viewModel.state.observe(renderer::render)
+        viewModel.state.observeOnResume(renderer::render)
 
-        viewModel.sideEffects.observe { sideEffect ->
+        viewModel.sideEffects.observeOnResume { sideEffect ->
             when (sideEffect) {
                 AddWeightSideEffect.SaveSuccess -> findNavController().popBackStack()
                 is AddWeightSideEffect.ShowDatePicker -> showPicker(sideEffect.date)

@@ -37,9 +37,9 @@ class ChartFragment : BaseFragment(R.layout.fragment_chart) {
         }
         chartRenderer.init(view)
 
-        viewModel.state.observe(chartRenderer::render)
+        viewModel.state.observeOnResume(chartRenderer::render)
 
-        viewModel.sideEffects.observe { sideEffect ->
+        viewModel.sideEffects.observeOnResume { sideEffect ->
             when (sideEffect) {
                 ChartsSideEffect.ShowErrorDialog -> {
                     requireContext().showErrorDialog()

@@ -12,5 +12,5 @@ import dagger.hilt.android.components.ViewModelComponent
 class AddNewWeightResultViewModelModule {
 
     @Provides
-    fun provideDefaultState(): State<AddWeightData> = State.Data(AddWeightData.INITIAL)
+    fun provideDefaultState(): State<AddWeightData> = State.Loading(AddWeightData.INITIAL)
 }

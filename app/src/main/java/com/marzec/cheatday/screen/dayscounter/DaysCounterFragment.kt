@@ -38,7 +38,7 @@ class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {
             viewModel.onWorkoutIncreaseClick()
         }
 
-        viewModel.state.observe { state ->
+        viewModel.state.observeOnResume { state ->
             renderer.render(state)
         }
 

@@ -51,9 +51,9 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        viewModel.state.observe(renderer::render)
+        viewModel.state.observeOnResume(renderer::render)
 
-        viewModel.sideEffects.observe { effect ->
+        viewModel.sideEffects.observeOnResume { effect ->
             when (effect) {
                 WeightsSideEffects.GoToAddResultScreen -> {
                     findNavController().navigate(
@@ -136,4 +136,3 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
         }
     }
 }
-
