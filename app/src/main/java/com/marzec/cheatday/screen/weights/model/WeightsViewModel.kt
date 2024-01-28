@@ -25,7 +25,7 @@ class WeightsViewModel @Inject constructor(
     defaultState: State<WeightsData>
 ) : StoreViewModel<State<WeightsData>, WeightsSideEffects>(defaultState) {
 
-    fun load() = intent<Content<WeightsData>> {
+    fun load() = intent<Content<WeightsData>>("load") {
         onTrigger {
             loadData()
         }

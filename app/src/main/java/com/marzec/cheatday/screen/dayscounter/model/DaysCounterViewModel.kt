@@ -19,7 +19,7 @@ class DaysCounterViewModel @Inject constructor(
     defaultState: DaysCounterState
 ) : StoreViewModel<DaysCounterState, Unit>(defaultState) {
 
-    fun loading() = intent<Pair<DaysGroup, ClickedStates>> {
+    fun loading() = intent<Pair<DaysGroup, ClickedStates>>() {
         onTrigger {
             val days = daysInteractor.observeDays()
             val clickedStates = daysInteractor.observeClickedStates()
