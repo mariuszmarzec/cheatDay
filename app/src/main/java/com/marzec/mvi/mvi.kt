@@ -2,12 +2,21 @@
 
 package com.marzec.mvi
 
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.random.Random
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.withContext
 
 @ExperimentalCoroutinesApi
 open class Store3<State : Any>(
@@ -116,10 +125,8 @@ open class Store3<State : Any>(
         intent: Intent3<State, Result>,
         jobId: String
     ): Job = scope.launch(start = CoroutineStart.LAZY) {
+        val flow = intent.onTrigger(_state.value) ?: flowOf(null)
 
-        val flow = withContext(stateThread) {
-            (intent.onTrigger(_state.value) ?: flowOf(null))
-        }
         flow.collect { result ->
             processTriggeredValue(intent, result, jobId)
         }
@@ -130,9 +137,8 @@ open class Store3<State : Any>(
         result: Result?,
         jobId: String
     ) {
-        val shouldCancel = withContext(stateThread) {
-            intent.cancelTrigger?.invoke(result, _state.value)
-        } ?: false
+        val shouldCancel = intent.cancelTrigger?.invoke(result, _state.value) ?: false
+
         if (shouldCancel) {
             runCancellationAndSideEffectIfNeeded(result, intent, jobId)
         } else {
@@ -140,8 +146,8 @@ open class Store3<State : Any>(
                 val oldStateValue = _state.value
                 _state.update { intent.reducer(result, oldStateValue) }
                 onNewState(_state.value)
-                intent.sideEffect?.invoke(result, _state.value)
             }
+            intent.sideEffect?.invoke(result, _state.value)
         }
     }
 
