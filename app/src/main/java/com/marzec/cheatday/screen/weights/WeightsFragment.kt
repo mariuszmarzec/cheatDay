@@ -17,13 +17,11 @@ import com.marzec.cheatday.extensions.DialogOptions
 import com.marzec.cheatday.extensions.showAnswerDialog
 import com.marzec.cheatday.extensions.showErrorDialog
 import com.marzec.cheatday.extensions.showInputDialog
-import com.marzec.cheatday.screen.weights.model.WeightsData
 import com.marzec.cheatday.screen.weights.model.WeightsSideEffects
 import com.marzec.cheatday.screen.weights.model.WeightsViewModel
-import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
 class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
@@ -51,7 +49,11 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        viewModel.state.observeOnResume(renderer::render)
+        with(renderer) {
+            viewModel.state
+                .mapToUi()
+                .observeOnResume(::render)
+        }
 
         viewModel.sideEffects.observeOnResume { effect ->
             when (effect) {

@@ -8,8 +8,6 @@ import com.marzec.adapterdelegate.adapter.DelegateAdapter
 import com.marzec.adapterdelegate.adapter.DelegateManager
 import com.marzec.adapterdelegate.model.ListItem
 import com.marzec.cheatday.R
-import com.marzec.cheatday.extensions.gone
-import com.marzec.cheatday.extensions.visible
 import com.marzec.cheatday.screen.weights.model.WeightsData
 import com.marzec.cheatday.screen.weights.model.WeightsMapper
 import com.marzec.cheatday.view.delegates.errorscreen.ErrorScreen
@@ -21,9 +19,15 @@ import com.marzec.cheatday.view.delegates.withloadingscreen.WithLoadingScreen
 import com.marzec.cheatday.view.delegates.withloadingscreen.WithLoadingScreenDelegate
 import com.marzec.mvi.State
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 class WeightsRenderer @Inject constructor(
     private val mapper: WeightsMapper,
+    private val dispatcher: CoroutineDispatcher
 ) {
     var onClickListener: (String) -> Unit = { }
     var onLongClickListener: (String) -> Unit = { }
@@ -62,18 +66,23 @@ class WeightsRenderer @Inject constructor(
         recyclerView.layoutManager = LinearLayoutManager(view.context)
     }
 
-    fun render(state: State<WeightsData>) = when (state) {
-        is State.Data -> renderData(state)
-        is State.Error -> renderError(state)
-        is State.Loading -> renderLoading(state)
+    fun Flow<State<WeightsData>>.mapToUi() = map { state ->
+        when (state) {
+            is State.Data -> renderData(state)
+            is State.Error -> renderError(state)
+            is State.Loading -> renderLoading(state)
+        }
+    }.flowOn(dispatcher)
+
+    fun render(uiItems: List<ListItem>) {
+        adapter.items = uiItems
     }
 
-    private fun renderData(state: State.Data<WeightsData>) {
+    private suspend fun renderData(state: State.Data<WeightsData>): List<WithLoadingScreen> =
         render(state.data)
-    }
 
-    private fun renderError(state: State.Error<WeightsData>) {
-        adapter.items = listOf(errorScreen(state))
+    private fun renderError(state: State.Error<WeightsData>): List<ListItem> {
+        return listOf(errorScreen(state))
     }
 
     private fun errorScreen(state: State.Error<WeightsData>): ListItem = ErrorScreen(
@@ -84,32 +93,31 @@ class WeightsRenderer @Inject constructor(
         onButtonClickListener = { onTryAgainButtonClickListener() }
     }
 
-    private fun render(data: WeightsData) = with(data) {
-        adapter.items = listOf(
-            WithLoadingScreen(
-                id = "ITEMS",
-                items = mapData(),
-                showOverflowLoading = false
-            )
+    private suspend fun render(data: WeightsData): List<WithLoadingScreen> = listOf(
+        WithLoadingScreen(
+            id = "ITEMS",
+            items = data.mapData(),
+            showOverflowLoading = false
         )
-    }
+    )
 
-    private fun renderLoading(state: State.Loading<WeightsData>) {
+    private suspend fun renderLoading(state: State.Loading<WeightsData>): List<ListItem> {
         val data = state.data
-        if (data != null) {
-            adapter.items = listOf(
+        return if (data != null) {
+            val items = data.mapData()
+            listOf(
                 WithLoadingScreen(
                     id = "ITEMS",
-                    items = data.mapData(),
+                    items = items,
                     showOverflowLoading = true
                 )
             )
         } else {
-            adapter.items = listOf(ProgressScreen("LOADING"))
+            listOf(ProgressScreen("LOADING"))
         }
     }
 
-    private fun WeightsData.mapData() = mapper.mapWeights(
+    private suspend fun WeightsData.mapData() = mapper.mapWeights(
         minWeight,
         weekAverage,
         maxPossibleWeight,

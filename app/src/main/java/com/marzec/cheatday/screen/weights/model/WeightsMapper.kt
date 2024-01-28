@@ -8,11 +8,14 @@ import com.marzec.cheatday.view.delegates.labeledrowitem.LabeledRow
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 class WeightsMapper @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val dispatcher: CoroutineDispatcher
 ) {
-    fun mapWeights(
+    suspend fun mapWeights(
         minWeight: WeightResult?,
         weekAverage: Float?,
         maxPossibleValue: Float,
@@ -20,12 +23,14 @@ class WeightsMapper @Inject constructor(
         weights: List<WeightResult>,
         onClickListener: (String) -> Unit,
         onLongClickListener: (String) -> Unit
-    ): List<ListItem> = buildList {
-        minWeight?.let { add(minWeightItem(it)) }
-        weekAverage?.let { add(stubWeekAverageWeightItem(it)) }
-        add(maxPossibleWeightItem(maxPossibleValue, onClickListener))
-        add(targetWeightItem(targetWeight, onClickListener))
-        addAll(weightsItems(weights, onClickListener, onLongClickListener))
+    ): List<ListItem> = withContext(dispatcher) {
+        buildList {
+            minWeight?.let { add(minWeightItem(it)) }
+            weekAverage?.let { add(stubWeekAverageWeightItem(it)) }
+            add(maxPossibleWeightItem(maxPossibleValue, onClickListener))
+            add(targetWeightItem(targetWeight, onClickListener))
+            addAll(weightsItems(weights, onClickListener, onLongClickListener))
+        }
     }
 
     private fun minWeightItem(minWeight: WeightResult): LabeledRow {

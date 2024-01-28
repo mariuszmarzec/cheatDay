@@ -7,6 +7,7 @@ import kotlin.random.Random
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -125,10 +126,13 @@ open class Store3<State : Any>(
         intent: Intent3<State, Result>,
         jobId: String
     ): Job = scope.launch(start = CoroutineStart.LAZY) {
+        withContext(Dispatchers.IO) {
+
         val flow = intent.onTrigger(_state.value) ?: flowOf(null)
 
         flow.collect { result ->
             processTriggeredValue(intent, result, jobId)
+        }
         }
     }
 
