@@ -17,9 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.Dispatchers
 
 @HiltViewModel
 class WeightsViewModel @Inject constructor(
@@ -118,5 +116,5 @@ class WeightsViewModel @Inject constructor(
         weightInteractor.observeWeights()
     ) { minWeight, weekAverage, maxPossibleWeight, targetWeight, weights ->
         WeightsData(minWeight, weekAverage, maxPossibleWeight, targetWeight, weights)
-    }.flowOn(Dispatchers.IO)
+    }
 }

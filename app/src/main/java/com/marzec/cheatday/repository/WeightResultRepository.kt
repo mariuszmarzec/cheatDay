@@ -76,9 +76,9 @@ class WeightResultRepository @Inject constructor(
 
     private suspend fun cachedWeight(
         networkCall: suspend () -> Content<List<WeightResult>>,
-    ): Flow<Content<List<WeightResult>>> {
+    ): Flow<Content<List<WeightResult>>> = withContext(dispatcher) {
         val userId = userRepository.getCurrentUser().id
-        return cacheCall(
+        cacheCall(
             networkCall = networkCall,
             cacheReadFlow = {
                 weightDao.observeWeights(userId)
