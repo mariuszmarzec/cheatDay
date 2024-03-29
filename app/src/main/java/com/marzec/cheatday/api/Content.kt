@@ -34,11 +34,12 @@ fun <T> T.toContentFlow(): Flow<Content<T>> = flowOf(Content.Data(this))
 fun <T> asContentFlow(request: suspend () -> T): Flow<Content<T>> {
     return flow {
         emit(Content.Loading())
-        try {
-            emit(Content.Data(request()))
+        val content = try {
+            Content.Data(request())
         } catch (expected: Exception) {
-            emit(Content.Error<T>(expected))
+            Content.Error(expected)
         }
+        emit(content)
     }
 }
 
