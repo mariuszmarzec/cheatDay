@@ -16,6 +16,7 @@ import com.marzec.mvi.reduceDataWithContent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
@@ -116,5 +117,5 @@ class WeightsViewModel @Inject constructor(
         weightInteractor.observeWeights()
     ) { minWeight, weekAverage, maxPossibleWeight, targetWeight, weights ->
         WeightsData(minWeight, weekAverage, maxPossibleWeight, targetWeight, weights)
-    }
+    }.distinctUntilChanged()
 }
