@@ -198,7 +198,7 @@ dependencies {
 
     // android views
     implementation("androidx.constraintlayout:constraintlayout:${Dependency.constraint_layout_version}")
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
 
     // http client
     implementation("com.squareup.retrofit2:retrofit:${Dependency.retrofit_version}")
