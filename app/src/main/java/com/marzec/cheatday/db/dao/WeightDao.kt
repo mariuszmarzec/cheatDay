@@ -28,8 +28,14 @@ interface WeightDao : BaseDao<WeightResultEntity> {
     @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE id = :id")
     suspend fun getWeight(id: Long): WeightResultEntity?
 
+    @Query("SELECT * FROM ${WeightResultEntity.NAME} WHERE id = :id")
+    fun observeWeight(id: Long): Flow<WeightResultEntity>
+
     @Query("DELETE FROM ${WeightResultEntity.NAME}")
     suspend fun removeAll()
+
+    @Query("DELETE FROM ${WeightResultEntity.NAME} WHERE id = :id")
+    suspend fun removeById(id: Long)
 
     @Insert
     suspend fun insertAll(weights: List<WeightResultEntity>)
