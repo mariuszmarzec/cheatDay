@@ -2,6 +2,8 @@ package com.marzec.cheatday.di
 
 import android.content.Context
 import com.google.gson.Gson
+import com.marzec.cache.Cache
+import com.marzec.cache.MemoryCache
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.dao.DayDao
 import com.marzec.cheatday.db.dao.UserDao
@@ -14,9 +16,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import javax.inject.Named
+import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.newSingleThreadContext
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -36,6 +44,10 @@ interface AppModule {
         fun provideCoroutineDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
         @Provides
+        @Named(UPDATER_COROUTINE_SCOPE)
+        fun provideUpdaterCoroutineScope() = CoroutineScope(newSingleThreadContext("updater"))
+
+        @Provides
         @Singleton
         fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase =
             AppDatabase.getInstance(context)
@@ -51,5 +63,11 @@ interface AppModule {
         @Provides
         @Singleton
         fun provideDayDao(database: AppDatabase): DayDao = database.getDayDao()
+
+        @Provides
+        @Singleton
+        fun provideMemoryCache() : Cache = MemoryCache()
+
+        const val UPDATER_COROUTINE_SCOPE = "UPDATER_COROUTINE_SCOPE"
     }
 }

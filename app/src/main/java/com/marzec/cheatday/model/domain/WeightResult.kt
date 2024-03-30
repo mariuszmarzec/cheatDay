@@ -1,6 +1,7 @@
 package com.marzec.cheatday.model.domain
 
 import com.marzec.cheatday.api.Api
+import com.marzec.cheatday.api.request.PutWeightRequest
 import com.marzec.cheatday.api.response.WeightDto
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 import org.joda.time.DateTime
@@ -21,3 +22,5 @@ fun WeightResult.toDb(userId: Long) = WeightResultEntity(
 )
 
 fun WeightResult.toDto(): WeightDto = WeightDto(id.toInt(), value, date.toString(Api.DATE_FORMAT))
+
+fun WeightResult.toCreateDto(): PutWeightRequest = PutWeightRequest(value, date.toString(Api.DATE_FORMAT))

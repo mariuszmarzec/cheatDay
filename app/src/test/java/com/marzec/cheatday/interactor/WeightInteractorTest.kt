@@ -1,13 +1,13 @@
 package com.marzec.cheatday.interactor
 
 import com.google.common.truth.Truth.assertThat
-import com.marzec.cheatday.api.Content
-import com.marzec.cheatday.api.toContentData
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.WeightResultRepository
 import com.marzec.cheatday.stubs.stubWeightResult
+import com.marzec.content.Content
+import com.marzec.content.toContentData
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

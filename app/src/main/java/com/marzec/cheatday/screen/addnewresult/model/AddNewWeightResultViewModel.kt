@@ -1,6 +1,6 @@
 package com.marzec.cheatday.screen.addnewresult.model
 
-import com.marzec.cheatday.api.Content
+import com.marzec.content.Content
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.model.domain.WeightResult

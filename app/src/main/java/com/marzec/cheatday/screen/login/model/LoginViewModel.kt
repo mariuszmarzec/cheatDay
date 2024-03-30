@@ -1,6 +1,6 @@
 package com.marzec.cheatday.screen.login.model
 
-import com.marzec.cheatday.api.Content
+import com.marzec.content.Content
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.LoginRepository
 import com.marzec.mvi.State

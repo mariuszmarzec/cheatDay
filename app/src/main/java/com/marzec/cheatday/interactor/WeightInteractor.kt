@@ -1,14 +1,14 @@
 package com.marzec.cheatday.interactor
 
-import com.marzec.cheatday.api.Content
-import com.marzec.cheatday.api.asContentFlow
-import com.marzec.cheatday.api.dataOrNull
-import com.marzec.cheatday.api.mapData
 import com.marzec.cheatday.extensions.incIf
 import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.repository.WeightResultRepository
+import com.marzec.content.Content
+import com.marzec.content.asContentFlow
+import com.marzec.content.dataOrNull
+import com.marzec.content.mapData
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

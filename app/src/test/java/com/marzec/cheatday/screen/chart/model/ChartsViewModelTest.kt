@@ -3,7 +3,7 @@ package com.marzec.cheatday.screen.chart.model
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestUnconfinedCoroutineExecutorExtension
-import com.marzec.cheatday.api.Content
+import com.marzec.content.Content
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.interactor.WeightInteractor

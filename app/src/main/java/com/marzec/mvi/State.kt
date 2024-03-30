@@ -1,6 +1,6 @@
 package com.marzec.mvi
 
-import com.marzec.cheatday.api.Content
+import com.marzec.content.Content
 import com.marzec.cheatday.extensions.asInstance
 
 

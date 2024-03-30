@@ -1,4 +1,4 @@
-package com.marzec.cheatday.api
+package com.marzec.content
 
 import android.util.Log
 import com.marzec.cheatday.extensions.asInstance
@@ -26,6 +26,9 @@ suspend fun <T> asContent(request: suspend () -> T): Content<T> {
         Content.Error(expected)
     }
 }
+
+suspend fun <T> Content<T>.ifDataSuspend(action: suspend Content.Data<T>.() -> Unit) =
+    (this as? Content.Data)?.action()
 
 fun <T> T.toContentData(): Content<T> = Content.Data(this)
 

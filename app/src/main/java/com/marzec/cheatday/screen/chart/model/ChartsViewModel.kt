@@ -1,8 +1,8 @@
 package com.marzec.cheatday.screen.chart.model
 
-import com.marzec.cheatday.api.Content
-import com.marzec.cheatday.api.asErrorAndReturn
-import com.marzec.cheatday.api.combineContentsFlows
+import com.marzec.content.Content
+import com.marzec.content.asErrorAndReturn
+import com.marzec.content.combineContentsFlows
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.mvi.State

@@ -16,7 +16,7 @@ interface WeightApi {
     suspend fun put(@Body request: PutWeightRequest): WeightDto
 
     @PATCH("weights/{id}")
-    suspend fun update(@Path("id") id: Long, @Body request: UpdateWeightDto)
+    suspend fun update(@Path("id") id: Long, @Body request: UpdateWeightDto): WeightDto
 
     @DELETE("weights/{id}")
     suspend fun remove(@Path("id") id: Long)

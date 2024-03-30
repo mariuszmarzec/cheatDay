@@ -1,9 +1,9 @@
 package com.marzec.cheatday.screen.weights.model
 
-import com.marzec.cheatday.api.Content
-import com.marzec.cheatday.api.asErrorAndReturn
-import com.marzec.cheatday.api.combineContentsFlows
-import com.marzec.cheatday.api.toContentData
+import com.marzec.content.Content
+import com.marzec.content.asErrorAndReturn
+import com.marzec.content.combineContentsFlows
+import com.marzec.content.toContentData
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.MAX_POSSIBLE_ID
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.MIN_ID

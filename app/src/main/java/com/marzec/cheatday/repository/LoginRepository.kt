@@ -1,10 +1,10 @@
 package com.marzec.cheatday.repository
 
 import com.marzec.cheatday.api.Api
-import com.marzec.cheatday.api.Content
+import com.marzec.content.Content
 import com.marzec.cheatday.api.LoginApi
-import com.marzec.cheatday.api.asContent
-import com.marzec.cheatday.api.asContentFlow
+import com.marzec.content.asContent
+import com.marzec.content.asContentFlow
 import com.marzec.cheatday.api.request.LoginRequest
 import com.marzec.cheatday.api.response.toDomain
 import com.marzec.cheatday.model.domain.CurrentUserDomain

@@ -2,7 +2,7 @@ package com.marzec.cheatday.repository
 
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.api.Api
-import com.marzec.cheatday.api.Content
+import com.marzec.content.Content
 import com.marzec.cheatday.api.LoginApi
 import com.marzec.cheatday.api.request.LoginRequest
 import com.marzec.cheatday.api.response.UserDto
