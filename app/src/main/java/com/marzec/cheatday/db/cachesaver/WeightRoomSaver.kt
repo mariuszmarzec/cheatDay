@@ -53,7 +53,6 @@ class WeightRoomSaver(
 
     override suspend fun updateCache(data: List<WeightResult>) {
         val userId = userRepository.getCurrentUser().id
-        weightDao.updateAll(data.map { it.toDb(userId) })
+        weightDao.replaceAll(userId, data.map { it.toDb(userId) })
     }
-
 }
