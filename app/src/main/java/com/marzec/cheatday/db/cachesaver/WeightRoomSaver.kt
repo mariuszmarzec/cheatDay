@@ -48,7 +48,11 @@ class WeightRoomSaver(
     }
 
     override suspend fun updateCache(update: (List<WeightResult>?) -> List<WeightResult>?) {
-        throw NoSuchMethodException()
+        val userId = userRepository.getCurrentUser().id
+        weightDao.replaceAll(userId) { list ->
+            val entities = list?.map { it.toDomain() }
+            update(entities)?.map { it.toDb(userId) }
+        }
     }
 
     override suspend fun updateCache(data: List<WeightResult>) {

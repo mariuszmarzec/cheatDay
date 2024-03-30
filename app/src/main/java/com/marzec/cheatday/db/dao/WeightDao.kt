@@ -8,6 +8,7 @@ import androidx.room.Update
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 import com.marzec.cheatday.model.domain.WeightResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 
 @Dao
 interface WeightDao : BaseDao<WeightResultEntity> {
@@ -37,6 +38,13 @@ interface WeightDao : BaseDao<WeightResultEntity> {
 
     @Query("DELETE FROM ${WeightResultEntity.NAME} WHERE id = :id")
     suspend fun removeById(id: Long)
+
+    @Transaction
+    suspend fun replaceAll(userId: Long, update: (List<WeightResultEntity>?) -> List<WeightResultEntity>?) {
+        val weights = observeWeights(userId).firstOrNull()
+        removeAll(userId)
+        insertAll(update(weights).orEmpty())
+    }
 
     @Transaction
     suspend fun replaceAll(userId: Long, weights: List<WeightResultEntity>) {
