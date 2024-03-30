@@ -52,7 +52,8 @@ class WeightRoomSaver(
     }
 
     override suspend fun updateCache(data: List<WeightResult>) {
-        throw NoSuchMethodException()
+        val userId = userRepository.getCurrentUser().id
+        weightDao.updateAll(data.map { it.toDb(userId) })
     }
 
 }

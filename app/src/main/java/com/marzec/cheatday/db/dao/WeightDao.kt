@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 import com.marzec.cheatday.model.domain.WeightResult
 import kotlinx.coroutines.flow.Flow
@@ -36,9 +37,6 @@ interface WeightDao : BaseDao<WeightResultEntity> {
 
     @Query("DELETE FROM ${WeightResultEntity.NAME} WHERE id = :id")
     suspend fun removeById(id: Long)
-
-    @Insert
-    suspend fun insertAll(weights: List<WeightResultEntity>)
 
     @Transaction
     suspend fun replaceAll(weights: List<WeightResultEntity>) {

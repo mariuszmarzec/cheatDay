@@ -3,6 +3,7 @@ package com.marzec.cheatday.db.dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Update
+import com.marzec.cheatday.db.model.db.WeightResultEntity
 
 interface BaseDao<T> {
 
@@ -23,4 +24,10 @@ interface BaseDao<T> {
 
     @Update
     suspend fun updateSuspend(ob: T)
+
+    @Insert
+    suspend fun insertAll(weights: List<WeightResultEntity>)
+
+    @Update
+    suspend fun updateAll(weights: List<WeightResultEntity>)
 }
