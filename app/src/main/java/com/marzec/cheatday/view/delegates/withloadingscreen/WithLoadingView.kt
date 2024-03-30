@@ -19,7 +19,7 @@ class WithLoadingView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
     private val binding: ViewWithLoadingBinding =
-        ViewWithLoadingBinding.inflate(LayoutInflater.from(context), this, true)
+        ViewWithLoadingBinding.inflate(LayoutInflater.from(context), this)
 
     private var delegateAdapter: DelegateAdapter<ListItem> = DelegateAdapter(DelegateManager())
 
