@@ -48,6 +48,7 @@ class WeightsModule {
         userRepository: UserRepository
     ): ManyItemsCacheSaver<Long, WeightResult> =
         WeightRoomSaver(dao, userRepository)
+
     @Provides
     @Named(WEIGHTS_CACHE_SAVER)
     fun provideWeightManyItemsCacheSaver(
