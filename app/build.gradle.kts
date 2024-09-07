@@ -123,6 +123,12 @@ android {
         val testAuthHeader = properties.getProperty("test.authHeader")
 
 
+        create("local") {
+            buildConfigField("String", "HOST", "LOCAL")
+            buildConfigField("String", "AUTHORIZATION", "")
+            setDimension("api")
+        }
+
         create("stage") {
             buildConfigField("String", "HOST", "\"$testApiUrl\"")
             buildConfigField("String", "AUTHORIZATION", "\"$testAuthHeader\"")
@@ -173,9 +179,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Dependency.coroutines_version}")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
     androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
-
-    // anko
-    implementation("org.jetbrains.anko:anko-commons:${Dependency.anko_version}")
 
     // androidx
     implementation("androidx.appcompat:appcompat:${Dependency.appcompat_version}")

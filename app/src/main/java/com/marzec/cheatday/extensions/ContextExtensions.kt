@@ -1,13 +1,15 @@
 package com.marzec.cheatday.extensions
 
 import android.content.Context
+import android.content.res.Resources
 import android.text.InputType
+import android.util.TypedValue
+import android.view.View
 import android.widget.EditText
+import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import com.marzec.cheatday.R
-import org.jetbrains.anko.alert
-import org.jetbrains.anko.okButton
 
 fun Context.showInputDialog(dialogInputOptions: DialogInputOptions): Unit = with(dialogInputOptions) {
     val editText = EditText(this@showInputDialog).apply {
@@ -52,11 +54,11 @@ fun Context.showErrorDialog(
     @StringRes titleResId: Int = R.string.dialog_error_title_common,
     @StringRes messageResId: Int = R.string.dialog_error_message_try_later
 ) {
-    alert {
-        titleResource = titleResId
-        messageResource = messageResId
-        isCancelable = true
-        okButton { }
+    AlertDialog.Builder(this).apply {
+        setTitle(titleResId)
+        setMessage(messageResId)
+        setCancelable(true)
+        setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
         show()
     }
 }
@@ -77,3 +79,14 @@ data class DialogOptions(
     val negativeButton: String,
     val onPositiveButtonClicked: () -> Unit = {}
 )
+
+fun Resources.Theme.attr(@AttrRes attribute: Int): TypedValue {
+    val typedValue = TypedValue()
+    if (!resolveAttribute(attribute, typedValue, true)) {
+        throw IllegalArgumentException("Failed to resolve attribute: $attribute")
+    }
+
+    return typedValue
+}
+
+fun Context.attr(@AttrRes attribute: Int): TypedValue = theme.attr(attribute)

@@ -8,11 +8,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
+import com.marzec.cheatday.extensions.showErrorDialog
 import com.marzec.cheatday.screen.addnewresult.model.AddNewWeightResultViewModel
 import com.marzec.cheatday.screen.addnewresult.model.AddWeightSideEffect
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import org.jetbrains.anko.alert
 import org.joda.time.DateTime
 
 @AndroidEntryPoint
@@ -40,15 +40,16 @@ class AddNewWeightResultFragment : BaseFragment(R.layout.fragment_add_new_weight
             when (sideEffect) {
                 AddWeightSideEffect.SaveSuccess -> findNavController().popBackStack()
                 is AddWeightSideEffect.ShowDatePicker -> showPicker(sideEffect.date)
-                AddWeightSideEffect.ShowError -> activity?.alert {
-                    titleResource = R.string.dialog_error_title_common
-                    messageResource = R.string.dialog_error_message_try_later
-                    isCancelable = true
-                    show()
-                }
-
+                AddWeightSideEffect.ShowError -> showError()
             }
         }
+    }
+
+    private fun showError() {
+        activity?.showErrorDialog(
+            R.string.dialog_error_title_common,
+            R.string.dialog_error_message_try_later
+        )
     }
 
     private fun showPicker(date: DateTime) {

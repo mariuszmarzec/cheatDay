@@ -6,7 +6,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.setPadding
 import com.marzec.cheatday.R
-import org.jetbrains.anko.attr
+import com.marzec.cheatday.extensions.attr
 
 class LabeledRowView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0

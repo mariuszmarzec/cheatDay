@@ -1,8 +1,10 @@
 package com.marzec.cheatday.extensions
 
+import android.util.TypedValue
 import android.view.View
 import android.view.View.GONE
 import android.view.View.INVISIBLE
+import androidx.annotation.AttrRes
 
 fun View.gone() {
     this.visibility = GONE
@@ -31,3 +33,5 @@ internal inline fun <reified T : View> View.findParentInstance() : T {
     } while (parent !is T)
     return parent
 }
+
+fun View.attr(@AttrRes attribute: Int): TypedValue = context.attr(attribute)

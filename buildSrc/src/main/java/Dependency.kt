@@ -14,7 +14,6 @@ object Dependency {
     val retrofit_version = "2.9.0"
     val gson_version = "2.8.5"
     val okhttp_version = "4.9.0"
-    val anko_version = "0.10.8"
     val junit5_version = "5.10.1"
     val joda_version = "2.10.3"
     val truth_version = "1.1.3"
