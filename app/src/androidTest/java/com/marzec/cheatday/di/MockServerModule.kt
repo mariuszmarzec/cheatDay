@@ -1,5 +1,6 @@
 package com.marzec.cheatday.di
 
+import com.marzec.cheatday.api.Api
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -21,6 +22,11 @@ class MockServerModule {
     @Provides
     @Singleton
     fun provideServer() = MockWebServer()
+
+    @Provides
+    @ApiHost
+    fun provideApiHost(): String = Api.HOST
+
     @Provides
     @LoginApiUrl
     fun provideLoginApiUrl(server: MockWebServer) = server.url("/").toString()

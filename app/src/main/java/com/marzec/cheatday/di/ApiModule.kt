@@ -97,6 +97,9 @@ annotation class LoginApiClient
 annotation class CheatDayApiClient
 
 @Qualifier
+annotation class ApiHost
+
+@Qualifier
 annotation class LoginApiUrl
 
 @Qualifier

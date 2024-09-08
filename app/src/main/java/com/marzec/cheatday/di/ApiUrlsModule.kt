@@ -10,6 +10,10 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 class ApiUrlsModule {
     @Provides
+    @ApiHost
+    fun provideApiHost(): String = Api.HOST
+
+    @Provides
     @LoginApiUrl
     fun provideLoginApiUrl() = Api.BASE_URL
 

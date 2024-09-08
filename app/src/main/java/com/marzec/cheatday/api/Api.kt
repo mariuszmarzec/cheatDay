@@ -6,7 +6,7 @@ import org.joda.time.format.DateTimeFormat
 
 object Api {
 
-    private const val HOST = BuildConfig.HOST
+    const val HOST = BuildConfig.HOST
 
     const val BASE_URL = "$HOST/fiteo/api/1/"
 

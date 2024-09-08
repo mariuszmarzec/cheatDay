@@ -124,7 +124,7 @@ android {
 
 
         create("local") {
-            buildConfigField("String", "HOST", "LOCAL")
+            buildConfigField("String", "HOST", "localhost")
             buildConfigField("String", "AUTHORIZATION", "")
             setDimension("api")
         }

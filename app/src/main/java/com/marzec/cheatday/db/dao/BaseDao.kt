@@ -9,7 +9,7 @@ import com.marzec.cheatday.db.model.db.WeightResultEntity
 interface BaseDao<T> {
 
     @Insert
-    fun insert(ob: T)
+    fun insert(ob: T): Long
 
     @Delete
     fun remove(ob: T)
@@ -21,7 +21,7 @@ interface BaseDao<T> {
     fun upsert(ob: T)
 
     @Insert
-    suspend fun insertSuspend(ob: T)
+    suspend fun insertSuspend(ob: T): Long
 
     @Delete
     suspend fun removeSuspend(ob: T)
@@ -29,9 +29,4 @@ interface BaseDao<T> {
     @Update
     suspend fun updateSuspend(ob: T)
 
-    @Insert
-    suspend fun insertAll(weights: List<WeightResultEntity>)
-
-    @Update
-    suspend fun updateAll(weights: List<WeightResultEntity>)
 }

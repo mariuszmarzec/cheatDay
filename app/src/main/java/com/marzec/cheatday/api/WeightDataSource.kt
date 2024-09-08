@@ -4,10 +4,11 @@ import com.marzec.cheatday.api.request.PutWeightRequest
 import com.marzec.cheatday.api.request.UpdateWeightDto
 import com.marzec.cheatday.api.response.WeightDto
 import com.marzec.datasource.CommonDataSource
+import javax.inject.Inject
 
 typealias WeightDataSource = CommonDataSource<Long, WeightDto, PutWeightRequest, UpdateWeightDto>
 
-class WeightDataSourceImpl(private val api: WeightApi) : WeightDataSource {
+class WeightDataSourceImpl @Inject constructor(private val api: WeightApi) : WeightDataSource {
 
     override suspend fun getAll(): List<WeightDto> = api.getAll()
 

@@ -39,6 +39,12 @@ interface WeightDao : BaseDao<WeightResultEntity> {
     @Query("DELETE FROM ${WeightResultEntity.NAME} WHERE id = :id")
     suspend fun removeById(id: Long)
 
+    @Insert
+    suspend fun insertAll(weights: List<WeightResultEntity>)
+
+    @Update
+    suspend fun updateAll(weights: List<WeightResultEntity>)
+
     @Transaction
     suspend fun replaceAll(userId: Long, update: (List<WeightResultEntity>?) -> List<WeightResultEntity>?) {
         val weights = observeWeights(userId).firstOrNull()
