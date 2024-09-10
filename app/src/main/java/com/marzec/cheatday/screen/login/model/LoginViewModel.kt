@@ -14,7 +14,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     initialState: State<LoginData>
-) : StoreViewModel<State<LoginData>, LoginSideEffects>(
+) : StoreViewModel<State<LoginData>, Unit>(
     initialState
 ) {
 
@@ -31,10 +31,6 @@ class LoginViewModel @Inject constructor(
 
         reducer {
             state.reduceContentNoChanges(resultNonNull())
-        }
-
-        emitSideEffect {
-            (resultNonNull() as? Content.Data<*>)?.let { LoginSideEffects.OnLoginSuccessful }
         }
     }
 

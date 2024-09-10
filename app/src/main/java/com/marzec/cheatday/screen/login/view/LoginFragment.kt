@@ -6,17 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
-import com.marzec.cheatday.screen.login.model.LoginData
-import com.marzec.cheatday.screen.login.model.LoginSideEffects
 import com.marzec.cheatday.screen.login.model.LoginViewModel
 import com.marzec.cheatday.screen.login.render.LoginRender
-import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment(R.layout.fragment_login) {
@@ -44,16 +39,8 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
             // do nothing
         }
 
-        viewModel.sideEffects.observeOnResume { effect ->
-            when (effect) {
-                LoginSideEffects.OnLoginSuccessful -> onLoginSuccessful()
-            }
-        }
-
         viewModel.state.observeOnResume {
             loginRender.render(it)
         }
     }
-
-    private fun onLoginSuccessful() = Unit
 }

@@ -44,8 +44,7 @@ internal class LoginViewModelTest {
 
         states.isEqualTo(
             defaultState,
-            State.Loading(defaultData),
-            LoginSideEffects.OnLoginSuccessful
+            State.Loading(defaultData)
         )
     }
 
