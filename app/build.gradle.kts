@@ -124,8 +124,8 @@ android {
 
 
         create("local") {
-            buildConfigField("String", "HOST", "localhost")
-            buildConfigField("String", "AUTHORIZATION", "")
+            buildConfigField("String", "HOST", "\"http://localhost\"")
+            buildConfigField("String", "AUTHORIZATION", "\"LOCAL_AUTHORIZATION\"")
             setDimension("api")
         }
 

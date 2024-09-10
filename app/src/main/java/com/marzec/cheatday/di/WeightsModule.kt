@@ -5,6 +5,7 @@ import com.marzec.cache.CompositeManyItemsCacheSaver
 import com.marzec.cache.ManyItemsCacheSaver
 import com.marzec.cache.MemoryListCacheSaver
 import com.marzec.cache.sortByInserter
+import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.api.WeightDataSource
 import com.marzec.cheatday.api.WeightDataSourceImpl
 import com.marzec.cheatday.api.response.toDomain
@@ -35,7 +36,7 @@ class WeightsModule {
         weightRoomDataSource: Provider<WeightRoomDataSource>,
         weightDataSourceImpl: Provider<WeightDataSourceImpl>
     ): WeightDataSource =
-        if (apiHost == LOCALHOST_API) {
+        if (apiHost == Api.LOCALHOST_API) {
             weightRoomDataSource.get()
         } else {
             weightDataSourceImpl.get()
@@ -112,7 +113,7 @@ class WeightsModule {
         @Named(WEIGHTS_REMOTE_REPOSITORY) remoteRepository: Provider<WeightCrudRepository>,
         @Named(WEIGHTS_ONLY_MEMORY_REPOSITORY) localRepository: Provider<WeightCrudRepository>,
         @ApiHost apiHost: String
-    ): WeightCrudRepository = if (apiHost == LOCALHOST_API) {
+    ): WeightCrudRepository = if (apiHost == Api.LOCALHOST_API) {
         localRepository.get()
     } else {
         remoteRepository.get()
@@ -128,7 +129,5 @@ class WeightsModule {
 
         const val WEIGHTS_REMOTE_REPOSITORY = "WEIGHTS_REMOTE_REPOSITORY"
         const val WEIGHTS_ONLY_MEMORY_REPOSITORY = "WEIGHTS_ONLY_MEMORY_REPOSITORY"
-
-        const val LOCALHOST_API = "LOCALHOST_API"
     }
 }

@@ -16,6 +16,7 @@ Source code of backend for project: https://github.com/mariuszmarzec/fiteo/blob/
 1. Setup above mentioned backend locally or on some services like AWS Elastic Beanstalk
 2. Before you will be able to run cheat day, declare variables in local.properties like below to
 configure connection with backend and release key store
+3. Use **localDebug** or **localRelease** build variant to check it without api
 
 ```properties
 storeFile=~/key_releases/cheat_day_release.jks
