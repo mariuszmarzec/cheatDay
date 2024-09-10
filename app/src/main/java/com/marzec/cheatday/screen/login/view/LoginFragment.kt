@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.marzec.cheatday.R
@@ -39,6 +40,10 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            // do nothing
+        }
+
         viewModel.sideEffects.observeOnResume { effect ->
             when (effect) {
                 LoginSideEffects.OnLoginSuccessful -> onLoginSuccessful()
@@ -50,7 +55,5 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         }
     }
 
-    private fun onLoginSuccessful() {
-        findNavController().navigateUp()
-    }
+    private fun onLoginSuccessful() = Unit
 }

@@ -7,14 +7,12 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.marzec.cheatday.R
 import com.marzec.cheatday.screen.home.model.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -43,16 +41,17 @@ class MainActivity : AppCompatActivity() {
                 viewModel.state.collect { state ->
                     val isUserLogged = state.isUserLogged
                     bottomNavigationView.isVisible = isUserLogged ?: true
-                    if (isUserLogged == false) {
-                        navHostFragment?.findNavController()?.let { controller ->
-                            val options = NavOptions.Builder()
-                                .apply {
-                                    controller.currentDestination?.id?.let {
-                                        setPopUpTo(it, true)
-                                    }
-                                }
-                                .build()
-                            controller.navigate(R.id.login, null, options)
+                    val controller = navHostFragment?.findNavController()
+                    controller?.let {
+
+                        if (isUserLogged == false) {
+                            if (it.currentDestination?.id != R.id.login) {
+                                it.navigate(R.id.login)
+                            }
+                        } else {
+                            if (controller.currentDestination?.id == R.id.login) {
+                                it.navigateUp()
+                            }
                         }
                     }
                 }
