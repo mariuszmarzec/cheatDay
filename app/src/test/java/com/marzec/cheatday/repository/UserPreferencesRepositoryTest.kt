@@ -15,9 +15,10 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import org.junit.jupiter.api.BeforeEach
@@ -25,9 +26,11 @@ import org.junit.jupiter.api.Test
 
 internal class UserPreferencesRepositoryTest {
 
+    val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
+
     private val dataStore: DataStore<Preferences> = mockk()
     private val userRepository: UserRepository = mockk()
-    private val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
 
     private val preferences = mockk<Preferences>()
     private val mutablePreferences = mockk<MutablePreferences>(relaxed = true)
@@ -41,7 +44,7 @@ internal class UserPreferencesRepositoryTest {
     )
 
     @BeforeEach
-    fun setUp() = test {
+    fun setUp() {
         mockkStatic("androidx.datastore.preferences.core.PreferencesKt")
         coEvery { userRepository.getCurrentUser() } returns user
         coEvery { userRepository.observeCurrentUser() } returns flowOf(user)
@@ -56,14 +59,14 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun setMaxPossibleWeight() = test {
+    fun setMaxPossibleWeight()  = scope.runTest {
         repository.setMaxPossibleWeight(10f)
 
         verify { mutablePreferences[floatPreferencesKey("1_max_possible_weight")] = eq(10f) }
     }
 
     @Test
-    fun observeMaxPossibleWeight() = test {
+    fun observeMaxPossibleWeight()  = scope.runTest {
         every { preferences[floatPreferencesKey("1_max_possible_weight")] } returns 5f
 
         val result = repository.observeMaxPossibleWeight().test(this)
@@ -72,14 +75,14 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun setTargetWeight() = test {
+    fun setTargetWeight()  = scope.runTest {
         repository.setTargetWeight(10f)
 
         verify { mutablePreferences[floatPreferencesKey("1_weight")] = eq(10f) }
     }
 
     @Test
-    fun observeTargetWeight() = test {
+    fun observeTargetWeight()  = scope.runTest {
         every { preferences[floatPreferencesKey("1_weight")] } returns 5f
 
         val result = repository.observeTargetWeight().test(this)
@@ -88,7 +91,7 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun observeWasClickToday() = test {
+    fun observeWasClickToday()  = scope.runTest {
         DateTimeUtils.setCurrentMillisFixed(0)
         every { preferences[longPreferencesKey("1_CHEAT")] } returns DateTime.now()
             .withTimeAtStartOfDay().millis
@@ -99,7 +102,7 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun `Given last day change was in different time as today, when getting clicked today status, then returns false`() = test {
+    fun `Given last day change was in different time as today, when getting clicked today status, then returns false`()  = scope.runTest {
         DateTimeUtils.setCurrentMillisFixed(0)
         every { preferences[longPreferencesKey("1_CHEAT")] } returns 123
 
@@ -109,7 +112,7 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun setWasClickedToday() = test {
+    fun setWasClickedToday()  = scope.runTest {
         DateTimeUtils.setCurrentMillisFixed(0)
 
         repository.setWasClickedToday(Day.Type.CHEAT)

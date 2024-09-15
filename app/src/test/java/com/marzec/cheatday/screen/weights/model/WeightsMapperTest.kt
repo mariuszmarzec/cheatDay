@@ -9,12 +9,16 @@ import com.marzec.cheatday.view.delegates.labeledrowitem.LabeledRow
 import io.mockk.every
 import io.mockk.mockk
 import java.util.Locale
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class WeightsMapperTest {
 
     val context = mockk<Context>()
+    val dispatcher = UnconfinedTestDispatcher()
+
     lateinit var mapper: WeightsMapper
 
     @BeforeEach
@@ -30,11 +34,11 @@ internal class WeightsMapperTest {
 
         Locale.setDefault(Locale.UK)
 
-        mapper = WeightsMapper(context)
+        mapper = WeightsMapper(context, dispatcher)
     }
 
     @Test
-    fun mapWeights() {
+    fun mapWeights() = runTest{
         val list = mapper.mapWeights(
             minWeight = stubWeightResult(value = 1f),
             weekAverage = 3f,
@@ -60,7 +64,7 @@ internal class WeightsMapperTest {
     }
 
     @Test
-    fun roundAverageWeight() {
+    fun roundAverageWeight() = runTest {
         val list = mapper.mapWeights(
             minWeight = null,
             weekAverage = 3.0121f,
@@ -80,7 +84,7 @@ internal class WeightsMapperTest {
     }
 
     @Test
-    fun mapWeightsWithoutMinWeightAndAverage() {
+    fun mapWeightsWithoutMinWeightAndAverage() = runTest {
         val list = mapper.mapWeights(
             minWeight = null,
             weekAverage = null,

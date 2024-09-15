@@ -12,17 +12,20 @@ import com.marzec.cheatday.model.domain.User
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import okhttp3.Headers
 import org.junit.jupiter.api.Test
 import retrofit2.Response
 
 class LoginRepositoryTest {
 
+    val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
+
     private val userRepository: UserRepository = mockk(relaxed = true)
     private val loginApi: LoginApi = mockk()
-    private val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
 
     private val repository = LoginRepository(
         userRepository, loginApi, dispatcher
@@ -39,7 +42,7 @@ class LoginRepositoryTest {
     )
 
     @Test
-    fun login() = test {
+    fun login()  = scope.runTest {
         coEvery { loginApi.login(request) } returns Response.success(
             userDto,
             Headers.headersOf(Api.Headers.AUTHORIZATION, "auth_token")
@@ -65,7 +68,7 @@ class LoginRepositoryTest {
     }
 
     @Test
-    fun logout() = test {
+    fun logout()  = scope.runTest {
         coEvery { loginApi.logout() } returns Unit
 
         val result = repository.logout()

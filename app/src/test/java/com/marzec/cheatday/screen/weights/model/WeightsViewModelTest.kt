@@ -14,6 +14,9 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import java.lang.Exception
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 
 import org.junit.jupiter.api.BeforeEach
 
@@ -22,6 +25,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 class WeightsViewModelTest {
+
+    val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
 
     val minWeight = 5.0f
     val weekAverage = 6.0f
@@ -38,7 +44,7 @@ class WeightsViewModelTest {
     val weightInteractor: WeightInteractor = mockk(relaxed = true)
 
     @BeforeEach
-    fun before() = test {
+    fun before() {
         coEvery { weightInteractor.observeMinWeight() } returns minWeightResult.toContentFlow()
         coEvery { weightInteractor.observeWeekAverage() } returns weekAverage.toContentFlow()
         coEvery { weightInteractor.observeMaxPossibleWeight() } returns flowOf(maxPossible)
@@ -47,7 +53,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun load_Data() = test {
+    fun load_Data()  = scope.runTest {
         coEvery { weightInteractor.observeWeights() } returns flowOf(Content.Data(weights))
 
         val viewModel = viewModel()
@@ -70,7 +76,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun load_Loading() = test {
+    fun load_Loading()  = scope.runTest {
         coEvery { weightInteractor.observeWeights() } returns flowOf(Content.Loading(weights))
 
         val viewModel = viewModel()
@@ -86,7 +92,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun load_Error() = test {
+    fun load_Error()  = scope.runTest {
         coEvery { weightInteractor.observeWeights() } returns flowOf(Content.Error(Exception()))
 
         val viewModel = viewModel()
@@ -103,7 +109,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun onClick_targetId() = test {
+    fun onClick_targetId()  = scope.runTest {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -118,7 +124,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun onClick_maxPossibleId() = test {
+    fun onClick_maxPossibleId()  = scope.runTest {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -133,7 +139,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun onClick_openWeight() = test {
+    fun onClick_openWeight()  = scope.runTest {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -148,7 +154,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun onLongClick() = test {
+    fun onLongClick()  = scope.runTest {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -163,7 +169,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun onFloatingButtonClick() = test {
+    fun onFloatingButtonClick()  = scope.runTest {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -178,7 +184,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun changeTargetWeight() = test {
+    fun changeTargetWeight()  = scope.runTest {
         coEvery { weightInteractor.setTargetWeight(5.0f) } returns Unit
         val viewModel = viewModel()
         val values = viewModel.test(this)
@@ -193,7 +199,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun changeTargetWeight_Error() = test {
+    fun changeTargetWeight_Error()  = scope.runTest {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -208,7 +214,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun changeMaxWeight() = test {
+    fun changeMaxWeight()  = scope.runTest {
         coEvery { weightInteractor.setMaxPossibleWeight(5.0f) } returns Unit
         val viewModel = viewModel()
         val values = viewModel.test(this)
@@ -223,7 +229,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun changeMaxWeight_Error() = test {
+    fun changeMaxWeight_Error()  = scope.runTest {
         coEvery { weightInteractor.setMaxPossibleWeight(5.0f) } returns Unit
         val viewModel = viewModel()
         val values = viewModel.test(this)
@@ -239,7 +245,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun goToChart() = test {
+    fun goToChart()  = scope.runTest {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 
@@ -254,7 +260,7 @@ class WeightsViewModelTest {
     }
 
     @Test
-    fun removeWeight() = test {
+    fun removeWeight()  = scope.runTest {
         val viewModel = viewModel()
         val values = viewModel.test(this)
 

@@ -15,6 +15,9 @@ import com.marzec.mvi.State
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
@@ -25,6 +28,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 internal class AddNewWeightResultViewModelTest {
+
+    val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
 
     val weightInteractor = mockk<WeightInteractor>()
 
@@ -40,12 +46,12 @@ internal class AddNewWeightResultViewModelTest {
     )
 
     @BeforeEach
-    fun setup() = test {
+    fun setup() {
         DateTimeUtils.setCurrentMillisFixed(0)
     }
 
     @Test
-    fun load() = test {
+    fun load()  = scope.runTest {
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 
@@ -59,7 +65,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun load_withId() = test {
+    fun load_withId()  = scope.runTest {
         coEvery { weightInteractor.getWeight(1) } returns stubWeightResult(
             value = 10f,
             date = DateTime(10)
@@ -85,7 +91,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun load_withId_failed() = test {
+    fun load_withId_failed()  = scope.runTest {
         coEvery { weightInteractor.getWeight(1) } returns flowOf(Content.Error(Exception()))
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
@@ -102,7 +108,7 @@ internal class AddNewWeightResultViewModelTest {
 
 
     @Test
-    fun setDate() = test {
+    fun setDate()  = scope.runTest {
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 
@@ -117,7 +123,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun onDatePickerClick() = test {
+    fun onDatePickerClick()  = scope.runTest {
         val viewModel = viewModel()
         val states = viewModel.test(this)
 
@@ -132,7 +138,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_addNewResult() = test {
+    fun save_addNewResult()  = scope.runTest {
         coEvery { weightInteractor.addWeight(stubWeightResult()) } returns Content.Data(Unit)
             .asFlow()
         val viewModel = viewModel()
@@ -149,7 +155,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_addNewResult_error() = test {
+    fun save_addNewResult_error()  = scope.runTest {
         coEvery { weightInteractor.addWeight(stubWeightResult()) } returns Content.Error<Unit>(
             Exception()
         ).asFlow()
@@ -202,7 +208,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_updateResult_error() = test {
+    fun save_updateResult_error()  = scope.runTest {
         val data = defaultData.copy(
             weightResult = stubWeightResult(id = 1),
             weight = "100",
@@ -235,7 +241,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun setNewWeight() = test {
+    fun setNewWeight()  = scope.runTest {
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 
@@ -247,5 +253,9 @@ internal class AddNewWeightResultViewModelTest {
                 State.Data(defaultData.copy(weight = "11.0"))
             )
         )
+    }
+
+    fun test(testBody: suspend TestScope.() -> Unit) = scope.runTest {
+        testBody.invoke(this)
     }
 }

@@ -11,11 +11,17 @@ import com.marzec.mvi.State
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 internal class LoginViewModelTest {
+
+    val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
 
     val loginRepository: LoginRepository = mockk()
     val defaultData = LoginData(
@@ -29,7 +35,7 @@ internal class LoginViewModelTest {
     )
 
     @Test
-    fun onLoginButtonClicked() = test {
+    fun onLoginButtonClicked()  = scope.runTest {
         val viewModel = viewModel(defaultState)
         val states = viewModel.test(this)
 
@@ -49,7 +55,7 @@ internal class LoginViewModelTest {
     }
 
     @Test
-    fun onLoginChanged() = test {
+    fun onLoginChanged()  = scope.runTest {
         val viewModel = viewModel(defaultState)
         val states = viewModel.test(this)
 
@@ -64,7 +70,7 @@ internal class LoginViewModelTest {
     }
 
     @Test
-    fun onPasswordChanged() = test {
+    fun onPasswordChanged()  = scope.runTest {
         val viewModel = viewModel(defaultState)
         val states = viewModel.test(this)
 

@@ -12,6 +12,10 @@ import com.marzec.mvi.State
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -20,12 +24,15 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 internal class ChartsViewModelTest {
 
+    val scope = TestScope()
+    val dispatcher: TestDispatcher = UnconfinedTestDispatcher(scope.testScheduler)
+
     val weightInteractor = mockk<WeightInteractor>()
 
     val defaultState: State<ChartsData> = State.Loading()
 
     @Test
-    fun loadData() = test {
+    fun loadData()  = scope.runTest {
         coEvery { weightInteractor.observeWeights() } returns flowOf(
             Content.Data(listOf(stubWeightResult()))
         )
@@ -47,7 +54,7 @@ internal class ChartsViewModelTest {
     }
 
     @Test
-    fun loadData_error() = test {
+    fun loadData_error()  = scope.runTest {
         coEvery { weightInteractor.observeWeights() } returns flowOf(
             Content.Error(Exception())
         )
@@ -73,7 +80,7 @@ internal class ChartsViewModelTest {
     inner class SwitchingChart {
 
         @Test
-        fun switchIntoAverageChart() = test {
+        fun switchIntoAverageChart()  = scope.runTest {
             val defaultState: State<ChartsData> = State.Loading(
                 ChartsData(
                     weights = emptyList(),
@@ -109,7 +116,7 @@ internal class ChartsViewModelTest {
         }
 
         @Test
-        fun switchIntoNormalChart() = test {
+        fun switchIntoNormalChart()  = scope.runTest {
             val defaultState: State<ChartsData> = State.Loading(
                 ChartsData(
                     weights = emptyList(),

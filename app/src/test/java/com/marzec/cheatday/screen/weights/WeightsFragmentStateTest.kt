@@ -5,10 +5,13 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.marzec.cheatday.R
 import com.marzec.cheatday.core.getPaparazziRule
 import com.marzec.cheatday.model.domain.WeightResult
-import com.marzec.cheatday.screen.login.model.LoginData
 import com.marzec.cheatday.screen.weights.model.WeightsData
 import com.marzec.cheatday.screen.weights.model.WeightsMapper
 import com.marzec.mvi.State
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import org.junit.Before
@@ -39,8 +42,9 @@ class WeightsFragmentStateTest {
     val pendingActionState = State.Loading(weightsData)
     val errorState = State.Error(weightsData, "Error has occurred")
 
-    val mapper by lazy { WeightsMapper(paparazzi.context) }
-    val renderer by lazy { WeightsRenderer(mapper) }
+    val dispatcher = UnconfinedTestDispatcher()
+    val mapper by lazy { WeightsMapper(paparazzi.context, dispatcher) }
+    val renderer by lazy { WeightsRenderer(mapper, dispatcher) }
 
     @Before
     fun setUp() {
@@ -61,8 +65,11 @@ class WeightsFragmentStateTest {
 
     private fun compare(state: State<WeightsData>) {
         val view = paparazzi.inflate<View>(R.layout.fragment_weights)
-        renderer.init(view)
-        renderer.render(state)
+        with(renderer) {
+            init(view)
+            val uiItems = flowOf(state).mapToUi()
+            render(runBlocking { uiItems.first() })
+        }
         paparazzi.snapshot(view)
     }
 }

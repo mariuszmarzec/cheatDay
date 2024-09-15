@@ -10,8 +10,8 @@ import com.marzec.cheatday.stubs.stubDayEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 
@@ -19,8 +19,10 @@ import org.junit.jupiter.api.Test
 
 internal class DayRepositoryTest {
 
+    val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
+
     private val dayDao: DayDao = mockk(relaxed = true)
-    private val dispatcher: CoroutineDispatcher = UnconfinedTestDispatcher()
 
     private val repository = DayRepository(
         dayDao, dispatcher
@@ -60,7 +62,7 @@ internal class DayRepositoryTest {
     }
 
     @Test
-    fun update() = test {
+    fun update()  = scope.runTest {
         repository.update(0, stubDay())
 
         coVerify { dayDao.createOrUpdate(stubDayEntity(userId = 0)) }

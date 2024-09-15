@@ -1,15 +1,20 @@
 package com.marzec.cheatday.extensions
 
 import com.google.common.truth.Truth.assertThat
-import com.marzec.adapterdelegate.model.ListItem
 import com.marzec.cheatday.core.test
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 
 import org.joda.time.DateTime
 import org.junit.Assert.assertThrows
 import org.junit.jupiter.api.Test
 
 internal class CommonExtensionsKtTest {
+
+    val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
 
     @Test
     fun emptyStringTest() {
@@ -37,19 +42,19 @@ internal class CommonExtensionsKtTest {
     }
 
     @Test
-    fun combinePair() = test {
+    fun combinePair()  = scope.runTest {
         val combine = combine(flowOf(1), flowOf("a"))
         assertThat(combine.test(this).values()).isEqualTo(listOf(Pair(1, "a")))
     }
 
     @Test
-    fun combineTriple() = test {
+    fun combineTriple()  = scope.runTest {
         val combine = combine(flowOf(1), flowOf("a"), flowOf(1L))
         assertThat(combine.test(this).values()).isEqualTo(listOf(Triple(1, "a", 1L)))
     }
 
     @Test
-    fun combineQuadruple() = test {
+    fun combineQuadruple()  = scope.runTest {
         val combine = combine(
             flowOf(1),
             flowOf("a"),

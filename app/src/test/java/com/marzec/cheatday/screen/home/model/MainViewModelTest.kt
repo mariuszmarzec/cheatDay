@@ -6,30 +6,26 @@ import com.marzec.cheatday.TestStandardCoroutineExecutorExtension
 import com.marzec.cheatday.core.test
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(value = [InstantExecutorExtension::class, TestStandardCoroutineExecutorExtension::class])
 internal class MainViewModelTest {
 
+    val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
+
     val mainInteractor: MainInteractor = mockk()
     val defualtState = MainState.INITIAL
 
     @Test
-    fun loadState() = runTest(StandardTestDispatcher()) {
+    fun loadState() = scope.runTest() {
         every { mainInteractor.observeIfUserLogged() } returns
                 flowOf(false, true).onEach { advanceUntilIdle() }
         val viewModel = viewModel()

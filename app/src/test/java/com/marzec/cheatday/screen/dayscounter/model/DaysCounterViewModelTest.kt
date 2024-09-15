@@ -13,6 +13,9 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,13 +23,16 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 class DaysCounterViewModelTest {
 
+    val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
+
     val daysInteractor: DaysInteractor = mockk(relaxed = true)
     val preferencesRepository: UserPreferencesRepository = mockk(relaxed = true)
     val loginRepository: LoginRepository = mockk(relaxed = true)
     val defaultState: DaysCounterState = DaysCounterState.DEFAULT_STATE
 
     @Test
-    fun loading() = test {
+    fun loading()  = scope.runTest {
         coEvery { daysInteractor.observeDays() } returns flowOf(
             stubDaysGroup(
                 cheat = defaultState.cheat.day.copy(
@@ -60,7 +66,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onCheatDecreaseClick() = test {
+    fun onCheatDecreaseClick()  = scope.runTest {
         val viewModel = viewModel()
 
         viewModel.onCheatDecreaseClick()
@@ -69,7 +75,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onDietIncreaseClick() = test {
+    fun onDietIncreaseClick()  = scope.runTest {
         val viewModel = viewModel()
 
         viewModel.onDietIncreaseClick()
@@ -78,7 +84,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onWorkoutIncreaseClick() = test {
+    fun onWorkoutIncreaseClick()  = scope.runTest {
         val viewModel = viewModel()
 
         viewModel.onWorkoutIncreaseClick()

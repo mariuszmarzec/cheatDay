@@ -18,11 +18,16 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class UserRepositoryTest {
+
+    val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
 
     val preferences = mockk<Preferences>(relaxed = true)
     val mutablePreferences = mockk<MutablePreferences>(relaxed = true)
@@ -30,7 +35,6 @@ internal class UserRepositoryTest {
     val gson = Gson()
     private val userDao: UserDao = mockk(relaxed = true)
     private val preferencesDataStore: DataStore<Preferences> = mockk()
-    private val dispatcher = UnconfinedTestDispatcher()
 
     lateinit var repository: UserRepository
 
@@ -72,7 +76,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun getCurrentUser() = test {
+    fun getCurrentUser()  = scope.runTest {
         mockCurrentUserFromPrefs(currentUser)
         coEvery { userDao.getUser("email") } returns userEntity
 
@@ -80,14 +84,14 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun getCurrentUserWithAuth() = test {
+    fun getCurrentUserWithAuth()  = scope.runTest {
         mockCurrentUserFromPrefs(currentUser)
 
         assertThat(repository.getCurrentUserWithAuthToken()).isEqualTo(currentUserDomain)
     }
 
     @Test
-    fun `given current user auth is empty, when getting auth token, returns null`() = test {
+    fun `given current user auth is empty, when getting auth token, returns null`()  = scope.runTest {
         mockCurrentUserFromPrefs(currentUser.copy(auth = ""))
 
         assertThat(repository.getCurrentUserWithAuthToken()).isNull()
@@ -95,7 +99,7 @@ internal class UserRepositoryTest {
 
 
     @Test
-    fun `given user data is available, when getting current user, returns domain user`() = test {
+    fun `given user data is available, when getting current user, returns domain user`()  = scope.runTest {
         mockCurrentUserFromPrefs(currentUser)
         coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
 
@@ -103,21 +107,21 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun `given current user mail is not empty, when getting if user logged, returns true`() = test {
+    fun `given current user mail is not empty, when getting if user logged, returns true`()  = scope.runTest {
         mockCurrentUserFromPrefs(currentUser)
 
         repository.observeIfUserLogged().test(this).isEqualTo(listOf(true))
     }
 
     @Test
-    fun `given current user token are empty, when getting if user logged, returns false`() = test {
+    fun `given current user token are empty, when getting if user logged, returns false`()  = scope.runTest {
         mockCurrentUserFromPrefs(currentUserNull)
 
         repository.observeIfUserLogged().test(this).isEqualTo(listOf(false))
     }
 
     @Test
-    fun `given user mail is not stored in database, when adding user, then user is added`() = test {
+    fun `given user mail is not stored in database, when adding user, then user is added`()  = scope.runTest {
         coEvery { userDao.observeUser("email") } returns flowOf()
 
         repository.addUserToDbIfNeeded(user)
@@ -127,7 +131,7 @@ internal class UserRepositoryTest {
 
     @Test
     fun `given user mail is stored in database, when adding user, then new user is not added`() =
-        test {
+        scope.runTest {
             coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
 
             repository.addUserToDbIfNeeded(user)
@@ -136,7 +140,7 @@ internal class UserRepositoryTest {
         }
 
     @Test
-    fun clearCurrentUser() = test {
+    fun clearCurrentUser()  = scope.runTest {
         val expectedJsonArg = gson.toJson(currentUserNull)
         val captured = slot<suspend (Preferences) -> Preferences>()
             coEvery {
@@ -152,7 +156,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun setCurrentUserWithAuth() = test {
+    fun setCurrentUserWithAuth()  = scope.runTest {
         val expectedJsonArg = gson.toJson(currentUser)
         val captured = slot<suspend (Preferences) -> Preferences>()
         coEvery {

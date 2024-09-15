@@ -5,7 +5,7 @@ object Dependency {
     val kotlin_version = "1.9.20"
     val junit4_version = "4.13.2"
     val leak_canary_version = "2.12"
-    val coroutines_version = "1.7.3"
+    val coroutines_version = "1.9.0"
     val appcompat_version = "1.1.0"
     val material_version = "1.2.0"
     val ktx_version = "2.3.0-alpha02"

@@ -5,13 +5,12 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.mvi.StoreViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.test.runTest
+import org.junit.Test
 
 fun <T> Flow<T>.test(scope: TestScope): TestCollector<T> {
     return TestCollector(scope, this).test()
@@ -28,7 +27,7 @@ class TestCollector<T>(
     private lateinit var job: Job
 
     fun test(): TestCollector<T> {
-        job = scope.async {
+        job = scope.launch(scope.coroutineContext) {
             flow.collect { values.add(it) }
         }
         return this
@@ -50,16 +49,10 @@ class TestCollector<T>(
     }
 
     private fun cancelIfActive() {
-        scope.advanceUntilIdle()
+        (scope as TestScope).advanceUntilIdle()
         if (job.isActive) {
             job.cancel()
         }
-    }
-}
-
-fun test(testBody: suspend TestScope.() -> Unit) {
-    return runTest(UnconfinedTestDispatcher()) {
-        testBody.invoke(this)
     }
 }
 
