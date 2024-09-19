@@ -9,8 +9,11 @@ import com.marzec.cheatday.view.delegates.labeledrowitem.LabeledRow
 import io.mockk.every
 import io.mockk.mockk
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -18,11 +21,13 @@ internal class WeightsMapperTest {
 
     val context = mockk<Context>()
     val dispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
 
     lateinit var mapper: WeightsMapper
 
     @BeforeEach
     fun setUp() {
+        Dispatchers.setMain(dispatcher)
         every { context.getString(any()) } answers {
             arg<Int>(0).toString()
         }
@@ -38,7 +43,7 @@ internal class WeightsMapperTest {
     }
 
     @Test
-    fun mapWeights() = runTest{
+    fun mapWeights() = scope.runTest {
         val list = mapper.mapWeights(
             minWeight = stubWeightResult(value = 1f),
             weekAverage = 3f,
@@ -48,8 +53,8 @@ internal class WeightsMapperTest {
                 stubWeightResult(id = 1, value = 1f),
                 stubWeightResult(id = 2, value = 2f)
             ),
-            onClickListener = {  },
-            onLongClickListener = {  }
+            onClickListener = { },
+            onLongClickListener = { }
         )
         assertThat(list).isEqualTo(
             listOf(
@@ -64,15 +69,15 @@ internal class WeightsMapperTest {
     }
 
     @Test
-    fun roundAverageWeight() = runTest {
+    fun roundAverageWeight() = scope.runTest {
         val list = mapper.mapWeights(
             minWeight = null,
             weekAverage = 3.0121f,
             maxPossibleValue = 2f,
             targetWeight = 0f,
             weights = emptyList(),
-            onClickListener = {  },
-            onLongClickListener = {  }
+            onClickListener = { },
+            onLongClickListener = { }
         )
         assertThat(list).isEqualTo(
             listOf(
@@ -84,7 +89,7 @@ internal class WeightsMapperTest {
     }
 
     @Test
-    fun mapWeightsWithoutMinWeightAndAverage() = runTest {
+    fun mapWeightsWithoutMinWeightAndAverage() = scope.runTest {
         val list = mapper.mapWeights(
             minWeight = null,
             weekAverage = null,
@@ -94,8 +99,8 @@ internal class WeightsMapperTest {
                 stubWeightResult(id = 1, value = 1f),
                 stubWeightResult(id = 2, value = 2f)
             ),
-            onClickListener = {  },
-            onLongClickListener = {  }
+            onClickListener = { },
+            onLongClickListener = { }
         )
         assertThat(list).isEqualTo(
             listOf(

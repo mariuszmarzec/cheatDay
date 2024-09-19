@@ -10,20 +10,23 @@ import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
 import com.marzec.mvi.State
+import com.marzec.mvi.Store4Impl
 import io.mockk.coEvery
 import io.mockk.mockk
 import java.lang.Exception
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 
 import org.junit.jupiter.api.BeforeEach
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
+@ExtendWith(value = [TestUnconfinedCoroutineExecutorExtension::class])
 class WeightsViewModelTest {
 
     val dispatcher = UnconfinedTestDispatcher()
@@ -45,6 +48,8 @@ class WeightsViewModelTest {
 
     @BeforeEach
     fun before() {
+        Dispatchers.setMain(dispatcher)
+        Store4Impl.stateThread = dispatcher
         coEvery { weightInteractor.observeMinWeight() } returns minWeightResult.toContentFlow()
         coEvery { weightInteractor.observeWeekAverage() } returns weekAverage.toContentFlow()
         coEvery { weightInteractor.observeMaxPossibleWeight() } returns flowOf(maxPossible)

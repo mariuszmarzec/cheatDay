@@ -12,12 +12,15 @@ import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubUpdateWeight
 import com.marzec.cheatday.stubs.stubWeightResult
 import com.marzec.mvi.State
+import com.marzec.mvi.Store4Impl
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
@@ -48,6 +51,8 @@ internal class AddNewWeightResultViewModelTest {
     @BeforeEach
     fun setup() {
         DateTimeUtils.setCurrentMillisFixed(0)
+        Dispatchers.setMain(dispatcher)
+        Store4Impl.stateThread = dispatcher
     }
 
     @Test
@@ -167,8 +172,8 @@ internal class AddNewWeightResultViewModelTest {
         assertThat(states.values()).isEqualTo(
             listOf(
                 defaultState,
-                AddWeightSideEffect.ShowError,
-                State.Error(defaultData, EMPTY_STRING)
+                State.Error(defaultData, EMPTY_STRING),
+                AddWeightSideEffect.ShowError
             )
         )
     }
@@ -234,8 +239,8 @@ internal class AddNewWeightResultViewModelTest {
         assertThat(states.values()).isEqualTo(
             listOf(
                 State.Data(data),
-                AddWeightSideEffect.ShowError,
-                State.Error(data, EMPTY_STRING)
+                State.Error(data, EMPTY_STRING),
+                AddWeightSideEffect.ShowError
             )
         )
     }

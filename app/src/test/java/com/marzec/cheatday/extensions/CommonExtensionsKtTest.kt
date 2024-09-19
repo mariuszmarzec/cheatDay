@@ -2,19 +2,27 @@ package com.marzec.cheatday.extensions
 
 import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.core.test
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 
 import org.joda.time.DateTime
 import org.junit.Assert.assertThrows
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class CommonExtensionsKtTest {
 
     val dispatcher = UnconfinedTestDispatcher()
     val scope = TestScope(dispatcher)
+
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+    }
 
     @Test
     fun emptyStringTest() {

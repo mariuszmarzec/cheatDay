@@ -9,13 +9,17 @@ import com.marzec.cheatday.model.domain.ClickedStates
 import com.marzec.cheatday.repository.LoginRepository
 import com.marzec.cheatday.repository.UserPreferencesRepository
 import com.marzec.cheatday.stubs.stubDaysGroup
+import com.marzec.mvi.Store4Impl
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.BeforeEach
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -30,6 +34,12 @@ class DaysCounterViewModelTest {
     val preferencesRepository: UserPreferencesRepository = mockk(relaxed = true)
     val loginRepository: LoginRepository = mockk(relaxed = true)
     val defaultState: DaysCounterState = DaysCounterState.DEFAULT_STATE
+
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+        Store4Impl.stateThread = dispatcher
+    }
 
     @Test
     fun loading()  = scope.runTest {

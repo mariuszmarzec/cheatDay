@@ -24,7 +24,7 @@ open class StoreViewModel<State : Any, SideEffect>(defaultState: State) : ViewMo
     val sideEffects: Flow<SideEffect>
         get() = sideEffectsInternal
 
-    private val store = Store3(viewModelScope, defaultState)
+    private val store = Store4Impl(viewModelScope, defaultState)
 
     val state
         get() = store.state

@@ -9,13 +9,17 @@ import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.interactor.WeightInteractor
 import com.marzec.cheatday.stubs.stubWeightResult
 import com.marzec.mvi.State
+import com.marzec.mvi.Store4Impl
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.BeforeEach
 
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -24,12 +28,18 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 internal class ChartsViewModelTest {
 
-    val scope = TestScope()
-    val dispatcher: TestDispatcher = UnconfinedTestDispatcher(scope.testScheduler)
+    val dispatcher: TestDispatcher = UnconfinedTestDispatcher()
+    val scope = TestScope(dispatcher)
 
     val weightInteractor = mockk<WeightInteractor>()
 
     val defaultState: State<ChartsData> = State.Loading()
+
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+        Store4Impl.stateThread = dispatcher
+    }
 
     @Test
     fun loadData()  = scope.runTest {
@@ -70,8 +80,8 @@ internal class ChartsViewModelTest {
         assertThat(test.values()).isEqualTo(
             listOf(
                 defaultState,
-                ChartsSideEffect.ShowErrorDialog,
-                State.Error(null, message = EMPTY_STRING)
+                State.Error(null, message = EMPTY_STRING),
+                ChartsSideEffect.ShowErrorDialog
             )
         )
     }

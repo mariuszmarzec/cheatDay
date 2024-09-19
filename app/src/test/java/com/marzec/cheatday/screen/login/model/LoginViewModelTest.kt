@@ -8,12 +8,16 @@ import com.marzec.cheatday.core.test
 import com.marzec.cheatday.model.domain.User
 import com.marzec.cheatday.repository.LoginRepository
 import com.marzec.mvi.State
+import com.marzec.mvi.Store4Impl
 import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -33,6 +37,12 @@ internal class LoginViewModelTest {
     private val user = User(
         0, "email"
     )
+
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+        Store4Impl.stateThread = dispatcher
+    }
 
     @Test
     fun onLoginButtonClicked()  = scope.runTest {

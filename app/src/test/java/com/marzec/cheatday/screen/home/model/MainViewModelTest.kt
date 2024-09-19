@@ -4,14 +4,18 @@ package com.marzec.cheatday.screen.home.model
 import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestStandardCoroutineExecutorExtension
 import com.marzec.cheatday.core.test
+import com.marzec.mvi.Store4Impl
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -23,6 +27,12 @@ internal class MainViewModelTest {
 
     val mainInteractor: MainInteractor = mockk()
     val defualtState = MainState.INITIAL
+
+    @BeforeEach
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+        Store4Impl.stateThread = dispatcher
+    }
 
     @Test
     fun loadState() = scope.runTest() {
