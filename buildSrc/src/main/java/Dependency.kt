@@ -59,10 +59,10 @@ object Dependency {
     }
 
     object Android {
-        val compileSdkVersion = 34
+        val compileSdkVersion = 35
         val applicationId = "com.marzec.cheatday"
         val minSdkVersion = 30
-        val targetSdkVersion = 34
+        val targetSdkVersion = 35
         val versionCode = 1
         val versionName = "1.0"
     }
