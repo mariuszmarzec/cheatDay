@@ -26,20 +26,20 @@ plugins {
 }
 
 jacoco {
-    toolVersion = Dependency.jacoco_version
+    toolVersion = libs.versions.jacoco.get().toString()
 }
 apply(from = "jacoco.gradle.kts")
 
 android {
     namespace = "com.marzec.cheatday"
 
-    compileSdkVersion(Dependency.Android.compileSdkVersion)
+    compileSdkVersion(libs.versions.compileSdk.get().toInt())
     defaultConfig {
-        applicationId = Dependency.Android.applicationId
-        minSdkVersion(Dependency.Android.minSdkVersion)
-        targetSdkVersion(Dependency.Android.targetSdkVersion)
-        versionCode = Dependency.Android.versionCode
-        versionName = Dependency.Android.versionName
+        applicationId = "com.marzec.cheatday"
+        minSdkVersion(libs.versions.minSdk.get().toInt())
+        targetSdkVersion(libs.versions.targetSdk.get().toInt())
+        versionCode = 1
+        versionName = "1.0"
         testApplicationId = "com.marzec.cheatday.debug.test"
         testInstrumentationRunner = "com.marzec.cheatday.MockTestRunner"
         // Using orchestrator is not possible, because project is affected by
@@ -153,7 +153,7 @@ android {
     }
 
     testCoverage {
-        jacocoVersion = Dependency.jacoco_version
+        jacocoVersion = libs.versions.jacoco.get().toString()
     }
 
     packagingOptions {
@@ -170,110 +170,110 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
     // leakcanary
-    debugImplementation("com.squareup.leakcanary:leakcanary-android:${Dependency.leak_canary_version}")
-    androidTestImplementation("com.squareup.leakcanary:leakcanary-android-instrumentation:${Dependency.leak_canary_version}")
+    debugImplementation(libs.leakCanary)
+    androidTestImplementation(libs.leakCanaryInstrumentation)
 
     // kotlin
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Dependency.kotlin_version}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependency.coroutines_version}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Dependency.coroutines_version}")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${Dependency.coroutines_version}")
+    implementation(libs.kotlinStdLib)
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
+    testImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.coroutines.test)
 
     // androidx
-    implementation("androidx.appcompat:appcompat:${Dependency.appcompat_version}")
-    implementation("androidx.core:core-ktx:${Dependency.core_ktx_version}")
-    implementation("android.arch.lifecycle:viewmodel:${Dependency.viewmodel_version}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${Dependency.ktx_version}")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${Dependency.ktx_version}")
-    implementation("com.google.android.material:material:${Dependency.material_version}")
-    implementation("androidx.fragment:fragment:${Dependency.fragment_version}")
-    debugImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
-    implementation("androidx.activity:activity:${Dependency.activity_version}")
-    androidTestImplementation("androidx.arch.core:core-testing:${Dependency.arch_testing_version}")
+    implementation(libs.appcompat)
+    implementation(libs.core.ktx)
+    implementation(libs.viewmodel)
+    implementation(libs.viewmodel.ktx)
+    implementation(libs.lifecycle.ktx)
+    implementation(libs.material)
+    implementation(libs.fragment)
+    debugImplementation(libs.fragment.testing)
+    implementation(libs.activity)
+    androidTestImplementation(libs.archCore.testing)
 
     // room
-    implementation("androidx.room:room-runtime:${Dependency.room_version}")
-    implementation("androidx.room:room-ktx:${Dependency.room_version}")
-    implementation("androidx.room:room-common:${Dependency.room_version}")
-    ksp("androidx.room:room-compiler:${Dependency.room_version}")
-    androidTestImplementation("androidx.room:room-testing:${Dependency.room_version}")
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    implementation(libs.room.common)
+    ksp(libs.room.compiler)
+    androidTestImplementation(libs.room.testing)
 
     // android views
-    implementation("androidx.constraintlayout:constraintlayout:${Dependency.constraint_layout_version}")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation(libs.constraintLayout)
+    implementation(libs.recyclerview)
 
     // http client
-    implementation("com.squareup.retrofit2:retrofit:${Dependency.retrofit_version}")
-    implementation("com.google.code.gson:gson:${Dependency.gson_version}")
-    implementation("com.squareup.okhttp3:okhttp:${Dependency.okhttp_version}")
-    implementation("com.squareup.retrofit2:converter-gson:${Dependency.retrofit_version}")
-    implementation("com.squareup.okhttp3:mockwebserver:${Dependency.okhttp_version}")
+    implementation(libs.retrofit)
+    implementation(libs.gson)
+    implementation(libs.okhttp)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp.mockWebServer)
 
     // joda time
-    implementation("net.danlew:android.joda:${Dependency.joda_version}")
-    testImplementation("joda-time:joda-time:${Dependency.joda_version}")
+    implementation(libs.joda.android)
+    testImplementation(libs.joda)
 
     // navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:${Dependency.nav_version}")
-    implementation("androidx.navigation:navigation-ui-ktx:${Dependency.nav_version}")
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:${Dependency.nav_version}")
-    androidTestImplementation("androidx.navigation:navigation-testing:${Dependency.nav_version}")
+    implementation(libs.nav.fragment.ktx)
+    implementation(libs.nav.ui.ktx)
+    implementation(libs.nav.dynamic.features)
+    androidTestImplementation(libs.nav.testing)
 
     // charts
-    implementation("com.github.PhilJay:MPAndroidChart:${Dependency.chart_version}")
+    implementation(libs.chart)
 
     // data store
-    implementation("androidx.datastore:datastore-preferences:${Dependency.datastore_version}")
-    implementation("androidx.datastore:datastore:${Dependency.datastore_version}")
+    implementation(libs.datastore.preferences)
+    implementation(libs.datastore)
 
     // firebase
-    implementation(platform("com.google.firebase:firebase-bom:${Dependency.firebase_version}"))
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics.ktx)
+    implementation(libs.firebase.analytics.ktx)
 
     // hilt
-    implementation("com.google.dagger:hilt-android:${Dependency.hilt_version}")
-    debugImplementation("com.google.dagger:hilt-android-testing:${Dependency.hilt_version}")
-    ksp("com.google.dagger:hilt-compiler:${Dependency.hilt_version}")
+    implementation(libs.hilt.android)
+    debugImplementation(libs.hilt.android.testing)
+    ksp(libs.hilt.compiler)
 
-    androidTestImplementation("com.google.dagger:hilt-android-testing:${Dependency.hilt_version}")
-    kspAndroidTest("com.google.dagger:hilt-android-compiler:${Dependency.hilt_version}")
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.android)
 
     // junit4
-    testImplementation("junit:junit:${Dependency.junit4_version}")
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:${Dependency.junit5_version}")
+    testImplementation(libs.junit4)
+    testRuntimeOnly(libs.jUnit5.vintage)
 
-    androidTestImplementation("androidx.test.ext:junit:${Dependency.junit_ext_version}")
-    androidTestImplementation("junit:junit:${Dependency.junit4_version}")
+    androidTestImplementation(libs.android.junit.ext)
+    androidTestImplementation(libs.junit4)
 
     // test5
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${Dependency.junit5_version}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Dependency.junit5_version}")
+    testImplementation(libs.jUnit5.api)
+    testRuntimeOnly(libs.jUnit5.engine)
     // mocking
-    testImplementation("io.mockk:mockk:${Dependency.mockk_version}")
-    testImplementation("io.mockk:mockk-agent-jvm:${Dependency.mockk_version}")
+    testImplementation(libs.mockk)
+    testImplementation(libs.mockk.jvm)
 
     // truth
-    testImplementation("com.google.truth:truth:${Dependency.truth_version}")
-    androidTestImplementation("com.google.truth:truth:${Dependency.truth_version}")
+    testImplementation(libs.truth)
+    androidTestImplementation(libs.truth)
 
     // test runner
-    androidTestImplementation("androidx.test:core:${Dependency.test_core}")
-    androidTestImplementation("androidx.test:runner:${Dependency.runner_version}")
-    androidTestImplementation("androidx.test:rules:${Dependency.test_rules}")
-    androidTestUtil("androidx.test:orchestrator:${Dependency.orchestrator_version}")
-    androidTestUtil("androidx.test.services:test-services:${Dependency.android_test_services_version}")
-    androidTestImplementation("androidx.fragment:fragment-testing:${Dependency.fragment_version}")
+    androidTestImplementation(libs.android.test.core)
+    androidTestImplementation(libs.android.test.runner)
+    androidTestImplementation(libs.android.test.rules)
+    androidTestUtil(libs.android.test.orchestrator)
+    androidTestUtil(libs.android.test.services)
+    androidTestImplementation(libs.fragment)
 
     // espresso
-    androidTestImplementation("androidx.test.espresso:espresso-core:${Dependency.espresso_core}")
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:${Dependency.espresso_core}")
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.espresso.contrib)
 
     // kaspresso
-    androidTestImplementation("com.kaspersky.android-components:kaspresso:${Dependency.kaspresso_version}")
+    androidTestImplementation(libs.kaspresso)
 
-    androidTestImplementation("org.hamcrest:hamcrest:${Dependency.hamcrestVersion}")
+    androidTestImplementation(libs.hamcrest)
 }
 
 detekt {

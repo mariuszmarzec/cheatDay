@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("com.google.devtools.ksp") version Dependency.kspVersion apply false
+    id("com.google.devtools.ksp") version "1.9.20-1.0.14" apply false
 }
 
 buildscript {
@@ -11,16 +11,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath(Dependency.BuildPlugins.androidBuildPlugin)
-        classpath(Dependency.BuildPlugins.kotlinGradlePlugin)
-        classpath(Dependency.BuildPlugins.jUnit5Plugin)
-        classpath(Dependency.BuildPlugins.kotlinAllOpen)
-        classpath(Dependency.BuildPlugins.screenshots)
-        classpath(Dependency.BuildPlugins.navigationSafeArgs)
-        classpath(Dependency.BuildPlugins.googleServices)
-        classpath(Dependency.BuildPlugins.crashlytics)
-        classpath(Dependency.BuildPlugins.hilt)
-        classpath(Dependency.BuildPlugins.detektPlugin)
+        classpath(libs.plugin.androidBuild)
+        classpath(libs.plugin.kotlinGradle)
+        classpath(libs.plugin.googleServices)
+        classpath(libs.plugin.crashlytics)
+        classpath(libs.plugin.detekt)
+        classpath(libs.plugin.jUnit5)
+        classpath(libs.plugin.kotlinAllOpen)
+        classpath(libs.plugin.screenshots)
+        classpath(libs.plugin.navigationSafeArgs)
+        classpath(libs.plugin.hilt)
     }
 }
 
