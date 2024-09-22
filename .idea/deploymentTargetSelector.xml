@@ -5,10 +5,16 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="CountersScenariosTest">
+      <SelectionState runConfigName="s09_userAddsNewWeightResult()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="All Tests">
+      <SelectionState runConfigName="WeightScenariosTest">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="s10_userUpdatesNewWeightResult()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="Tests in 'com.marzec.cheatday.scenarios'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

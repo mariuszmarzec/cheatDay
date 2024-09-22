@@ -72,6 +72,7 @@ fun addWeightsResponse() = okStatusResponse()
     .setBody(responseJson("one_weight.json"))
 
 fun updateWeightResponse() = okStatusResponse()
+    .setBody(responseJson("updated_weight_0.json"))
 
 private fun okStatusResponse() = MockResponse()
     .setHeader(Api.Headers.AUTHORIZATION, "token")

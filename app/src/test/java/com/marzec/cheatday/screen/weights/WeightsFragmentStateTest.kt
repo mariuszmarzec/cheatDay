@@ -1,7 +1,6 @@
 package com.marzec.cheatday.screen.weights
 
 import android.view.View
-import androidx.test.platform.app.InstrumentationRegistry
 import com.marzec.cheatday.R
 import com.marzec.cheatday.core.getPaparazziRule
 import com.marzec.cheatday.model.domain.WeightResult
