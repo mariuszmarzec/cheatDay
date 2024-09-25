@@ -22,10 +22,13 @@ jobs:
     - name: Create local.properties
       run: ./script/create_local_properties.sh
 
-    - name: Set up JDK 11
+    - name: Set up JDK
       uses: actions/setup-java@v1
       with:
         java-version: 17
+
+    - name: Detekt
+      run: ./gradlew detekt
 
     - name: Build with Gradle
       run: ./gradlew build
