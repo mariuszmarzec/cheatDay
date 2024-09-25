@@ -55,4 +55,3 @@ class Item(parent: Matcher<View>) : KRecyclerItem<Item>(parent) {
     val label: KTextView = KTextView(parent) { withId(R.id.label) }
     val value: KTextView = KTextView(parent) { withId(R.id.value) }
 }
-

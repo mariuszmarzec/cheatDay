@@ -9,7 +9,6 @@ import javax.inject.Singleton
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import okhttp3.mockwebserver.QueueDispatcher
 import okhttp3.mockwebserver.RecordedRequest
 
 @Module
@@ -49,5 +48,4 @@ object MockWebDispatcher : Dispatcher() {
         responses.remove(pair)
         return pair.second
     }
-
 }

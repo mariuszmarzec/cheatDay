@@ -8,11 +8,9 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
-import com.marzec.cheatday.screen.dayscounter.model.DaysCounterState
 import com.marzec.cheatday.screen.dayscounter.model.DaysCounterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
 class DaysCounterFragment : BaseFragment(R.layout.fragment_days_counter) {

@@ -3,7 +3,6 @@ package com.marzec.cheatday.api
 import com.marzec.cheatday.BuildConfig
 import org.joda.time.format.DateTimeFormat
 
-
 object Api {
 
     const val LOCALHOST_API = "http://localhost"

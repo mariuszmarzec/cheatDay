@@ -15,21 +15,22 @@ class WeightsMapper @Inject constructor(
     @ApplicationContext private val context: Context,
     private val dispatcher: CoroutineDispatcher
 ) {
+    var onClickListener: (String) -> Unit = { }
+    var onLongClickListener: (String) -> Unit = { }
+
     suspend fun mapWeights(
         minWeight: WeightResult?,
         weekAverage: Float?,
         maxPossibleValue: Float,
         targetWeight: Float,
-        weights: List<WeightResult>,
-        onClickListener: (String) -> Unit,
-        onLongClickListener: (String) -> Unit
+        weights: List<WeightResult>
     ): List<ListItem> = withContext(dispatcher) {
         buildList {
             minWeight?.let { add(minWeightItem(it)) }
             weekAverage?.let { add(stubWeekAverageWeightItem(it)) }
-            add(maxPossibleWeightItem(maxPossibleValue, onClickListener))
-            add(targetWeightItem(targetWeight, onClickListener))
-            addAll(weightsItems(weights, onClickListener, onLongClickListener))
+            add(maxPossibleWeightItem(maxPossibleValue))
+            add(targetWeightItem(targetWeight))
+            addAll(weightsItems(weights))
         }
     }
 
@@ -55,29 +56,25 @@ class WeightsMapper @Inject constructor(
         )
     }
 
-    private fun maxPossibleWeightItem(maxPossibleValue: Float, onClickListener: (String) -> Unit) =
+    private fun maxPossibleWeightItem(maxPossibleValue: Float) =
         LabeledRow(
             id = MAX_POSSIBLE_ID,
             value = "$maxPossibleValue ${context.getString(R.string.unit_kg_short)}",
             label = context.getString(R.string.weights_max_possible_label)
         ).apply {
-            this.onClickListener = { onClickListener(id) }
+            this.onClickListener = { this@WeightsMapper.onClickListener(id) }
         }
 
-    private fun targetWeightItem(targetWeight: Float, onClickListener: (String) -> Unit) =
+    private fun targetWeightItem(targetWeight: Float) =
         LabeledRow(
             id = TARGET_ID,
             value = "$targetWeight ${context.getString(R.string.unit_kg_short)}",
             label = context.getString(R.string.weights_target_label)
         ).apply {
-            this.onClickListener = { onClickListener(id) }
+            this.onClickListener = { this@WeightsMapper.onClickListener(id) }
         }
 
-    private fun weightsItems(
-        weights: List<WeightResult>,
-        onClickListener: (String) -> Unit,
-        onLongClickListener: (String) -> Unit
-    ) =
+    private fun weightsItems(weights: List<WeightResult>) =
         weights.map { weightResult ->
             with(weightResult) {
                 LabeledRow(
@@ -89,8 +86,8 @@ class WeightsMapper @Inject constructor(
                         )
                     }"
                 ).apply {
-                    this.onClickListener = { onClickListener(id) }
-                    this.onLongClickListener = { onLongClickListener(id) }
+                    this.onClickListener = { this@WeightsMapper.onClickListener(id) }
+                    this.onLongClickListener = { this@WeightsMapper.onLongClickListener(id) }
                 }
             }
         }

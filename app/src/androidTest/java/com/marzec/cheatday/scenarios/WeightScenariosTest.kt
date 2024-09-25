@@ -9,11 +9,9 @@ import com.marzec.cheatday.common.currentUser
 import com.marzec.cheatday.common.emptyWeightsListResponse
 import com.marzec.cheatday.common.updatedOneWeightsListResponse
 import com.marzec.cheatday.common.fewWeightsListResponse
-import com.marzec.cheatday.common.oneWeightResponse
 import com.marzec.cheatday.common.oneWeightsListResponse
 import com.marzec.cheatday.common.startApplication
 import com.marzec.cheatday.common.updateWeightResponse
-import com.marzec.cheatday.common.updatedFewWeightsListResponse
 import com.marzec.cheatday.di.MockWebDispatcher
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.screens.AddNewWeightsScreen
@@ -173,7 +171,6 @@ class WeightScenariosTest : TestCase() {
             step("Then user sees update weight screen") {
                 UpdateWeightsScreen.isDisplayed()
             }
-
 
             step("And user type weight value") {
                 UpdateWeightsScreen.typeWeight("83.0")

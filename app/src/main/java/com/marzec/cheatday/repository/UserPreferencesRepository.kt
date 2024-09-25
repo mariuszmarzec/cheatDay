@@ -52,7 +52,6 @@ class UserPreferencesRepository @Inject constructor(
             }
         }.flowOn(dispatcher)
 
-
     fun observeWasClickToday(day: Day.Type): Flow<Boolean> =
         userRepository.observeCurrentUser()
             .flatMapMerge { user ->

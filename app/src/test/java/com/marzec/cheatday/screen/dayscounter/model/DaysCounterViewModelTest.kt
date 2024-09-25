@@ -42,7 +42,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun loading()  = scope.runTest {
+    fun loading() = scope.runTest {
         coEvery { daysInteractor.observeDays() } returns flowOf(
             stubDaysGroup(
                 cheat = defaultState.cheat.day.copy(
@@ -76,7 +76,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onCheatDecreaseClick()  = scope.runTest {
+    fun onCheatDecreaseClick() = scope.runTest {
         val viewModel = viewModel()
 
         viewModel.onCheatDecreaseClick()
@@ -85,7 +85,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onDietIncreaseClick()  = scope.runTest {
+    fun onDietIncreaseClick() = scope.runTest {
         val viewModel = viewModel()
 
         viewModel.onDietIncreaseClick()
@@ -94,7 +94,7 @@ class DaysCounterViewModelTest {
     }
 
     @Test
-    fun onWorkoutIncreaseClick()  = scope.runTest {
+    fun onWorkoutIncreaseClick() = scope.runTest {
         val viewModel = viewModel()
 
         viewModel.onWorkoutIncreaseClick()

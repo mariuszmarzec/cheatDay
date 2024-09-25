@@ -52,4 +52,3 @@ class AddNewResultRendererTest {
         paparazzi.snapshot(view)
     }
 }
-

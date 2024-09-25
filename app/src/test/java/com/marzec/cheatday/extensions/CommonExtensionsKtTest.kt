@@ -50,19 +50,19 @@ internal class CommonExtensionsKtTest {
     }
 
     @Test
-    fun combinePair()  = scope.runTest {
+    fun combinePair() = scope.runTest {
         val combine = combine(flowOf(1), flowOf("a"))
         assertThat(combine.test(this).values()).isEqualTo(listOf(Pair(1, "a")))
     }
 
     @Test
-    fun combineTriple()  = scope.runTest {
+    fun combineTriple() = scope.runTest {
         val combine = combine(flowOf(1), flowOf("a"), flowOf(1L))
         assertThat(combine.test(this).values()).isEqualTo(listOf(Triple(1, "a", 1L)))
     }
 
     @Test
-    fun combineQuadruple()  = scope.runTest {
+    fun combineQuadruple() = scope.runTest {
         val combine = combine(
             flowOf(1),
             flowOf("a"),

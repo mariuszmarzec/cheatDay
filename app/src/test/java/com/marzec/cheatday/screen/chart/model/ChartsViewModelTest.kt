@@ -42,7 +42,7 @@ internal class ChartsViewModelTest {
     }
 
     @Test
-    fun loadData()  = scope.runTest {
+    fun loadData() = scope.runTest {
         coEvery { weightInteractor.observeWeights() } returns flowOf(
             Content.Data(listOf(stubWeightResult()))
         )
@@ -64,7 +64,7 @@ internal class ChartsViewModelTest {
     }
 
     @Test
-    fun loadData_error()  = scope.runTest {
+    fun loadData_error() = scope.runTest {
         coEvery { weightInteractor.observeWeights() } returns flowOf(
             Content.Error(Exception())
         )
@@ -90,7 +90,7 @@ internal class ChartsViewModelTest {
     inner class SwitchingChart {
 
         @Test
-        fun switchIntoAverageChart()  = scope.runTest {
+        fun switchIntoAverageChart() = scope.runTest {
             val defaultState: State<ChartsData> = State.Loading(
                 ChartsData(
                     weights = emptyList(),
@@ -105,7 +105,6 @@ internal class ChartsViewModelTest {
             coEvery { weightInteractor.observeAverageWeights() } returns flowOf(
                 Content.Data(listOf(stubWeightResult()))
             )
-
 
             val viewModel = viewModel(defaultState)
             val values = viewModel.test(this)
@@ -126,7 +125,7 @@ internal class ChartsViewModelTest {
         }
 
         @Test
-        fun switchIntoNormalChart()  = scope.runTest {
+        fun switchIntoNormalChart() = scope.runTest {
             val defaultState: State<ChartsData> = State.Loading(
                 ChartsData(
                     weights = emptyList(),
@@ -140,7 +139,6 @@ internal class ChartsViewModelTest {
             coEvery { weightInteractor.observeAverageWeights() } returns flowOf(
                 Content.Data(listOf(stubWeightResult()))
             )
-
 
             val viewModel = viewModel(defaultState)
             val values = viewModel.test(this)

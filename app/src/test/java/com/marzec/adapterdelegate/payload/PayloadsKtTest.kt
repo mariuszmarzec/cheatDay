@@ -55,7 +55,6 @@ class PayloadsKtTest {
             assertThat(actual).isEqualTo(NullablePayload(newValue))
         }
 
-
         @Test
         fun changedToNull() {
             val oldValue = "val"

@@ -1,12 +1,9 @@
 package com.marzec.cheatday.di
 
-import android.util.Log
 import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.api.LocalLoginApi
 import com.marzec.cheatday.api.LoginApi
 import com.marzec.cheatday.api.WeightApi
-import com.marzec.cheatday.api.request.LoginRequest
-import com.marzec.cheatday.api.response.UserDto
 import com.marzec.cheatday.repository.UserRepository
 import dagger.Module
 import dagger.Provides
@@ -20,10 +17,8 @@ import javax.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Headers
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -38,7 +33,6 @@ class ApiModule {
             .readTimeout(Duration.ofMillis(TIMEOUT))
             .addNetworkInterceptor(Interceptor { chain ->
                 var request = chain.request()
-                Log.d("REQUEST", "${request.url.toString()}")
 
                 runBlocking { userRepository.getCurrentUserWithAuthToken() }?.let { user ->
                     request = request.newBuilder()
@@ -54,7 +48,6 @@ class ApiModule {
             })
             .build()
     }
-
 
     @Provides
     @Singleton

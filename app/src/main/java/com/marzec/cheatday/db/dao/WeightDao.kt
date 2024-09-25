@@ -6,7 +6,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.marzec.cheatday.db.model.db.WeightResultEntity
-import com.marzec.cheatday.model.domain.WeightResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 

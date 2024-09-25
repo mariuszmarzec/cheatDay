@@ -16,4 +16,3 @@ interface Cache {
 
     suspend fun toMap(): Map<String, Any?>
 }
-

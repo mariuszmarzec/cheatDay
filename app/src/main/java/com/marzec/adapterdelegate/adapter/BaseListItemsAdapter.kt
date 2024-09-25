@@ -1,4 +1,4 @@
-package com.marzec.adapterdelegate.adapter;
+package com.marzec.adapterdelegate.adapter
 
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView

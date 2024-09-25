@@ -28,7 +28,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-
 @ExtendWith(value = [InstantExecutorExtension::class, TestUnconfinedCoroutineExecutorExtension::class])
 internal class AddNewWeightResultViewModelTest {
 
@@ -56,7 +55,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun load()  = scope.runTest {
+    fun load() = scope.runTest {
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 
@@ -70,7 +69,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun load_withId()  = scope.runTest {
+    fun load_withId() = scope.runTest {
         coEvery { weightInteractor.getWeight(1) } returns stubWeightResult(
             value = 10f,
             date = DateTime(10)
@@ -96,7 +95,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun load_withId_failed()  = scope.runTest {
+    fun load_withId_failed() = scope.runTest {
         coEvery { weightInteractor.getWeight(1) } returns flowOf(Content.Error(Exception()))
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
@@ -111,9 +110,8 @@ internal class AddNewWeightResultViewModelTest {
         )
     }
 
-
     @Test
-    fun setDate()  = scope.runTest {
+    fun setDate() = scope.runTest {
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 
@@ -128,7 +126,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun onDatePickerClick()  = scope.runTest {
+    fun onDatePickerClick() = scope.runTest {
         val viewModel = viewModel()
         val states = viewModel.test(this)
 
@@ -143,7 +141,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_addNewResult()  = scope.runTest {
+    fun save_addNewResult() = scope.runTest {
         coEvery { weightInteractor.addWeight(stubWeightResult()) } returns Content.Data(Unit)
             .asFlow()
         val viewModel = viewModel()
@@ -160,7 +158,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_addNewResult_error()  = scope.runTest {
+    fun save_addNewResult_error() = scope.runTest {
         coEvery { weightInteractor.addWeight(stubWeightResult()) } returns Content.Error<Unit>(
             Exception()
         ).asFlow()
@@ -213,7 +211,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun save_updateResult_error()  = scope.runTest {
+    fun save_updateResult_error() = scope.runTest {
         val data = defaultData.copy(
             weightResult = stubWeightResult(id = 1),
             weight = "100",
@@ -246,7 +244,7 @@ internal class AddNewWeightResultViewModelTest {
     }
 
     @Test
-    fun setNewWeight()  = scope.runTest {
+    fun setNewWeight() = scope.runTest {
         val viewModel = viewModel()
         val states = viewModel.state.test(this)
 

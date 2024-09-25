@@ -58,4 +58,3 @@ class TestCollector<T>(
 }
 
 fun getPaparazziRule() = Paparazzi(theme = "AppTheme")
-

@@ -4,7 +4,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Update
 import androidx.room.Upsert
-import com.marzec.cheatday.db.model.db.WeightResultEntity
 
 interface BaseDao<T> {
 
@@ -28,5 +27,4 @@ interface BaseDao<T> {
 
     @Update
     suspend fun updateSuspend(ob: T)
-
 }

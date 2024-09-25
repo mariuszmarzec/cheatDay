@@ -9,7 +9,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.marzec.cheatday.R
 
 class ErrorView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     var errorMessage = ""
@@ -23,7 +25,6 @@ class ErrorView @JvmOverloads constructor(
             butttonLabel(newValue)
             field = newValue
         }
-
 
     private val errorMessageTextView: TextView
     private val button: Button

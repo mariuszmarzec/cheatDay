@@ -9,9 +9,7 @@ import com.google.common.truth.Truth.assertThat
 import com.marzec.cheatday.db.AppDatabase
 import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.db.model.db.WeightResultEntity
-import kotlinx.coroutines.asExecutor
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 
@@ -100,11 +98,10 @@ class WeightDaoTest {
         assertThat(actual).isEqualTo(listOf(weight3, weight, weight2))
     }
 
-
     @Test
     fun observeMinWeight() = runTest(testDispatcher) {
         val actual = weightDao.observeMinWeight(userEntity.id).first()
-        
+
         assertThat(actual).isEqualTo(weight)
     }
 

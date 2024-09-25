@@ -119,7 +119,6 @@ class WeightsModule {
         remoteRepository.get()
     }
 
-
     private companion object {
         const val WEIGHTS_MEMORY_CACHE_KEY = "WEIGHTS_MEMORY_CACHE_KEY"
 

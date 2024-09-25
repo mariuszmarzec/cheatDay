@@ -5,7 +5,6 @@ import com.marzec.cheatday.api.response.WeightDto
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.model.domain.WeightResult
-import io.mockk.InternalPlatformDsl.toStr
 import org.joda.time.DateTime
 
 fun stubWeightDto(

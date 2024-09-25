@@ -14,4 +14,3 @@ interface CacheByIdSaver<ID, MODEL> {
 
     suspend fun removeItem(id: ID)
 }
-

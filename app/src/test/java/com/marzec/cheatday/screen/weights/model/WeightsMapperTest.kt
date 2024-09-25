@@ -52,9 +52,7 @@ internal class WeightsMapperTest {
             weights = listOf(
                 stubWeightResult(id = 1, value = 1f),
                 stubWeightResult(id = 2, value = 2f)
-            ),
-            onClickListener = { },
-            onLongClickListener = { }
+            )
         )
         assertThat(list).isEqualTo(
             listOf(
@@ -75,9 +73,7 @@ internal class WeightsMapperTest {
             weekAverage = 3.0121f,
             maxPossibleValue = 2f,
             targetWeight = 0f,
-            weights = emptyList(),
-            onClickListener = { },
-            onLongClickListener = { }
+            weights = emptyList()
         )
         assertThat(list).isEqualTo(
             listOf(
@@ -98,9 +94,7 @@ internal class WeightsMapperTest {
             weights = listOf(
                 stubWeightResult(id = 1, value = 1f),
                 stubWeightResult(id = 2, value = 2f)
-            ),
-            onClickListener = { },
-            onLongClickListener = { }
+            )
         )
         assertThat(list).isEqualTo(
             listOf(
@@ -128,7 +122,6 @@ internal class WeightsMapperTest {
         value = "3.0 ${context.getString(R.string.unit_kg_short)}",
         label = context.getString(R.string.weights_week_average_label)
     )
-
 
     private fun stubMaxPossibleWeightItem() = LabeledRow(
         id = WeightsMapper.MAX_POSSIBLE_ID,

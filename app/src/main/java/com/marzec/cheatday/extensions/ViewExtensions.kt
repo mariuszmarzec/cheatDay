@@ -26,7 +26,7 @@ fun View.setVisible(isVisible: Boolean, invisibilityMode: Boolean = false) {
     }
 }
 
-internal inline fun <reified T : View> View.findParentInstance() : T {
+internal inline fun <reified T : View> View.findParentInstance(): T {
     var parent: View = this
     do {
         parent = parent.parent as View

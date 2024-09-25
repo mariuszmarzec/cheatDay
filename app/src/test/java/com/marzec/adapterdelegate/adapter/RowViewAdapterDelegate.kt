@@ -17,5 +17,4 @@ class RowViewHolder : BaseViewHolder<TestItem.Row>(mockk()) {
     override fun onBind(item: TestItem.Row) = Unit
 
     override fun onPayload(item: TestItem.Row, payloads: List<Any>) = Unit
-
 }

@@ -28,7 +28,7 @@ class LoginStateTest {
     val errorState = State.Error(withMailAndPassword, "Error has occurred")
 
     val renderer = LoginRender()
-    
+
     @Test
     fun initialState() = compare(initialState)
 

@@ -16,10 +16,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import javax.inject.Named
-import javax.inject.Qualifier
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -66,7 +63,7 @@ interface AppModule {
 
         @Provides
         @Singleton
-        fun provideMemoryCache() : Cache = MemoryCache()
+        fun provideMemoryCache(): Cache = MemoryCache()
 
         const val UPDATER_COROUTINE_SCOPE = "UPDATER_COROUTINE_SCOPE"
     }

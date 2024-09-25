@@ -1,8 +1,6 @@
 package com.marzec.cheatday.db.datasource
 
-
 import android.content.res.Resources.NotFoundException
-import androidx.datastore.dataStore
 import com.marzec.cheatday.api.WeightDataSource
 import com.marzec.cheatday.api.request.PutWeightRequest
 import com.marzec.cheatday.api.request.UpdateWeightDto
@@ -77,5 +75,4 @@ class WeightRoomDataSource @Inject constructor(
         dataSource.create(WeightResult(0, create.value, create.date.toDateTime())).toDto()
 
     override suspend fun getById(id: Long): WeightDto = dataSource.getById(id).toDto()
-
 }

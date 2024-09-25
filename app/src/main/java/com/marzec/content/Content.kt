@@ -149,7 +149,7 @@ fun <T1, T2, T3, T4, R> combineContentsFlows(
     }
 )
 
-@Suppress("unchecked_cast", "MagicNumber")
+@Suppress("unchecked_cast", "MagicNumber", "LongParameterList")
 fun <T1, T2, T3, T4, T5, R> combineContentsFlows(
     flow: Flow<Content<T1>>,
     flow2: Flow<Content<T2>>,

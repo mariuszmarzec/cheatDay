@@ -168,6 +168,7 @@ hilt {
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    detektPlugins(libs.detekt.formatting)
 
     // leakcanary
     debugImplementation(libs.leakCanary)
@@ -277,6 +278,7 @@ dependencies {
 }
 
 detekt {
+    autoCorrect = true
     source = files(
         "src/androidTest/java",
         "src/main/java",

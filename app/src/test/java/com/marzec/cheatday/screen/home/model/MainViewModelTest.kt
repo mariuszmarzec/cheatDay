@@ -1,6 +1,5 @@
 package com.marzec.cheatday.screen.home.model
 
-
 import com.marzec.cheatday.InstantExecutorExtension
 import com.marzec.cheatday.TestStandardCoroutineExecutorExtension
 import com.marzec.cheatday.core.test

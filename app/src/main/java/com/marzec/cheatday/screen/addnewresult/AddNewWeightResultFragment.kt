@@ -64,4 +64,3 @@ class AddNewWeightResultFragment : BaseFragment(R.layout.fragment_add_new_weight
         ).apply { show() }
     }
 }
-

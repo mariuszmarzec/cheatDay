@@ -51,7 +51,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun `given observe days returns data, when days are observed, then days are returned`()  = scope.runTest {
+    fun `given observe days returns data, when days are observed, then days are returned`() = scope.runTest {
         coEvery { daysRepository.observeDaysByUser(0) } returns flowOf(
             stubDaysGroup(),
             stubDaysGroup(stubDay(count = 10))
@@ -66,7 +66,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun `when cheat day is updated, then repositories are called`()  = scope.runTest {
+    fun `when cheat day is updated, then repositories are called`() = scope.runTest {
         interactor.updateDay(stubDay(type = Day.Type.CHEAT))
 
         coVerify { userRepository.getCurrentUser() }
@@ -74,7 +74,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun `when workout day is updated, then repositories are called`()  = scope.runTest {
+    fun `when workout day is updated, then repositories are called`() = scope.runTest {
         interactor.updateDay(stubDay(type = Day.Type.WORKOUT))
 
         coVerify { userRepository.getCurrentUser() }
@@ -82,7 +82,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun `given days data is available, when workout day reached max count, then workout is updated and cheat day increased`()  = scope.runTest {
+    fun `given days data is available, when workout day reached max count, then workout is updated and cheat day increased`() = scope.runTest {
         coEvery { daysRepository.observeDaysByUser(0) } returns flowOf(stubDaysGroup())
 
         interactor.updateDay(stubDay(type = Day.Type.WORKOUT, count = 3L))
@@ -92,7 +92,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun `given days data is available, when diet day reached max count, then workout is updated and diet day increased`()  = scope.runTest {
+    fun `given days data is available, when diet day reached max count, then workout is updated and diet day increased`() = scope.runTest {
         coEvery { daysRepository.observeDaysByUser(0) } returns flowOf(stubDaysGroup())
 
         interactor.updateDay(stubDay(type = Day.Type.DIET, count = 5L))
@@ -104,7 +104,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun `when diet day is updated, then repositories are called`()  = scope.runTest {
+    fun `when diet day is updated, then repositories are called`() = scope.runTest {
         interactor.updateDay(stubDay(type = Day.Type.DIET))
 
         coVerify { userRepository.getCurrentUser() }
@@ -112,17 +112,17 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun getMaxDietDays()  = scope.runTest {
+    fun getMaxDietDays() = scope.runTest {
         assertThat(interactor.getMaxDietDays()).isEqualTo(Constants.MAX_DIET_DAYS)
     }
 
     @Test
-    fun getMaxWorkoutDays()  = scope.runTest {
+    fun getMaxWorkoutDays() = scope.runTest {
         assertThat(interactor.getMaxWorkoutDays()).isEqualTo(Constants.MAX_WORKOUT_DAYS)
     }
 
     @Test
-    fun `given days are available, when increment cheat days count, then days repository is called`()  = scope.runTest {
+    fun `given days are available, when increment cheat days count, then days repository is called`() = scope.runTest {
         coEvery { daysRepository.observeDaysByUser(0) } returns flowOf(stubDaysGroup())
 
         interactor.incrementCheatDays(7)
@@ -131,7 +131,7 @@ internal class DaysInteractorTest {
     }
 
     @Test
-    fun `given days are available, when increment cheat days count with minus value, then days repository is called`()  = scope.runTest {
+    fun `given days are available, when increment cheat days count with minus value, then days repository is called`() = scope.runTest {
         coEvery { daysRepository.observeDaysByUser(0) } returns flowOf(stubDaysGroup())
 
         interactor.incrementCheatDays(-7)

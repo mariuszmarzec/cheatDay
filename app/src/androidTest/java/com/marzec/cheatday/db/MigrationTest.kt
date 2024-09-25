@@ -71,7 +71,6 @@ class MigrationTest {
                     DayEntity(2, "TYPE", 2, 3, 2)
                 )
             )
-
         }
     }
 

@@ -45,7 +45,7 @@ internal class LoginViewModelTest {
     }
 
     @Test
-    fun onLoginButtonClicked()  = scope.runTest {
+    fun onLoginButtonClicked() = scope.runTest {
         val viewModel = viewModel(defaultState)
         val states = viewModel.test(this)
 
@@ -65,7 +65,7 @@ internal class LoginViewModelTest {
     }
 
     @Test
-    fun onLoginChanged()  = scope.runTest {
+    fun onLoginChanged() = scope.runTest {
         val viewModel = viewModel(defaultState)
         val states = viewModel.test(this)
 
@@ -80,7 +80,7 @@ internal class LoginViewModelTest {
     }
 
     @Test
-    fun onPasswordChanged()  = scope.runTest {
+    fun onPasswordChanged() = scope.runTest {
         val viewModel = viewModel(defaultState)
         val states = viewModel.test(this)
 

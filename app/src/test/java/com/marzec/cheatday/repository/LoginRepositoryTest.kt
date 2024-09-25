@@ -42,7 +42,7 @@ class LoginRepositoryTest {
     )
 
     @Test
-    fun login()  = scope.runTest {
+    fun login() = scope.runTest {
         coEvery { loginApi.login(request) } returns Response.success(
             userDto,
             Headers.headersOf(Api.Headers.AUTHORIZATION, "auth_token")
@@ -68,7 +68,7 @@ class LoginRepositoryTest {
     }
 
     @Test
-    fun logout()  = scope.runTest {
+    fun logout() = scope.runTest {
         coEvery { loginApi.logout() } returns Unit
 
         val result = repository.logout()

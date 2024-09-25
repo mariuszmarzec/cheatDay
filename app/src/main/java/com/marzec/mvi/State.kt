@@ -3,7 +3,6 @@ package com.marzec.mvi
 import com.marzec.content.Content
 import com.marzec.cheatday.extensions.asInstance
 
-
 sealed class State<T>(open val data: T?) {
 
     data class Data<T>(override val data: T) : State<T>(data)

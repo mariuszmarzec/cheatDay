@@ -2,8 +2,6 @@ package com.marzec.cheatday.db.migrations
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.marzec.cheatday.db.model.db.DayEntity
-import com.marzec.cheatday.db.model.db.UserEntity
 import com.marzec.cheatday.db.model.db.WeightResultEntity
 
 val MIGRATION_3_TO_4 = Migration3to4()

@@ -56,7 +56,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun `given target weight is available, when target weight is observed, then value is returned as flow`()  = scope.runTest {
+    fun `given target weight is available, when target weight is observed, then value is returned as flow`() = scope.runTest {
         coEvery { targetRepository.observeTargetWeight() } returns flowOf(1f, 2f)
 
         assertThat(interactor.observeTargetWeight().test(this).values()).isEqualTo(
@@ -65,7 +65,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun `when target weight is updated, then target weight is called`()  = scope.runTest {
+    fun `when target weight is updated, then target weight is called`() = scope.runTest {
         coEvery { targetRepository.setTargetWeight(1f) } returns Unit
 
         interactor.setTargetWeight(1f)
@@ -74,7 +74,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun observeWeights()  = scope.runTest {
+    fun observeWeights() = scope.runTest {
         coEvery { weightResultRepository.observeWeights() } returns flowOf(
             Content.Data(
                 listOf(
@@ -100,7 +100,7 @@ class WeightInteractorTest {
     inner class WeekAverage {
 
         @Test
-        fun `given seven or more weights are available, when observing average weight, then week average is returned`()  = scope.runTest {
+        fun `given seven or more weights are available, when observing average weight, then week average is returned`() = scope.runTest {
             coEvery { weightResultRepository.observeWeights() } returns flowOf(
                 Content.Data(
                     listOf(
@@ -124,7 +124,7 @@ class WeightInteractorTest {
         }
 
         @Test
-        fun `given seven or more weights are available, when observing average weight, then no data are available`()  = scope.runTest {
+        fun `given seven or more weights are available, when observing average weight, then no data are available`() = scope.runTest {
             coEvery { weightResultRepository.observeWeights() } returns flowOf(
                 Content.Data(
                     listOf(
@@ -143,7 +143,7 @@ class WeightInteractorTest {
         }
 
         @Test
-        fun `given seven or more weights are available, when observing average weights, then they are returned`()  = scope.runTest {
+        fun `given seven or more weights are available, when observing average weights, then they are returned`() = scope.runTest {
             coEvery { weightResultRepository.observeWeights() } returns flowOf(
                 Content.Data(
                     listOf(
@@ -175,7 +175,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun `when adding weight, then weight result repository is called`()  = scope.runTest {
+    fun `when adding weight, then weight result repository is called`() = scope.runTest {
         coEvery { weightResultRepository.putWeight(stubWeightResult()) } returns flowOf(
             Content.Data(
                 stubWeightResult()
@@ -188,7 +188,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun `when updating weight, then weight result repository is called`()  = scope.runTest {
+    fun `when updating weight, then weight result repository is called`() = scope.runTest {
         val date = DateTime.now()
         val updateWeight = UpdateWeight(value = 70f, date)
         coEvery {
@@ -202,7 +202,7 @@ class WeightInteractorTest {
     }
 
     @Test
-    fun `when added weight is not today, then don't change cheat days count`()  = scope.runTest {
+    fun `when added weight is not today, then don't change cheat days count`() = scope.runTest {
         coEvery { weightResultRepository.putWeight(stubWeightResult(value = 90.5f)) } returns flowOf(
             Content.Data(stubWeightResult(value = 90.5f))
         )
@@ -338,7 +338,7 @@ class WeightInteractorTest {
             }
 
         @Test
-        fun `given old value not available, when adding new weight, then don't cheat days count`()  = scope.runTest {
+        fun `given old value not available, when adding new weight, then don't cheat days count`() = scope.runTest {
             coEvery { weightResultRepository.putWeight(stubWeightResult(value = 90.5f)) } returns flowOf(
                 Content.Data(stubWeightResult(value = 90.5f))
             )

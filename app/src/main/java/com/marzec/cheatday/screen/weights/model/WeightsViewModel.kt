@@ -75,7 +75,6 @@ class WeightsViewModel @Inject constructor(
         }
     }
 
-
     fun changeMaxWeight(maxWeight: String) = intent<Unit> {
         onTrigger {
             maxWeight.toFloatOrNull()?.let { weight ->

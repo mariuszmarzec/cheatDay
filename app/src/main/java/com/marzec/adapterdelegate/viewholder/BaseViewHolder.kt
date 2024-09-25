@@ -10,4 +10,3 @@ abstract class BaseViewHolder<Item : ListItem>(itemView: View) : RecyclerView.Vi
 
     abstract fun onPayload(item: Item, payloads: List<Any>)
 }
-

@@ -16,4 +16,3 @@ class MainViewModel @Inject constructor(
         reducer { state.copy(isUserLogged = resultNonNull()) }
     }
 }
-

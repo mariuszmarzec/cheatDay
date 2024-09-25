@@ -11,5 +11,4 @@ open class DateTimeConverter {
 
     @TypeConverter
     fun dateToTimestamp(date: DateTime?): Long? = date?.millis
-
 }

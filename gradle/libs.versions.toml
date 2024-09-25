@@ -143,10 +143,11 @@ android-test-services = { module = "androidx.test.services:test-services", versi
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso_core" }
 espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "espresso_core" }
 
-
 kaspresso = { module = "com.kaspersky.android-components:kaspresso", version.ref = "kaspresso" }
 
 hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrestVersion" }
+
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 
 plugin-androidBuild = { module = "com.android.tools.build:gradle", version.ref = "androidGradleplugin" }
 plugin-kotlinGradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }

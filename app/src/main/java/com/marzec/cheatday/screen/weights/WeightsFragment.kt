@@ -21,7 +21,6 @@ import com.marzec.cheatday.screen.weights.model.WeightsSideEffects
 import com.marzec.cheatday.screen.weights.model.WeightsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlinx.coroutines.flow.map
 
 @AndroidEntryPoint
 class WeightsFragment : BaseFragment(R.layout.fragment_weights) {

@@ -18,7 +18,9 @@ import com.marzec.cheatday.extensions.visible
 import com.marzec.cheatday.model.domain.Day
 
 class CounterView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private val defaultFontSize = context.resources.getDimensionPixelSize(R.dimen.counter_title_text_size)
@@ -155,7 +157,7 @@ class CounterView @JvmOverloads constructor(
             CountMode.DECREASE -> "${this.value}"
             CountMode.INCREASE -> {
                 val valueToDraw = this.value % max
-                "$valueToDraw/${max}"
+                "$valueToDraw/$max"
             }
         }
     }

@@ -4,4 +4,4 @@ import com.marzec.cheatday.model.domain.User
 
 data class UserDto(val id: Int, val email: String)
 
-fun UserDto.toDomain() = User(id =  id.toLong(), email = email)
+fun UserDto.toDomain() = User(id = id.toLong(), email = email)

@@ -76,7 +76,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun getCurrentUser()  = scope.runTest {
+    fun getCurrentUser() = scope.runTest {
         mockCurrentUserFromPrefs(currentUser)
         coEvery { userDao.getUser("email") } returns userEntity
 
@@ -84,22 +84,21 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun getCurrentUserWithAuth()  = scope.runTest {
+    fun getCurrentUserWithAuth() = scope.runTest {
         mockCurrentUserFromPrefs(currentUser)
 
         assertThat(repository.getCurrentUserWithAuthToken()).isEqualTo(currentUserDomain)
     }
 
     @Test
-    fun `given current user auth is empty, when getting auth token, returns null`()  = scope.runTest {
+    fun `given current user auth is empty, when getting auth token, returns null`() = scope.runTest {
         mockCurrentUserFromPrefs(currentUser.copy(auth = ""))
 
         assertThat(repository.getCurrentUserWithAuthToken()).isNull()
     }
 
-
     @Test
-    fun `given user data is available, when getting current user, returns domain user`()  = scope.runTest {
+    fun `given user data is available, when getting current user, returns domain user`() = scope.runTest {
         mockCurrentUserFromPrefs(currentUser)
         coEvery { userDao.observeUser("email") } returns flowOf(userEntity)
 
@@ -107,21 +106,21 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun `given current user mail is not empty, when getting if user logged, returns true`()  = scope.runTest {
+    fun `given current user mail is not empty, when getting if user logged, returns true`() = scope.runTest {
         mockCurrentUserFromPrefs(currentUser)
 
         repository.observeIfUserLogged().test(this).isEqualTo(listOf(true))
     }
 
     @Test
-    fun `given current user token are empty, when getting if user logged, returns false`()  = scope.runTest {
+    fun `given current user token are empty, when getting if user logged, returns false`() = scope.runTest {
         mockCurrentUserFromPrefs(currentUserNull)
 
         repository.observeIfUserLogged().test(this).isEqualTo(listOf(false))
     }
 
     @Test
-    fun `given user mail is not stored in database, when adding user, then user is added`()  = scope.runTest {
+    fun `given user mail is not stored in database, when adding user, then user is added`() = scope.runTest {
         coEvery { userDao.observeUser("email") } returns flowOf()
 
         repository.addUserToDbIfNeeded(user)
@@ -140,7 +139,7 @@ internal class UserRepositoryTest {
         }
 
     @Test
-    fun clearCurrentUser()  = scope.runTest {
+    fun clearCurrentUser() = scope.runTest {
         val expectedJsonArg = gson.toJson(currentUserNull)
         val captured = slot<suspend (Preferences) -> Preferences>()
             coEvery {
@@ -156,7 +155,7 @@ internal class UserRepositoryTest {
     }
 
     @Test
-    fun setCurrentUserWithAuth()  = scope.runTest {
+    fun setCurrentUserWithAuth() = scope.runTest {
         val expectedJsonArg = gson.toJson(currentUser)
         val captured = slot<suspend (Preferences) -> Preferences>()
         coEvery {

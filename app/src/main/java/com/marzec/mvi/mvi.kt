@@ -19,6 +19,7 @@ import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalCoroutinesApi::class)
+@Suppress("FunctionNaming")
 fun <State : Any> Store(
     scope: CoroutineScope,
     defaultState: State,
@@ -60,7 +61,6 @@ interface Store4<State : Any> {
     fun <Result : Any> run(intent: Intent3<State, Result>)
     fun <Result : Any> run(id: String?, intent: Intent3<State, Result>)
 }
-
 
 open class Store4Impl<State : Any>(
     private val scope: CoroutineScope,
@@ -338,7 +338,6 @@ fun <OutState : Any, InState : Any, Result : Any> Intent3<InState, Result>.map(
                 stateMapper(state)?.let { newInState ->
                     stateReducer(inner.reducer(result, newInState))
                 } ?: state
-
             }
 
             sideEffect {

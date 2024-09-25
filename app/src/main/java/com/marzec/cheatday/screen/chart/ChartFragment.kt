@@ -6,14 +6,11 @@ import androidx.fragment.app.viewModels
 import com.marzec.cheatday.R
 import com.marzec.cheatday.common.BaseFragment
 import com.marzec.cheatday.extensions.showErrorDialog
-import com.marzec.cheatday.screen.chart.model.ChartsData
 import com.marzec.cheatday.screen.chart.model.ChartsSideEffect
 import com.marzec.cheatday.screen.chart.model.ChartsViewModel
 import com.marzec.cheatday.screen.chart.renderer.ChartRenderer
-import com.marzec.mvi.State
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
 class ChartFragment : BaseFragment(R.layout.fragment_chart) {

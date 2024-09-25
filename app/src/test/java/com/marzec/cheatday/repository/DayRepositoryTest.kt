@@ -62,7 +62,7 @@ internal class DayRepositoryTest {
     }
 
     @Test
-    fun update()  = scope.runTest {
+    fun update() = scope.runTest {
         repository.update(0, stubDay())
 
         coVerify { dayDao.createOrUpdate(stubDayEntity(userId = 0)) }

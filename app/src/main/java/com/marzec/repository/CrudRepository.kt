@@ -60,27 +60,30 @@ class CrudRepository<ID, MODEL : Any, CREATE : Any, UPDATE : Any, MODEL_DTO : An
                 override suspend fun updateCache(data: MODEL) {
                     cacheSaver.updateItem(id, data)
                 }
-
             },
             call = networkCall
         ).run()
 
     suspend fun remove(
-        id: ID, policy: RefreshPolicy = RefreshPolicy.SEPARATE_DISPATCHER
+        id: ID,
+        policy: RefreshPolicy = RefreshPolicy.SEPARATE_DISPATCHER
     ): Flow<Content<Unit>> = asContentFlow {
         dataSource.remove(id)
         cacheSaver.removeItem(id)
     }.triggerUpdateIfNeeded(policy).flowOn(dispatcher)
 
     suspend fun update(
-        id: ID, model: UPDATE, policy: RefreshPolicy = RefreshPolicy.SEPARATE_DISPATCHER
+        id: ID,
+        model: UPDATE,
+        policy: RefreshPolicy = RefreshPolicy.SEPARATE_DISPATCHER
     ): Flow<Content<Unit>> = asContentFlow {
         val updatedModel = dataSource.update(id, model.updateToDto()).toDomain()
         cacheSaver.updateItem(id, updatedModel)
     }.triggerUpdateIfNeeded(policy).flowOn(dispatcher)
 
     suspend fun create(
-        create: CREATE, policy: RefreshPolicy = RefreshPolicy.SEPARATE_DISPATCHER
+        create: CREATE,
+        policy: RefreshPolicy = RefreshPolicy.SEPARATE_DISPATCHER
     ): Flow<Content<MODEL>> = asContentFlow {
         val createdModel = dataSource.create(create.createToDto()).toDomain()
         cacheSaver.addItem(createdModel)

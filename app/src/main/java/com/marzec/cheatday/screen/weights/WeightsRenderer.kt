@@ -53,6 +53,9 @@ class WeightsRenderer @Inject constructor(
 
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(view.context)
+
+        mapper.onClickListener = { onClickListener(it) }
+        mapper.onLongClickListener = { onLongClickListener(it) }
     }
 
     fun Flow<State<WeightsData>>.mapToUi() = map { state ->
@@ -91,8 +94,6 @@ class WeightsRenderer @Inject constructor(
         weekAverage,
         maxPossibleWeight,
         targetWeight,
-        weights,
-        onClickListener,
-        onLongClickListener
+        weights
     )
 }

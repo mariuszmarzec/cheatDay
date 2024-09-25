@@ -59,14 +59,14 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun setMaxPossibleWeight()  = scope.runTest {
+    fun setMaxPossibleWeight() = scope.runTest {
         repository.setMaxPossibleWeight(10f)
 
         verify { mutablePreferences[floatPreferencesKey("1_max_possible_weight")] = eq(10f) }
     }
 
     @Test
-    fun observeMaxPossibleWeight()  = scope.runTest {
+    fun observeMaxPossibleWeight() = scope.runTest {
         every { preferences[floatPreferencesKey("1_max_possible_weight")] } returns 5f
 
         val result = repository.observeMaxPossibleWeight().test(this)
@@ -75,14 +75,14 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun setTargetWeight()  = scope.runTest {
+    fun setTargetWeight() = scope.runTest {
         repository.setTargetWeight(10f)
 
         verify { mutablePreferences[floatPreferencesKey("1_weight")] = eq(10f) }
     }
 
     @Test
-    fun observeTargetWeight()  = scope.runTest {
+    fun observeTargetWeight() = scope.runTest {
         every { preferences[floatPreferencesKey("1_weight")] } returns 5f
 
         val result = repository.observeTargetWeight().test(this)
@@ -91,7 +91,7 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun observeWasClickToday()  = scope.runTest {
+    fun observeWasClickToday() = scope.runTest {
         DateTimeUtils.setCurrentMillisFixed(0)
         every { preferences[longPreferencesKey("1_CHEAT")] } returns DateTime.now()
             .withTimeAtStartOfDay().millis
@@ -102,7 +102,7 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun `Given last day change was in different time as today, when getting clicked today status, then returns false`()  = scope.runTest {
+    fun `Given last day change was in different time as today, when getting clicked today status, then returns false`() = scope.runTest {
         DateTimeUtils.setCurrentMillisFixed(0)
         every { preferences[longPreferencesKey("1_CHEAT")] } returns 123
 
@@ -112,7 +112,7 @@ internal class UserPreferencesRepositoryTest {
     }
 
     @Test
-    fun setWasClickedToday()  = scope.runTest {
+    fun setWasClickedToday() = scope.runTest {
         DateTimeUtils.setCurrentMillisFixed(0)
 
         repository.setWasClickedToday(Day.Type.CHEAT)
