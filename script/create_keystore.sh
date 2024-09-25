@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the keystore details
-KEYSTORE_DIR="$HOME/.android"
+KEYSTORE_DIR="./app"
 KEYSTORE_FILE="debug.keystore"
 ALIAS="androiddebugkey"
 KEYSTORE_PASSWORD="android"
