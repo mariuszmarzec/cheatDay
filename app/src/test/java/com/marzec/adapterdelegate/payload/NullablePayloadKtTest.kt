@@ -2,9 +2,7 @@ package com.marzec.adapterdelegate.payload
 
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
-
 import org.junit.jupiter.api.Test
 
 class NullablePayloadKtTest {

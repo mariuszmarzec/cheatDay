@@ -1,9 +1,7 @@
 package com.marzec.adapterdelegate.payload
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
-
 import org.junit.jupiter.api.Test
 
 class PayloadsKtTest {
