@@ -281,7 +281,7 @@ class WeightInteractorTest {
             }
 
         @Test
-        @Suppress("MaxLineLength")
+        @Suppress("MaxLineLength", "MaximumLineLength")
         fun `given new weight is smaller than older, when adding new weight, then increase cheat day and additionally increase cheat day with diff from integers values of weights`() =
             scope.runTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
