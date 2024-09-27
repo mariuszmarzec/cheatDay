@@ -2,21 +2,22 @@ package com.marzec.cheatday.api
 
 import com.marzec.cheatday.BuildConfig
 import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 
 object Api {
 
     const val LOCALHOST_API = "http://localhost"
-    val HOST = BuildConfig.HOST
+    const val HOST = BuildConfig.HOST
 
-    val BASE_URL = "$HOST/fiteo/api/1/"
+    const val BASE_URL = "$HOST/fiteo/api/1/"
 
-    val BASE_CHEAT_URL = "$HOST/cheat/api/1/"
+    const val BASE_CHEAT_URL = "$HOST/cheat/api/1/"
 
-    val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
-    val DATE_FORMATTER = DateTimeFormat.forPattern(DATE_FORMAT)
+    const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
+    val DATE_FORMATTER: DateTimeFormatter = DateTimeFormat.forPattern(DATE_FORMAT)
 
     object Headers {
 
-        val AUTHORIZATION = BuildConfig.AUTHORIZATION
+        const val AUTHORIZATION = BuildConfig.AUTHORIZATION
     }
 }

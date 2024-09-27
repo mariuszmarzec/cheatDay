@@ -93,7 +93,7 @@ class UserRepository @Inject constructor(
         getCurrentUser() ?: currentUserNull
 
     companion object {
-        private val CURRENT_USER = "CURRENT_USER"
+        private const val CURRENT_USER = "CURRENT_USER"
 
         private val currentUserNull = CurrentUserDomain(
             id = -1,
