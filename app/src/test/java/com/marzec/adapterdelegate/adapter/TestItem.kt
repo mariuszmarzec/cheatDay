@@ -19,7 +19,7 @@ sealed class TestItem(open val name: String) : ListItem {
     }
 
     companion object {
-        val HEADER_VIEW_TYPE = 1
-        val ROW_VIEW_TYPE = HEADER_VIEW_TYPE + 1
+        const val HEADER_VIEW_TYPE = 1
+        const val ROW_VIEW_TYPE = HEADER_VIEW_TYPE + 1
     }
 }
