@@ -89,6 +89,7 @@ class ChartRenderer @Inject constructor() {
         }
     }
 
+    @Suppress("NewApi")
     private fun render(data: ChartsData) {
         val weights = if (data.showAverage) {
             data.averageWeights
