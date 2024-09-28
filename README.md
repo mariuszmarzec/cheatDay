@@ -1,3 +1,5 @@
+[![build](https://github.com/mariuszmarzec/cheatDay/actions/workflows/build.yml/badge.svg)](https://github.com/mariuszmarzec/cheatDay/actions/workflows/build.yml)
+
 # CheatDay application
 
 Application for putting some gamification into diet. Keep diet, do workout, get cheat day as reward.
