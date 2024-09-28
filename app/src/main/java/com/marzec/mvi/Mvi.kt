@@ -294,7 +294,9 @@ class IntentBuilder<State : Any, Result : Any>(
     )
 
     companion object {
-        fun <State : Any, Result : Any> build(buildFun: IntentBuilder<State, Result>.() -> Unit): Intent3<State, Result> =
+        fun <State : Any, Result : Any> build(
+            buildFun: IntentBuilder<State, Result>.() -> Unit
+        ): Intent3<State, Result> =
             IntentBuilder<State, Result>().apply(buildFun).build()
     }
 }

@@ -278,7 +278,6 @@ dependencies {
 }
 
 detekt {
-    autoCorrect = true
     source = files(
         "src/androidTest/java",
         "src/main/java",

@@ -224,7 +224,7 @@ class WeightInteractorTest {
         }
 
         @Test
-        @Suppress("MaxLineLength", "MaximumLineLength")
+        @SuppressWarnings("MaxLineLength", "MaximumLineLength")
         fun `given new weight is greater than older and target weight, when adding new weight, then decrease cheat day, and additionally decrease cheat day with diff from integers values of weights`() =
             scope.runTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
@@ -243,7 +243,7 @@ class WeightInteractorTest {
             }
 
         @Test
-        @Suppress("MaxLineLength", "MaximumLineLength")
+        @SuppressWarnings("MaxLineLength", "MaximumLineLength")
         fun `given new weight is greater than older with diff smaller than 1 kg than and then target weight, when adding new weight, then decrease cheat day`() =
             scope.runTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
@@ -262,7 +262,7 @@ class WeightInteractorTest {
             }
 
         @Test
-        @Suppress("MaxLineLength", "MaximumLineLength")
+        @SuppressWarnings("MaxLineLength", "MaximumLineLength")
         fun `given new weight is greater than older, but not than target weight, when adding new weight, then don't change cheat days count`() =
             scope.runTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
@@ -281,7 +281,7 @@ class WeightInteractorTest {
             }
 
         @Test
-        @Suppress("MaxLineLength", "MaximumLineLength")
+        @SuppressWarnings("MaxLineLength", "MaximumLineLength")
         fun `given new weight is smaller than older, when adding new weight, then increase cheat day and additionally increase cheat day with diff from integers values of weights`() =
             scope.runTest {
                 coEvery { weightResultRepository.observeLastWeight() } returns flowOf(
