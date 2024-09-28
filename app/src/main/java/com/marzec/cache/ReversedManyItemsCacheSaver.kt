@@ -1,5 +1,6 @@
 package com.marzec.cache
 
+@Suppress("NewApi")
 class ReversedManyItemsCacheSaver<ID, MODEL>(
     private val saver: ManyItemsCacheSaver<ID, MODEL>
 ) : ManyItemsCacheSaver<ID, MODEL> by saver {
