@@ -46,6 +46,7 @@ jobs:
       uses: reactivecircus/android-emulator-runner@v2.32.0
       with:
         api-level: 30
+        arch: x86_64
         script: ./gradlew connectedLocalDebugAndroidTest
 
     - name: Log success message
