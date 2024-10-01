@@ -33,7 +33,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
 
-    - name: Run unit tests
+    - name: unit tests
       run: ./gradlew testLocalDebugUnitTest
 
     - name: Enable KVM
@@ -42,12 +42,12 @@ jobs:
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
 
-    - name: run tests
+    - name: UI tests
       uses: reactivecircus/android-emulator-runner@v2.32.0
       with:
         api-level: 30
         arch: x86_64
-        script: ./gradlew connectedLocalDebugAndroidTest
+        script: ./gradlew connectedStageDebugAndroidTest
 
     - name: Log success message
       run: echo "Build finished successfully"
