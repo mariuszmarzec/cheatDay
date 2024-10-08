@@ -30,6 +30,7 @@ internal class DayRepositoryTest {
 
     @Test
     fun observeDaysByUser() = runTest(dispatcher) {
+        assertThat(true).isFalse()
         coEvery { dayDao.getDay(0, "CHEAT") } returns stubDayEntity(type = "CHEAT")
         coEvery { dayDao.getDay(0, "WORKOUT") } returns stubDayEntity(type = "WORKOUT")
         coEvery { dayDao.getDay(0, "DIET") } returns stubDayEntity(type = "DIET")
