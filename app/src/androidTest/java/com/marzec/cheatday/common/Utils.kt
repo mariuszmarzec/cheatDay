@@ -69,7 +69,7 @@ fun updatedFewWeightsListResponse() = okStatusResponse()
     .setBody(responseJson("updated_few_weights.json"))
 
 fun addWeightsResponse() = okStatusResponse()
-    .setBody(responseJson("one_weight.json"))
+    .setBody(responseJson("added_weight_0.json"))
 
 fun updateWeightResponse() = okStatusResponse()
     .setBody(responseJson("updated_weight_0.json"))
