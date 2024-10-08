@@ -36,7 +36,7 @@ jobs:
     - name: unit tests
       run: ./gradlew testLocalDebugUnitTest
 
-    - name: Upload artifact on failure
+    - name: Upload artifact on ui tests failure
       if: failure()
       uses: actions/upload-artifact@v3
       with:
@@ -55,6 +55,13 @@ jobs:
         api-level: 30
         arch: x86_64
         script: ./gradlew connectedStageDebugAndroidTest
+
+    - name: Upload artifact on failure
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: UI Tests report
+        path: '**/app/build/reports/androidTests/**'
 
     - name: Log success message
       run: echo "Build finished successfully"
