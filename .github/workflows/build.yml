@@ -34,7 +34,7 @@ jobs:
       run: ./gradlew build
 
     - name: unit tests
-      run: ./gradlew testLocalDebugUnitTest
+      run: ./gradlew testStageDebugUnitTest
 
     - name: Upload artifact on ui tests failure
       if: failure()
@@ -56,12 +56,22 @@ jobs:
         arch: x86_64
         script: ./gradlew connectedStageDebugAndroidTest
 
-    - name: Upload artifact on failure
+    - name: Upload artifact on UI test failure
       if: failure()
       uses: actions/upload-artifact@v3
       with:
         name: UI Tests report
         path: '**/app/build/reports/androidTests/**'
+
+    - name: Coverage report
+      run: ./gradlew jacocoTestReportStageDebug
+
+    - name: Upload artifact on low coverage
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: UI Tests report
+        path: '**/app/build/reports/jacoco/**'
 
     - name: Log success message
       run: echo "Build finished successfully"
