@@ -41,7 +41,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: Unit test report
-        path: app/build/tests/**
+        path: '**/app/build/tests/**'
 
     - name: Enable KVM
       run: |
