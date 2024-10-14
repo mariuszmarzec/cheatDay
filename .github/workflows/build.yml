@@ -54,7 +54,7 @@ jobs:
       with:
         api-level: 31
         arch: x86_64
-        profile: Pixel 6
+        profile: Pixel 4
         script: ./gradlew connectedStageDebugAndroidTest
 
     - name: Upload artifact on UI test failure
