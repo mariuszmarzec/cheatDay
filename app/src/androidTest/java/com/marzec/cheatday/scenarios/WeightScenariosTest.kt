@@ -25,6 +25,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import javax.inject.Inject
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -48,6 +49,11 @@ class WeightScenariosTest : TestCase() {
     @Before
     fun init() {
         hiltRule.inject()
+    }
+
+    @After
+    fun tearDown() {
+        MockWebDispatcher.clear()
     }
 
     @Test

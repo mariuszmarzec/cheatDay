@@ -48,4 +48,8 @@ object MockWebDispatcher : Dispatcher() {
         responses.remove(pair)
         return pair.second
     }
+
+    fun clear() {
+        responses.clear()
+    }
 }
