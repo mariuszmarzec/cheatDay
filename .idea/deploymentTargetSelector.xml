@@ -11,9 +11,6 @@
       <SelectionState runConfigName="WeightScenariosTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="s10_userUpdatesNewWeightResult()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="Tests in 'com.marzec.cheatday.scenarios'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>

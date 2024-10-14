@@ -79,6 +79,8 @@ class WeightScenariosTest : TestCase() {
 
             step("And user clicks weights tab") {
                 MockWebDispatcher.setResponse("/weights", emptyWeightsListResponse())
+                MockWebDispatcher.setResponse("/weights", emptyWeightsListResponse())
+                MockWebDispatcher.setResponse("/weights", emptyWeightsListResponse())
                 HomeScreen.weightTab.click()
             }
 
@@ -100,6 +102,8 @@ class WeightScenariosTest : TestCase() {
 
             step("And user clicks add button") {
                 MockWebDispatcher.setResponse("/weights", addWeightsResponse())
+                MockWebDispatcher.setResponse("/weights", oneWeightsListResponse())
+                MockWebDispatcher.setResponse("/weights", oneWeightsListResponse())
                 MockWebDispatcher.setResponse("/weights", oneWeightsListResponse())
                 AddNewWeightsScreen.button.click()
             }
