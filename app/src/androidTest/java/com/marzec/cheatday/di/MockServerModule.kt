@@ -1,5 +1,6 @@
 package com.marzec.cheatday.di
 
+import android.util.Log
 import com.marzec.cheatday.api.Api
 import dagger.Module
 import dagger.Provides
@@ -37,19 +38,27 @@ class MockServerModule {
 
 object MockWebDispatcher : Dispatcher() {
 
-    private val responses = mutableListOf<Pair<String, MockResponse>>()
+    private val responses = mutableMapOf<Pair<Method, String>, MockResponse>()
 
-    fun setResponse(path: String, response: MockResponse) {
-        responses.add(path to response)
+    fun setResponse(method: Method, path: String, response: MockResponse) {
+        responses[method to path] = response
     }
 
-    override fun dispatch(request: RecordedRequest): MockResponse {
-        val pair = responses.first { request.path.orEmpty() == it.first }
-        responses.remove(pair)
-        return pair.second
-    }
+    override fun dispatch(request: RecordedRequest): MockResponse =
+        responses[Method.valueOf(request.method.orEmpty().uppercase()) to request.path]
+            ?: throw IllegalArgumentException("No response for ${request.path} in mock server").also {
+                Log.e(this@MockWebDispatcher::class.simpleName, it.message.orEmpty(), it)
+            }
 
     fun clear() {
         responses.clear()
     }
+}
+
+enum class Method(val value: String) {
+    GET("GET"),
+    POST("POST"),
+    PUT("PUT"),
+    PATCH("PATCH"),
+    DELETE("DELETE")
 }
