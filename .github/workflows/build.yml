@@ -67,8 +67,7 @@ jobs:
     - name: Coverage report
       run: ./gradlew jacocoTestReportStageDebug
 
-    - name: Upload artifact on low coverage
-      if: failure()
+    - name: Upload coverage report
       uses: actions/upload-artifact@v3
       with:
         name: UI Tests report
