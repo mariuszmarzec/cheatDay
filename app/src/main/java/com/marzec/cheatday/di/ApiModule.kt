@@ -1,6 +1,7 @@
 package com.marzec.cheatday.di
 
 import com.marzec.cheatday.api.Api
+import com.marzec.cheatday.api.FeatureToggleApi
 import com.marzec.cheatday.api.LocalLoginApi
 import com.marzec.cheatday.api.LoginApi
 import com.marzec.cheatday.api.WeightApi
@@ -63,6 +64,18 @@ class ApiModule {
 
     @Provides
     @Singleton
+    @FeatureToggleApiRetrofit
+    fun provideFeatureToggleApiRetrofit(
+        httpClient: OkHttpClient,
+        @FeatureToggleApiUrl apiUrl: String
+    ): Retrofit = Retrofit.Builder()
+        .client(httpClient)
+        .baseUrl(apiUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    @Provides
+    @Singleton
     @CheatDayApiRetrofit
     fun provideRetrofitForCheatDayApi(
         httpClient: OkHttpClient,
@@ -98,6 +111,12 @@ class ApiModule {
 
     @Provides
     @Singleton
+    fun provideFeatureToggleApi(@FeatureToggleApiRetrofit retrofit: Retrofit): FeatureToggleApi = retrofit.create(
+        FeatureToggleApi::class.java
+    )
+
+    @Provides
+    @Singleton
     fun provideWeightApi(@CheatDayApiRetrofit retrofit: Retrofit): WeightApi = retrofit.create(
         WeightApi::class.java
     )
@@ -115,6 +134,9 @@ class ApiModule {
 annotation class LoginApiRetrofit
 
 @Qualifier
+annotation class FeatureToggleApiRetrofit
+
+@Qualifier
 annotation class CheatDayApiRetrofit
 
 @Qualifier
@@ -122,6 +144,9 @@ annotation class ApiHost
 
 @Qualifier
 annotation class LoginApiUrl
+
+@Qualifier
+annotation class FeatureToggleApiUrl
 
 @Qualifier
 annotation class CheatDayApiUrl

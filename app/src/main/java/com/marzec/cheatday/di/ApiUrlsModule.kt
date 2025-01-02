@@ -18,6 +18,10 @@ class ApiUrlsModule {
     fun provideLoginApiUrl() = Api.BASE_URL
 
     @Provides
+    @FeatureToggleApiUrl
+    fun provideFeatureToggleApi() = Api.BASE_URL
+
+    @Provides
     @CheatDayApiUrl
     fun provideCheatDayApiUrl() = Api.BASE_CHEAT_URL
 }
