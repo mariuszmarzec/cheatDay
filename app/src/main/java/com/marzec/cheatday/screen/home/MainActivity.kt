@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.state.collect { state ->
                     val isUserLogged = state.isUserLogged
-                    bottomNavigationView.isVisible = isUserLogged ?: true
+                    bottomNavigationView.isVisible = state.isBottomNavigationVisible
                     val controller = navHostFragment?.findNavController()
                     controller?.let {
 

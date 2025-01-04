@@ -7,6 +7,7 @@ import com.marzec.content.asContent
 import com.marzec.content.asContentFlow
 import com.marzec.cheatday.api.request.LoginRequest
 import com.marzec.cheatday.api.request.toDomain
+import com.marzec.cheatday.api.response.toDomain
 import com.marzec.cheatday.model.domain.CurrentUserDomain
 import com.marzec.cheatday.model.domain.User
 import kotlinx.coroutines.CoroutineDispatcher

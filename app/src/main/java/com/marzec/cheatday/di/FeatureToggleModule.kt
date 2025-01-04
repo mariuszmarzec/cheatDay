@@ -27,19 +27,6 @@ import kotlinx.coroutines.CoroutineScope
 class FeatureToggleModule {
 
     @Provides
-    fun provideRemoteWeightDataSource(
-        @ApiHost apiHost: String,
-        weightRoomDataSource: Provider<WeightRoomDataSource>,
-        featureToggleDataSourceImpl: Provider<WeightDataSourceImpl>
-    ): WeightDataSource =
-        if (apiHost == Api.LOCALHOST_API) {
-            weightRoomDataSource.get()
-        } else {
-            featureToggleDataSourceImpl.get()
-        }
-
-    @Provides
-    @Named(FEATURE_TOGGLE_MEMORY_CACHE_SAVER)
     fun provideMemoryCacheSaver(cache: Cache): ManyItemsCacheSaver<Int, FeatureToggle> =
         MemoryListCacheSaver(
             key = FEATURE_TOGGLE_MEMORY_CACHE_KEY,
@@ -48,49 +35,10 @@ class FeatureToggleModule {
         )
 
     @Provides
-    @Named(FEATURE_TOGGLE_ROOM_CACHE_SAVER)
-    fun provideWeightRoomSaver(
-        dao: WeightDao,
-        userRepository: UserRepository
-    ): ManyItemsCacheSaver<Long, FeatureToggle> =
-        WeightRoomSaver(dao, userRepository)
-
-    @Provides
-    @Named(FEATURE_TOGGLE_CACHE_SAVER)
-    fun provideWeightManyItemsCacheSaver(
-        @Named(FEATURE_TOGGLE_MEMORY_CACHE_SAVER) memoryListCacheSaver: ManyItemsCacheSaver<Long, FeatureToggle>,
-        @Named(FEATURE_TOGGLE_ROOM_CACHE_SAVER) roomCacheSaver: ManyItemsCacheSaver<Long, FeatureToggle>,
-    ): ManyItemsCacheSaver<Long, FeatureToggle> = CompositeManyItemsCacheSaver(
-        savers = listOf(
-            memoryListCacheSaver,
-            roomCacheSaver
-        )
-    )
-
-    @Provides
-    @Named(FEATURE_TOGGLE_REMOTE_REPOSITORY)
     fun provideFeatureToggleRemoteRepository(
-        featureToggleDataSource: WeightDataSource,
-        coroutineDispatcher: CoroutineDispatcher,
-        @Named(FEATURE_TOGGLE_CACHE_SAVER) cacheSaver: ManyItemsCacheSaver<Long, FeatureToggle>,
-        @Named(AppModule.UPDATER_COROUTINE_SCOPE) updaterCoroutineScope: CoroutineScope
-    ): FeatureToggleRepository =
-        FeatureToggleRepository(
-            dataSource = featureToggleDataSource,
-            dispatcher = coroutineDispatcher,
-            cacheSaver = cacheSaver,
-            toDomain = { toDomain() },
-            updateToDto = { toDto() },
-            createToDto = { toDto() },
-            updaterCoroutineScope = updaterCoroutineScope
-        )
-
-    @Provides
-    @Named(FEATURE_TOGGLE_ONLY_MEMORY_REPOSITORY)
-    fun provideFeatureToggleLocalRepository(
         featureToggleDataSource: FeatureToggleDataSource,
         coroutineDispatcher: CoroutineDispatcher,
-        @Named(FEATURE_TOGGLE_MEMORY_CACHE_SAVER) cacheSaver: ManyItemsCacheSaver<Int, FeatureToggle>,
+        cacheSaver: ManyItemsCacheSaver<Int, FeatureToggle>,
         @Named(AppModule.UPDATER_COROUTINE_SCOPE) updaterCoroutineScope: CoroutineScope
     ): FeatureToggleRepository =
         FeatureToggleRepository(
@@ -102,26 +50,8 @@ class FeatureToggleModule {
             createToDto = { toDto() },
             updaterCoroutineScope = updaterCoroutineScope
         )
-
-    @Provides
-    fun provideFeatureToggleRepository(
-        @Named(FEATURE_TOGGLE_REMOTE_REPOSITORY) remoteRepository: Provider<FeatureToggleRepository>,
-        @Named(FEATURE_TOGGLE_ONLY_MEMORY_REPOSITORY) localRepository: Provider<FeatureToggleRepository>,
-        @ApiHost apiHost: String
-    ): FeatureToggleRepository = if (apiHost == Api.LOCALHOST_API) {
-        localRepository.get()
-    } else {
-        remoteRepository.get()
-    }
 
     private companion object {
         const val FEATURE_TOGGLE_MEMORY_CACHE_KEY = "FEATURE_TOGGLE_MEMORY_CACHE_KEY"
-
-        const val FEATURE_TOGGLE_MEMORY_CACHE_SAVER = "FEATURE_TOGGLE_MEMORY_CACHE_SAVER"
-        const val FEATURE_TOGGLE_ROOM_CACHE_SAVER = "FEATURE_TOGGLE_ROOM_CACHE_SAVER"
-        const val FEATURE_TOGGLE_CACHE_SAVER = "FEATURE_TOGGLE_CACHE_SAVER"
-
-        const val FEATURE_TOGGLE_REMOTE_REPOSITORY = "FEATURE_TOGGLE_REMOTE_REPOSITORY"
-        const val FEATURE_TOGGLE_ONLY_MEMORY_REPOSITORY = "FEATURE_TOGGLE_ONLY_MEMORY_REPOSITORY"
     }
 }

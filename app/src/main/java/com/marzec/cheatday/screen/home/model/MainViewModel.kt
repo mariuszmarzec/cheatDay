@@ -10,9 +10,14 @@ class MainViewModel @Inject constructor(
     defaultState: MainState
 ) : StoreViewModel<MainState, Unit>(defaultState) {
 
-    fun loadState() = intent<Boolean> {
-        onTrigger { mainInteractor.observeIfUserLogged() }
+    fun loadState() = intent<Pair<Boolean, Boolean>> {
+        onTrigger { mainInteractor.observeMainState() }
 
-        reducer { state.copy(isUserLogged = resultNonNull()) }
+        reducer {
+            state.copy(
+                isUserLogged = resultNonNull().first,
+                isBottomNavigationVisible = resultNonNull().first && resultNonNull().second
+            )
+        }
     }
 }
