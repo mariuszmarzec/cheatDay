@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                     val controller = navHostFragment?.findNavController()
                     controller?.let {
 
-                        if (isUserLogged == false) {
+                        if (!isUserLogged) {
                             if (it.currentDestination?.id != R.id.login) {
                                 it.navigate(R.id.login)
                             }

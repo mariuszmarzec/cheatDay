@@ -16,7 +16,8 @@ class MainViewModel @Inject constructor(
         reducer {
             state.copy(
                 isUserLogged = resultNonNull().first,
-                isBottomNavigationVisible = resultNonNull().first && resultNonNull().second
+                isBottomNavigationVisible = resultNonNull().first && resultNonNull().second,
+                isCounterEnabled = resultNonNull().second
             )
         }
     }
