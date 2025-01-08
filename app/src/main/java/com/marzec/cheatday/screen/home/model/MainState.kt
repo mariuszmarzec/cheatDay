@@ -9,6 +9,7 @@ data class MainState(
         val INITIAL = MainState(
             isUserLogged = false,
             isBottomNavigationVisible = true,
-            isCounterEnabled = true)
+            isCounterEnabled = true
+        )
     }
 }

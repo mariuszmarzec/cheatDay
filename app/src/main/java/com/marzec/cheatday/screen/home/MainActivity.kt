@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -34,6 +35,15 @@ class MainActivity : AppCompatActivity() {
                 bottomNavigationView,
                 fragment.findNavController()
             )
+            fragment.findNavController().addOnDestinationChangedListener { controller, destination, _ ->
+                if (destination.id == R.id.home && !viewModel.state.value.isCounterEnabled) {
+                    controller.navigate(
+                        R.id.weights,
+                        null,
+                        NavOptions.Builder().setPopUpTo(R.id.home, true).build()
+                    )
+                }
+            }
         }
 
         lifecycleScope.launch {
