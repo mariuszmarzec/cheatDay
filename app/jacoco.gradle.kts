@@ -46,7 +46,7 @@ tasks.create("jacocoTestCoverageVerification", JacocoCoverageVerification::class
             }
         }
         rule {
-            element = "METHOD" // Ograniczenie na poziomie metod
+            element = "METHOD"
             limit {
                 counter = "LINE"
                 value = "COVERED_RATIO"
