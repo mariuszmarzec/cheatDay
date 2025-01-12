@@ -39,7 +39,13 @@ class FeatureTogglesManagerImpl(
     override fun observe(featureToggle: String): Flow<Boolean> = runBlocking {
         memoryCache.observe<String>(featureToggle)
             .map { it.toBoolean() }
-            .also { update() }
+            .also { triggerUpdate() }
+    }
+
+    private fun triggerUpdate() {
+        updaterCoroutineScope.launch {
+            featureToggleRepository.refreshAll()
+        }
     }
 
     override fun get(featureToggle: String): Boolean = runBlocking {

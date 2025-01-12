@@ -12,6 +12,7 @@ import com.marzec.cheatday.model.domain.UpdateWeight
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.model.domain.toDb
 import com.marzec.cheatday.model.domain.toDomain
+import com.marzec.cheatday.model.domain.toDto
 import com.marzec.featuretoggle.toDto
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.datasource.CommonDataSource

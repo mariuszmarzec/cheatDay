@@ -1,5 +1,6 @@
 package com.marzec.cheatday.di
 
+import com.marzec.cheatday.LocalFeatureToggleApi
 import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.api.FeatureToggleApi
 import com.marzec.cheatday.api.LocalLoginApi
@@ -111,9 +112,14 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideFeatureToggleApi(@FeatureToggleApiRetrofit retrofit: Retrofit): FeatureToggleApi = retrofit.create(
-        FeatureToggleApi::class.java
-    )
+    fun provideFeatureToggleApi(
+        @ApiHost apiHost: String,
+        @FeatureToggleApiRetrofit retrofit: Retrofit
+    ): FeatureToggleApi = if (apiHost == Api.LOCALHOST_API) {
+        LocalFeatureToggleApi
+    } else {
+        retrofit.create(FeatureToggleApi::class.java)
+    }
 
     @Provides
     @Singleton

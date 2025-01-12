@@ -14,6 +14,7 @@ import com.marzec.cheatday.db.dao.WeightDao
 import com.marzec.cheatday.db.datasource.WeightRoomDataSource
 import com.marzec.cheatday.model.domain.WeightResult
 import com.marzec.cheatday.model.domain.toCreateDto
+import com.marzec.cheatday.model.domain.toDto
 import com.marzec.featuretoggle.toDto
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.repository.WeightCrudRepository

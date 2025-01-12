@@ -104,7 +104,7 @@ class CrudRepository<ID, MODEL : Any, CREATE : Any, UPDATE : Any, MODEL_DTO : An
             }
         }
 
-    private suspend fun refreshAll() = asContent {
+    suspend fun refreshAll() = asContent {
         loadAll()
     }.ifDataSuspend {
         cacheSaver.updateCache(data)

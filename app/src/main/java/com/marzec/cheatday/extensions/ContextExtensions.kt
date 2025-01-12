@@ -89,3 +89,7 @@ fun Resources.Theme.attr(@AttrRes attribute: Int): TypedValue {
 }
 
 fun Context.attr(@AttrRes attribute: Int): TypedValue = theme.attr(attribute)
+
+fun Context.readFile(fileName: String): String {
+    return assets.open(fileName).bufferedReader().use { it.readText() }
+}
