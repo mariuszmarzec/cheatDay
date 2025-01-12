@@ -1,4 +1,3 @@
-
 val kotlinTree = fileTree("${project.buildDir}/tmp/kotlin-classes/stageDebug") {
     exclude(
         "**/com/paris/**",
@@ -40,22 +39,18 @@ tasks.create("jacocoTestCoverageVerification", JacocoCoverageVerification::class
     violationRules {
         rule {
             element = "CLASS"
-            limits {
-                limit {
-                    counter = "LINE"
-                    value = "COVERED_RATIO"
-                    minimum = 0.60.toBigDecimal()
-                }
+            limit {
+                counter = "LINE"
+                value = "COVERED_RATIO"
+                minimum = 0.60.toBigDecimal()
             }
         }
         rule {
             element = "METHOD" // Ograniczenie na poziomie metod
-            limits {
-                limit {
-                    counter = "LINE"
-                    value = "COVERED_RATIO"
-                    minimum = 0.60.toBigDecimal()
-                }
+            limit {
+                counter = "LINE"
+                value = "COVERED_RATIO"
+                minimum = 0.60.toBigDecimal()
             }
         }
     }
