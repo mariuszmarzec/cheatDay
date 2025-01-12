@@ -39,20 +39,23 @@ tasks.create("jacocoTestCoverageVerification", JacocoCoverageVerification::class
 
     violationRules {
         rule {
-            limit {
-                minimum = "0.5".toBigDecimal()
+            element = "CLASS"
+            limits {
+                limit {
+                    counter = "LINE"
+                    value = "COVERED_RATIO"
+                    minimum = 0.60.toBigDecimal()
+                }
             }
         }
-
         rule {
-            isEnabled = false
-            element = "CLASS"
-            includes = listOf("org.gradle.*")
-
-            limit {
-                counter = "LINE"
-                value = "TOTALCOUNT"
-                maximum = "0.3".toBigDecimal()
+            element = "METHOD" // Ograniczenie na poziomie metod
+            limits {
+                limit {
+                    counter = "LINE"
+                    value = "COVERED_RATIO"
+                    minimum = 0.60.toBigDecimal()
+                }
             }
         }
     }
