@@ -1,4 +1,4 @@
-package com.marzec.cheatday.model.domain
+package com.marzec.featuretoggle
 
 import com.marzec.cheatday.api.request.NewFeatureToggleDto
 import com.marzec.cheatday.api.request.UpdateFeatureToggleDto

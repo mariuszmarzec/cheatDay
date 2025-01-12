@@ -36,7 +36,7 @@ class LoginFragment : BaseFragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            // do nothing
+            activity?.finish()
         }
 
         viewModel.state.observeOnResume {

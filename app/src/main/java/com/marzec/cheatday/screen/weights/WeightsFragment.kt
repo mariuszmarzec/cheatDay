@@ -133,6 +133,7 @@ class WeightsFragment : BaseFragment(R.layout.fragment_weights) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.chart -> viewModel.goToChart().run { true }
+            R.id.logout -> viewModel.onLogoutClick().run { true }
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -1,6 +1,7 @@
 package com.marzec.cheatday.screen.home
 
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible

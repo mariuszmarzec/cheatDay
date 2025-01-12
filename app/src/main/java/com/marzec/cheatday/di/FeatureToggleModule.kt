@@ -1,24 +1,18 @@
 package com.marzec.cheatday.di
 
 import com.marzec.cache.Cache
-import com.marzec.cache.CompositeManyItemsCacheSaver
 import com.marzec.cache.ManyItemsCacheSaver
 import com.marzec.cache.MemoryListCacheSaver
-import com.marzec.cache.sortByInserter
-import com.marzec.cheatday.api.Api
 import com.marzec.cheatday.api.FeatureToggleDataSource
 import com.marzec.cheatday.api.response.toDomain
-import com.marzec.cheatday.model.domain.FeatureToggle
-import com.marzec.cheatday.model.domain.toCreateDto
-import com.marzec.cheatday.model.domain.toDto
-import com.marzec.cheatday.repository.FeatureToggleRepository
-import com.marzec.cheatday.repository.UserRepository
+import com.marzec.featuretoggle.FeatureToggle
+import com.marzec.featuretoggle.toDto
+import com.marzec.featuretoggle.FeatureToggleRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
-import javax.inject.Provider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 

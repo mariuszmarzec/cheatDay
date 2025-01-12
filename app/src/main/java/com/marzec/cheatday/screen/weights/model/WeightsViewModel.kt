@@ -5,6 +5,7 @@ import com.marzec.content.asErrorAndReturn
 import com.marzec.content.combineContentsFlows
 import com.marzec.content.toContentData
 import com.marzec.cheatday.interactor.WeightInteractor
+import com.marzec.cheatday.repository.LoginRepository
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.MAX_POSSIBLE_ID
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.MIN_ID
 import com.marzec.cheatday.screen.weights.model.WeightsMapper.Companion.TARGET_ID
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.map
 @HiltViewModel
 class WeightsViewModel @Inject constructor(
     private val weightInteractor: WeightInteractor,
+    private val loginRepository: LoginRepository,
     defaultState: State<WeightsData>
 ) : StoreViewModel<State<WeightsData>, WeightsSideEffects>(defaultState) {
 
@@ -104,6 +106,14 @@ class WeightsViewModel @Inject constructor(
                 load()
             } else {
                 content.asErrorAndReturn { sideEffectsInternal.emit(WeightsSideEffects.ShowError) }
+            }
+        }
+    }
+
+    fun onLogoutClick() = intent<Unit> {
+        onTrigger {
+            flow {
+                loginRepository.logout()
             }
         }
     }

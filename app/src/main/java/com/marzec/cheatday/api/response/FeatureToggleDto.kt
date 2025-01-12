@@ -1,6 +1,6 @@
 package com.marzec.cheatday.api.response
 
-import com.marzec.cheatday.model.domain.FeatureToggle
+import com.marzec.featuretoggle.FeatureToggle
 
 data class FeatureToggleDto(
     val id: Int,
