@@ -14,7 +14,6 @@ class MainViewModel @Inject constructor(
         onTrigger { mainInteractor.observeMainState() }
 
         reducer {
-            println("isCounterEnabled = ${resultNonNull().second}")
             state.copy(
                 isUserLogged = resultNonNull().first,
                 isBottomNavigationVisible = resultNonNull().first && resultNonNull().second,

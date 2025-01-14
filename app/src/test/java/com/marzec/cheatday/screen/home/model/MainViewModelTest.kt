@@ -34,19 +34,23 @@ internal class MainViewModelTest {
     }
 
     @Test
-    fun loadState() = scope.runTest() {
-        every { mainInteractor.observeIfUserLogged() } returns
-                flowOf(false, true).onEach { advanceUntilIdle() }
-        val viewModel = viewModel()
-        val values = viewModel.test(this)
+    fun loadState() {
+        val initialState = defualtState.copy(isUserLogged = false, isBottomNavigationVisible = false)
+        scope.runTest {
+            every { mainInteractor.observeMainState() } returns
+                    flowOf(false to true, true to true).onEach {
+                        advanceUntilIdle()
+                    }
+            val viewModel = viewModel(state = initialState)
+            val values = viewModel.test(this)
 
-        viewModel.loadState()
+            viewModel.loadState()
 
-        values.isEqualTo(
-            defualtState,
-            defualtState.copy(isUserLogged = false),
-            defualtState.copy(isUserLogged = true)
-        )
+            values.isEqualTo(
+                initialState,
+                initialState.copy(isUserLogged = true, isBottomNavigationVisible = true)
+            )
+        }
     }
 
     private fun viewModel(state: MainState = defualtState) = MainViewModel(mainInteractor, state)

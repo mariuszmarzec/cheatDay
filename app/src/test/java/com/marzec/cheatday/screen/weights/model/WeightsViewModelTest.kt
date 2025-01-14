@@ -7,6 +7,7 @@ import com.marzec.content.toContentFlow
 import com.marzec.cheatday.core.test
 import com.marzec.cheatday.extensions.EMPTY_STRING
 import com.marzec.cheatday.interactor.WeightInteractor
+import com.marzec.cheatday.repository.LoginRepository
 import com.marzec.cheatday.stubs.stubWeightResult
 import com.marzec.mvi.State
 import com.marzec.mvi.Store4Impl
@@ -44,6 +45,7 @@ class WeightsViewModelTest {
     val defaultState = State.Loading<WeightsData>()
 
     val weightInteractor: WeightInteractor = mockk(relaxed = true)
+    val loginRepository: LoginRepository = mockk(relaxed = true)
 
     @BeforeEach
     fun before() {
@@ -278,5 +280,9 @@ class WeightsViewModelTest {
     }
 
     private fun viewModel(state: State<WeightsData> = defaultState) =
-        WeightsViewModel(weightInteractor, state)
+        WeightsViewModel(
+            defaultState = state,
+            weightInteractor = weightInteractor,
+            loginRepository = loginRepository
+        )
 }
