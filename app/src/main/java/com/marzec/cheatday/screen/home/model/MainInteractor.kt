@@ -1,12 +1,10 @@
 package com.marzec.cheatday.screen.home.model
 
 import com.marzec.cheatday.repository.UserRepository
-import com.marzec.content.Content
 import com.marzec.featuretoggle.FeatureTogglesManager
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 
 class MainInteractor @Inject constructor(
     private val userRepository: UserRepository,
@@ -16,7 +14,6 @@ class MainInteractor @Inject constructor(
     fun observeMainState(): Flow<Pair<Boolean, Boolean>> =
         combine(listOf(observeIfUserLogged(), observeCounterFeatureFlag())) {
             it.first() to it[1]
-
         }
 
     private fun observeCounterFeatureFlag(): Flow<Boolean> =

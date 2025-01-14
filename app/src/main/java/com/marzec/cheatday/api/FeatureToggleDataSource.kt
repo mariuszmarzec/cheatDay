@@ -3,7 +3,6 @@ package com.marzec.cheatday.api
 import com.marzec.cheatday.api.request.NewFeatureToggleDto
 import com.marzec.cheatday.api.request.UpdateFeatureToggleDto
 import com.marzec.cheatday.api.response.FeatureToggleDto
-import com.marzec.cheatday.api.response.WeightDto
 import com.marzec.datasource.CommonDataSource
 import javax.inject.Inject
 

@@ -10,11 +10,9 @@ import com.marzec.cheatday.api.FeatureToggleDataSource
 import com.marzec.cheatday.api.response.toDomain
 import com.marzec.cheatday.common.FeatureTogglesManagerInitializerImpl
 import com.marzec.featuretoggle.FeatureToggle
-import com.marzec.featuretoggle.toDto
 import com.marzec.featuretoggle.FeatureToggleRepository
 import com.marzec.featuretoggle.FeatureTogglesManager
-import com.marzec.featuretoggle.FeatureTogglesManagerImpl
-import com.marzec.featuretoggle.FeatureTogglesManagerInitializer
+import com.marzec.featuretoggle.toDto
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
