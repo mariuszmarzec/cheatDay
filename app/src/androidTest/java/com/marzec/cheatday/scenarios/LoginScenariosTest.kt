@@ -8,6 +8,8 @@ import com.marzec.cheatday.common.loginResponse
 import com.marzec.cheatday.common.logoutResponse
 import com.marzec.cheatday.common.startApplication
 import com.marzec.cheatday.di.ApiUrlsModule
+import com.marzec.cheatday.di.Method
+import com.marzec.cheatday.di.MockWebDispatcher
 import com.marzec.cheatday.repository.UserRepository
 import com.marzec.cheatday.screens.HomeScreen
 import com.marzec.cheatday.screens.LoginScreen
@@ -48,9 +50,14 @@ class LoginScenariosTest : TestCase() {
     @Test
     fun s01_loginInApplication() {
         before {
-            server.enqueue(loginResponse())
+            server.dispatcher = MockWebDispatcher
+            MockWebDispatcher.setResponse(
+                Method.POST,
+                "/login",
+                loginResponse()
+            )
         }.after {
-            server.shutdown()
+            MockWebDispatcher.clear()
         }.run {
             step("User launch application") {
                 startApplication()
@@ -81,11 +88,14 @@ class LoginScenariosTest : TestCase() {
     @Test
     fun s02_loginInApplicationFailed() {
         before {
-            server.enqueue(
+            server.dispatcher = MockWebDispatcher
+            MockWebDispatcher.setResponse(
+                Method.POST,
+                "/login",
                 MockResponse().setResponseCode(404)
             )
         }.after {
-            server.shutdown()
+            MockWebDispatcher.clear()
         }.run {
             step("User launch application") {
                 startApplication()
@@ -116,9 +126,14 @@ class LoginScenariosTest : TestCase() {
     @Test
     fun s03_logoutFromApplication() {
         before {
-            server.enqueue(logoutResponse())
+            server.dispatcher = MockWebDispatcher
+            MockWebDispatcher.setResponse(
+                Method.GET,
+                "/logout",
+                logoutResponse()
+            )
         }.after {
-            server.shutdown()
+            MockWebDispatcher.clear()
         }.run {
             step("Given user is logged in") {
                 runBlocking {
