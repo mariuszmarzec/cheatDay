@@ -34,6 +34,10 @@ class MockServerModule {
     @Provides
     @CheatDayApiUrl
     fun provideCheatDayApiUrl(server: MockWebServer) = server.url("/").toString()
+
+    @Provides
+    @FeatureToggleApiUrl
+    fun provideFeatureToggleApiUrl(server: MockWebServer) = server.url("/").toString()
 }
 
 object MockWebDispatcher : Dispatcher() {
