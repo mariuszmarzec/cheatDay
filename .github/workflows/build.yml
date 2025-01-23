@@ -59,7 +59,7 @@ jobs:
 
     - name: Upload artifact on UI test failure
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: UI Tests report
         path: '**/app/build/reports/androidTests/**'
@@ -68,7 +68,7 @@ jobs:
       run: ./gradlew jacocoTestReportStageDebug
 
     - name: Upload coverage report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: UI Tests report
         path: '**/app/build/reports/jacoco/**'
