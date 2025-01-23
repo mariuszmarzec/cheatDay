@@ -205,6 +205,7 @@ class WeightScenariosTest : TestCase() {
     @Test
     fun s11_userUpdateMaxPossibleWeight() {
         before {
+            server.dispatcher = MockWebDispatcher
         }.after {
             server.shutdown()
         }.run {
@@ -215,7 +216,7 @@ class WeightScenariosTest : TestCase() {
             }
 
             step("And user has weights results") {
-                server.enqueue(fewWeightsListResponse())
+                MockWebDispatcher.setResponse(Method.GET, "/weights", fewWeightsListResponse())
             }
 
             step("Then User launch application") {
