@@ -42,7 +42,7 @@ tasks.create("jacocoTestCoverageVerification", JacocoCoverageVerification::class
             limit {
                 counter = "LINE"
                 value = "COVERED_RATIO"
-                minimum = 0.60.toBigDecimal()
+                minimum = 0.70.toBigDecimal()
             }
         }
         rule {
@@ -50,7 +50,7 @@ tasks.create("jacocoTestCoverageVerification", JacocoCoverageVerification::class
             limit {
                 counter = "LINE"
                 value = "COVERED_RATIO"
-                minimum = 0.60.toBigDecimal()
+                minimum = 0.70.toBigDecimal()
             }
         }
     }
