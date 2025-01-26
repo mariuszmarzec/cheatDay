@@ -1,11 +1,17 @@
 package com.marzec.cheatday.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.google.gson.Gson
 import com.marzec.cache.Cache
+import com.marzec.cache.CompositeCacheSaver
+import com.marzec.cache.CompositeListCacheSaver
+import com.marzec.cache.CompositeManyItemsCacheSaver
 import com.marzec.cache.ManyItemsCacheSaver
 import com.marzec.cache.MemoryCache
 import com.marzec.cache.MemoryListCacheSaver
+import com.marzec.cache.PreferenceCacheListSaver
 import com.marzec.cheatday.api.FeatureToggleDataSource
 import com.marzec.cheatday.api.response.toDomain
 import com.marzec.cheatday.common.FeatureTogglesManagerInitializerImpl
@@ -27,11 +33,27 @@ import kotlinx.coroutines.CoroutineScope
 class FeatureToggleModule {
 
     @Provides
-    fun provideMemoryCacheSaver(cache: Cache): ManyItemsCacheSaver<Int, FeatureToggle> =
-        MemoryListCacheSaver(
-            key = FEATURE_TOGGLE_MEMORY_CACHE_KEY,
-            memoryCache = cache,
-            isSameId = { id == it }
+    fun provideMemoryCacheSaver(
+        cache: Cache,
+        dataStore: DataStore<Preferences>,
+        dispatcher: CoroutineDispatcher,
+        gson: Gson
+    ): ManyItemsCacheSaver<Int, FeatureToggle> =
+        CompositeManyItemsCacheSaver(
+            listOf(
+                MemoryListCacheSaver(
+                    key = FEATURE_TOGGLE_MEMORY_CACHE_KEY,
+                    memoryCache = cache,
+                    isSameId = { id == it }
+                ),
+                PreferenceCacheListSaver(
+                    key = FEATURE_TOGGLE_MEMORY_CACHE_KEY,
+                    dataStore = dataStore,
+                    dispatcher = dispatcher,
+                    gson = gson,
+                    isSameId = { id == it }
+                )
+            )
         )
 
     @Provides

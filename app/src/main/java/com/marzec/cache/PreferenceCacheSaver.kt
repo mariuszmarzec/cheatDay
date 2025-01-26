@@ -1,12 +1,10 @@
 package com.marzec.cache
 
-import android.view.Display.Mode
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.google.gson.Gson
-import kotlin.reflect.KClass
-import kotlin.reflect.typeOf
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
@@ -19,7 +17,7 @@ class PreferenceCacheSaver<T : Any>(
     private val dataStore: DataStore<Preferences>,
     private val dispatcher: CoroutineDispatcher,
     private val gson: Gson,
-    private val type: KClass<T>
+    private val typeToken: TypeToken<T>
 ) : CacheSaver<T> {
 
     override suspend fun get(): T? = withContext(dispatcher) {
@@ -53,7 +51,7 @@ class PreferenceCacheSaver<T : Any>(
 
     private fun Preferences?.parseValue(): T? =
         this?.get(stringPreferencesKey(key))?.let {
-            gson.fromJson(it, type.java)
+            gson.fromJson(it, typeToken.type)
         }
 }
 
@@ -70,7 +68,7 @@ inline fun <ID, reified MODEL : Any> PreferenceCacheListSaver(
         dataStore = dataStore,
         dispatcher = dispatcher,
         gson = gson,
-        type = List<MODEL>::class
+        typeToken = object : TypeToken<List<MODEL>>() {}
     ),
     isSameId = isSameId,
     newItemInsert = atLastPositionInserter()
