@@ -34,7 +34,7 @@ jobs:
       run: ./gradlew build
 
     - name: unit tests
-      run: ./gradlew testStageDebugUnitTest
+      run: ./gradlew clean testStageDebugUnitTest
 
     - name: Upload artifact on ui tests failure
       if: failure()
