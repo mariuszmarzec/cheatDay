@@ -5,7 +5,7 @@ minSdk = "30"
 targetSdk = "35"
 
 kotlin = "2.1.10"
-androidGradleplugin = "8.1.4"
+androidGradleplugin = "8.8.0"
 detekt = "1.23.7"
 googleServices = "4.4.2"
 crashlytics = "3.0.2"
