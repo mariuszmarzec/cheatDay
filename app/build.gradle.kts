@@ -166,6 +166,12 @@ hilt {
     enableTransformForLocalTests = true
 }
 
+configurations.all {
+    resolutionStrategy {
+        force("androidx.test:core:1.6.1")
+    }
+}
+
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     detektPlugins(libs.detekt.formatting)
