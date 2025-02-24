@@ -164,3 +164,25 @@ and in SQL Lite database using [Room](https://developer.android.com/training/dat
 data from API is done with first cache pattern. It means data are loaded always from data base. Fetched
 data from API when request succeed into database. Thanks to Room and kotlin flow, on every update 
 in database, new values are emitted to be presented on screen.
+
+# Feature Toggles
+
+Application could be configured by json file with feature toggles values placed in assets. 
+
+```json
+{
+  "cheatDay.counter": "false"
+}
+```
+
+During runtime also feature toggles could be read from remote API to update local ones. Always remote values overwrite
+local ones. To read current value of feature flag application uses FeatureToggleManager interface:
+
+```kotlin
+interface FeatureTogglesManager {
+
+    fun observe(featureToggle: String): Flow<Boolean>
+
+    fun get(featureToggle: String): Boolean
+}
+```
