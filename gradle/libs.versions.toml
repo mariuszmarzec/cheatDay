@@ -4,15 +4,15 @@ compileSdk = "36"
 minSdk = "30"
 targetSdk = "36"
 
-kotlin = "2.3.0"
-androidGradleplugin = "8.13.2"
+kotlin = "2.3.10"
+androidGradleplugin = "9.0.1"
 detekt = "1.23.7"
 googleServices = "4.4.2"
 crashlytics = "3.0.2"
 screenshots = "2.0.0-alpha04"
 jUnit5 = "1.10.0.0"
 hilt = "2.59.1"
-navigation = "2.8.6"
+navigation = "2.9.7"
 
 firebase = "33.8.0"
 junit4 = "4.13.2"
@@ -164,4 +164,3 @@ plugin-hilt = { module = "com.google.dagger:hilt-android-gradle-plugin", version
 [plugins]
 
 [bundles]
-

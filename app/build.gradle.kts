@@ -1,6 +1,5 @@
 import java.util.Properties
 import java.io.FileInputStream
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 fun readProperties(): Properties {
     val properties = Properties()
@@ -13,7 +12,6 @@ fun readProperties(): Properties {
 
 plugins {
     id("com.android.application")
-    kotlin("android")
     id("kotlin-parcelize")
     id("de.mannodermaus.android-junit5")
     id("androidx.navigation.safeargs.kotlin")
@@ -293,10 +291,4 @@ detekt {
 // https://github.com/cashapp/paparazzi/issues?q=%22attempted+to+delete+a+method%22
 tasks.withType<Test> {
     jvmArgs("-XX:+AllowRedefinitionToAddDeleteMethods")
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = JvmTarget.JVM_17
-    }
 }
