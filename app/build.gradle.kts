@@ -1,5 +1,6 @@
 import java.util.Properties
 import java.io.FileInputStream
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 fun readProperties(): Properties {
     val properties = Properties()
@@ -65,10 +66,6 @@ android {
             sourceCompatibility = JavaVersion.VERSION_17
             targetCompatibility = JavaVersion.VERSION_17
         }
-
-        kotlinOptions {
-            jvmTarget = "17"
-        }
     }
 
     sourceSets {
@@ -112,8 +109,7 @@ android {
             )
         }
     }
-
-    flavorDimensions("api")
+    flavorDimensions += listOf("api")
 
     productFlavors {
         val properties = readProperties()
@@ -126,19 +122,19 @@ android {
         create("local") {
             buildConfigField("String", "HOST", "\"http://localhost\"")
             buildConfigField("String", "AUTHORIZATION", "\"LOCAL_AUTHORIZATION\"")
-            setDimension("api")
+            dimension = "api"
         }
 
         create("stage") {
             buildConfigField("String", "HOST", "\"$testApiUrl\"")
             buildConfigField("String", "AUTHORIZATION", "\"$testAuthHeader\"")
-            setDimension("api")
+            dimension = "api"
         }
 
         create("prod") {
             buildConfigField("String", "HOST", "\"$prodApiUrl\"")
             buildConfigField("String", "AUTHORIZATION", "\"$prodAuthHeader\"")
-            setDimension("api")
+            dimension = "api"
         }
     }
 
@@ -155,10 +151,10 @@ android {
     testCoverage {
         jacocoVersion = libs.versions.jacoco.get().toString()
     }
-
     packagingOptions {
-        exclude("META-INF/AL2.0")
-        exclude("META-INF/LGPL2.1")
+        resources {
+            excludes += setOf("META-INF/AL2.0", "META-INF/LGPL2.1")
+        }
     }
 }
 
@@ -297,4 +293,10 @@ detekt {
 // https://github.com/cashapp/paparazzi/issues?q=%22attempted+to+delete+a+method%22
 tasks.withType<Test> {
     jvmArgs("-XX:+AllowRedefinitionToAddDeleteMethods")
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
+    }
 }
