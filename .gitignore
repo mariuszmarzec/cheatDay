@@ -10,6 +10,8 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 /.idea/deploymentTargetDropDown.xml
+/.idea/copilot.data.migration.agent.xml
+/.idea/copilot.data.migration.edit.xml
 .DS_Store
 /build
 /captures

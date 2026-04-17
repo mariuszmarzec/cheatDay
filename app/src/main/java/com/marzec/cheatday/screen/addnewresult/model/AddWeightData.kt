@@ -9,10 +9,11 @@ data class AddWeightData(
     val weight: String
 ) {
     companion object {
-        val INITIAL = AddWeightData(
-            weightResult = WeightResult(-1, 0.0f, DateTime.now()),
-            date = DateTime.now(),
-            weight = "0.0"
-        )
+        val INITIAL
+            get() = AddWeightData(
+                weightResult = WeightResult(-1, 0.0f, DateTime.now()),
+                date = DateTime.now(),
+                weight = "0.0"
+            )
     }
 }

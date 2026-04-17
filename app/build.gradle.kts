@@ -12,7 +12,6 @@ fun readProperties(): Properties {
 
 plugins {
     id("com.android.application")
-    kotlin("android")
     id("kotlin-parcelize")
     id("de.mannodermaus.android-junit5")
     id("androidx.navigation.safeargs.kotlin")
@@ -62,12 +61,8 @@ android {
         }
 
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
-        }
-
-        kotlinOptions {
-            jvmTarget = "17"
+            sourceCompatibility = JavaVersion.VERSION_21
+            targetCompatibility = JavaVersion.VERSION_21
         }
     }
 
@@ -112,8 +107,7 @@ android {
             )
         }
     }
-
-    flavorDimensions("api")
+    flavorDimensions += listOf("api")
 
     productFlavors {
         val properties = readProperties()
@@ -126,19 +120,19 @@ android {
         create("local") {
             buildConfigField("String", "HOST", "\"http://localhost\"")
             buildConfigField("String", "AUTHORIZATION", "\"LOCAL_AUTHORIZATION\"")
-            setDimension("api")
+            dimension = "api"
         }
 
         create("stage") {
             buildConfigField("String", "HOST", "\"$testApiUrl\"")
             buildConfigField("String", "AUTHORIZATION", "\"$testAuthHeader\"")
-            setDimension("api")
+            dimension = "api"
         }
 
         create("prod") {
             buildConfigField("String", "HOST", "\"$prodApiUrl\"")
             buildConfigField("String", "AUTHORIZATION", "\"$prodAuthHeader\"")
-            setDimension("api")
+            dimension = "api"
         }
     }
 
@@ -155,15 +149,21 @@ android {
     testCoverage {
         jacocoVersion = libs.versions.jacoco.get().toString()
     }
-
     packagingOptions {
-        exclude("META-INF/AL2.0")
-        exclude("META-INF/LGPL2.1")
+        resources {
+            excludes += setOf("META-INF/AL2.0", "META-INF/LGPL2.1")
+        }
     }
 }
 
 hilt {
     enableTransformForLocalTests = true
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("androidx.test:core:1.6.1")
+    }
 }
 
 dependencies {
