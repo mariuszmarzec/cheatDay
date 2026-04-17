@@ -292,3 +292,11 @@ detekt {
 tasks.withType<Test> {
     jvmArgs("-XX:+AllowRedefinitionToAddDeleteMethods")
 }
+
+kapt {
+    correctErrorTypes = true
+}
+
+hilt {
+    enableAggregatingTask = true
+}
