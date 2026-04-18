@@ -10,7 +10,7 @@ detekt = "1.23.7"
 googleServices = "4.4.2"
 crashlytics = "3.0.2"
 screenshots = "2.0.0-alpha04"
-jUnit5 = "1.10.0.0"
+jUnit5 = "2.0.1"
 hilt = "2.59.2"
 navigation = "2.9.7"
 
