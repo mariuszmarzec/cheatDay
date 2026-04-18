@@ -157,7 +157,7 @@ android {
 }
 
 hilt {
-    enableTransformForLocalTests = true
+    enableAggregatingTask = true
 }
 
 configurations.all {
@@ -291,12 +291,4 @@ detekt {
 // https://github.com/cashapp/paparazzi/issues?q=%22attempted+to+delete+a+method%22
 tasks.withType<Test> {
     jvmArgs("-XX:+AllowRedefinitionToAddDeleteMethods")
-}
-
-kapt {
-    correctErrorTypes = true
-}
-
-hilt {
-    enableAggregatingTask = true
 }
