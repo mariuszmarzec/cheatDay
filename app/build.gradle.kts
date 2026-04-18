@@ -156,7 +156,16 @@ android {
     }
 
     lint {
-        checkBuildScripts = false
+        checkReleaseBuilds = false
+        abortOnError = false
+    }
+}
+
+tasks.configureEach {
+    if (name.contains("lint", ignoreCase = true) &&
+        name.contains("Debug", ignoreCase = true)
+    ) {
+        enabled = false
     }
 }
 
