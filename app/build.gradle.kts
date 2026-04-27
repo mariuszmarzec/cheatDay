@@ -305,8 +305,3 @@ detekt {
 tasks.withType<Test> {
     jvmArgs("-XX:+AllowRedefinitionToAddDeleteMethods")
 }
-
-// TODO REMOVE
-tasks.withType<Test> {
-    maxParallelForks = 1
-}
