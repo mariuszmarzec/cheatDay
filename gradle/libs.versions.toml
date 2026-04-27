@@ -44,7 +44,7 @@ chart = "v3.1.0"
 datastore = "1.1.2"
 mockk = "1.13.8"
 kaspresso = "1.6.0"
-jacoco = "0.8.10"
+jacoco = "0.8.12"
 hamcrestVersion = "2.2"
 recyclerview = "1.4.0"
 [libraries]
