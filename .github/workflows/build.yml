@@ -12,6 +12,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      GRADLE_OPTS: >
+        -XX:+UnlockDiagnosticVMOptions
+        -XX:-TieredCompilation
+        -Xint
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
