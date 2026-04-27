@@ -127,7 +127,6 @@ jUnit5-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jU
 jUnit5-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "jUnit5" }
 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-mockk-jvm = { module = "io.mockk:mockk-agent-jvm", version.ref = "mockk" }
 
 
 truth = { module = "com.google.truth:truth", version.ref = "truth" }

@@ -266,7 +266,6 @@ dependencies {
     testRuntimeOnly(libs.jUnit5.engine)
     // mocking
     testImplementation(libs.mockk)
-    testImplementation(libs.mockk.jvm)
 
     // truth
     testImplementation(libs.truth)
