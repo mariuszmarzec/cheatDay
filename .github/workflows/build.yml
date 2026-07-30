@@ -44,13 +44,25 @@ jobs:
         name: Unit test report
         path: '**/app/build/reports/tests/**'
 
-    - name: Enable KVM
+    - name: Check KVM
+      id: check-kvm
       run: |
+        if [ -e /dev/kvm ]; then
+          echo "exists=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "exists=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Enable KVM
+      if: steps.check-kvm.outputs.exists == 'true'
+      run: |
+        sudo mkdir -p /etc/udev/rules.d
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
         sudo udevadm control --reload-rules
         sudo udevadm trigger --name-match=kvm
 
     - name: UI tests
+      if: steps.check-kvm.outputs.exists == 'true'
       uses: reactivecircus/android-emulator-runner@v2.33.0
       with:
         api-level: 31
@@ -59,7 +71,7 @@ jobs:
         script: ./gradlew connectedStageDebugAndroidTest
 
     - name: Upload artifact on UI test failure
-      if: failure()
+      if: failure() && steps.check-kvm.outputs.exists == 'true'
       uses: actions/upload-artifact@v4
       with:
         name: UI Tests report
