@@ -44,9 +44,6 @@ jobs:
         name: Unit test report
         path: '**/app/build/reports/tests/**'
 
-    - name: Setup passwordless sudo
-      run: echo '${{ secrets.SUDO_PASSWORD }}' | sudo -S sh -c 'echo "runner ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/runner && chmod 440 /etc/sudoers.d/runner'
-
     - name: Enable KVM
       run: |
         echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
