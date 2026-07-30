@@ -303,4 +303,5 @@ detekt {
 // https://github.com/cashapp/paparazzi/issues?q=%22attempted+to+delete+a+method%22
 tasks.withType<Test> {
     jvmArgs("-XX:+AllowRedefinitionToAddDeleteMethods")
+    maxHeapSize = "2g"
 }
