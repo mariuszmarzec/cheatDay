@@ -284,7 +284,13 @@ dependencies {
     androidTestImplementation(libs.espresso.contrib)
 
     // kaspresso
-    androidTestImplementation(libs.kaspresso)
+    // kaspresso 1.6.0 declares a stale io.github.kakaocup:kakao-ext-clicks:1.0.0
+    // (pre group-id migration) next to kakao 3.6.2 which pulls
+    // io.github.kakaocup.kakao:kakao-ext-clicks:3.6.2 with the same classes,
+    // failing checkStageDebugAndroidTestDuplicateClasses. Exclude the old one.
+    androidTestImplementation(libs.kaspresso) {
+        exclude(group = "io.github.kakaocup", module = "kakao-ext-clicks")
+    }
 
     androidTestImplementation(libs.hamcrest)
 }

@@ -1,14 +1,15 @@
 name: build
 
 on:
-  push:
-    branches:
-      - '**'
   pull_request:
     branches:
       - master
 
 jobs:
+  # `build` stays on the self-hosted runner: compiling, detekt, unit tests and
+  # coverage only need the JDK + Android SDK, not KVM, so they work fine there.
+  # It also assembles the app + androidTest APKs and uploads them as an
+  # artifact so the `ui-tests` job can consume them.
   build:
     runs-on: self-hosted
 
@@ -44,38 +45,21 @@ jobs:
         name: Unit test report
         path: '**/app/build/reports/tests/**'
 
-    - name: Check KVM
-      id: check-kvm
-      run: |
-        if [ -e /dev/kvm ]; then
-          echo "exists=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "exists=false" >> "$GITHUB_OUTPUT"
-        fi
+    # The UI-test APKs are built here (on the self-hosted runner) but executed
+    # in the `ui-tests` job on GitHub-hosted ubuntu-latest. Artifacts are the
+    # bridge: upload-artifact publishes them here, download-artifact fetches
+    # them in the other job, so no machine ever needs direct access to another.
+    - name: Build Android test APK
+      run: ./gradlew assembleStageDebugAndroidTest
 
-    - name: Enable KVM
-      if: steps.check-kvm.outputs.exists == 'true'
-      run: |
-        sudo mkdir -p /etc/udev/rules.d
-        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-        sudo udevadm control --reload-rules
-        sudo udevadm trigger --name-match=kvm
-
-    - name: UI tests
-      if: steps.check-kvm.outputs.exists == 'true'
-      uses: reactivecircus/android-emulator-runner@v2.33.0
-      with:
-        api-level: 31
-        arch: x86_64
-        profile: Nexus 6
-        script: ./gradlew connectedStageDebugAndroidTest
-
-    - name: Upload artifact on UI test failure
-      if: failure() && steps.check-kvm.outputs.exists == 'true'
+    - name: Upload APKs for UI tests
       uses: actions/upload-artifact@v4
       with:
-        name: UI Tests report
-        path: '**/app/build/reports/androidTests/**'
+        name: apks
+        path: |
+          app/build/outputs/apk/stage/debug/app-stage-debug.apk
+          app/build/outputs/apk/androidTest/stage/debug/app-stage-debug-androidTest.apk
+        if-no-files-found: error
 
     - name: Coverage report
       run: ./gradlew jacocoTestCoverageVerification
@@ -84,7 +68,44 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Jacoco report
-        path: '**/app/build/reports/jacoco/**'
+        path: '**/app/build/jacocoHtml/**'
 
     - name: Log success message
       run: echo "Build finished successfully"
+
+  # `ui-tests` runs on GitHub-hosted ubuntu-latest because those runners expose
+  # /dev/kvm (hardware-accelerated emulation). Emulators without KVM are too
+  # slow/unreliable for CI, so the KVM-dependent steps moved here; the self-
+  # hosted runner keeps only the KVM-free build/unit-test/coverage steps.
+  # `needs: build` guarantees the APK artifact exists before this job downloads
+  # it, and the emulator boots the same APKs the `build` job produced.
+  ui-tests:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    # Fetch the APKs uploaded by the `build` job (cross-runner transfer via
+    # GitHub artifact storage).
+    - name: Download APKs
+      uses: actions/download-artifact@v4
+      with:
+        name: apks
+        path: app/build/outputs/apk
+
+    - name: UI tests
+      uses: reactivecircus/android-emulator-runner@v2.33.0
+      with:
+        api-level: 31
+        arch: x86_64
+        profile: Nexus 6
+        script: |
+          adb install -r app/build/outputs/apk/stage/debug/app-stage-debug.apk || exit 1
+          adb install -r app/build/outputs/apk/androidTest/stage/debug/app-stage-debug-androidTest.apk || exit 1
+          bash -o pipefail -c 'adb shell am instrument -w -r com.marzec.cheatday.debug.test/com.marzec.cheatday.MockTestRunner 2>&1 | tee ui-test.log'
+
+    - name: Upload artifact on UI test failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: UI Tests console log
+        path: ui-test.log
