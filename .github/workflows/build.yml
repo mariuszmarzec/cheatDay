@@ -9,6 +9,10 @@ on:
       - master
 
 jobs:
+  # `build` stays on the self-hosted runner: compiling, detekt, unit tests and
+  # coverage only need the JDK + Android SDK, not KVM, so they work fine there.
+  # It also assembles the app + androidTest APKs and uploads them as an
+  # artifact so the `ui-tests` job can consume them.
   build:
     runs-on: self-hosted
 
@@ -44,6 +48,10 @@ jobs:
         name: Unit test report
         path: '**/app/build/reports/tests/**'
 
+    # The UI-test APKs are built here (on the self-hosted runner) but executed
+    # in the `ui-tests` job on GitHub-hosted ubuntu-latest. Artifacts are the
+    # bridge: upload-artifact publishes them here, download-artifact fetches
+    # them in the other job, so no machine ever needs direct access to another.
     - name: Build Android test APK
       run: ./gradlew assembleStageDebugAndroidTest
 
@@ -68,11 +76,19 @@ jobs:
     - name: Log success message
       run: echo "Build finished successfully"
 
+  # `ui-tests` runs on GitHub-hosted ubuntu-latest because those runners expose
+  # /dev/kvm (hardware-accelerated emulation). Emulators without KVM are too
+  # slow/unreliable for CI, so the KVM-dependent steps moved here; the self-
+  # hosted runner keeps only the KVM-free build/unit-test/coverage steps.
+  # `needs: build` guarantees the APK artifact exists before this job downloads
+  # it, and the emulator boots the same APKs the `build` job produced.
   ui-tests:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
+    # Fetch the APKs uploaded by the `build` job (cross-runner transfer via
+    # GitHub artifact storage).
     - name: Download APKs
       uses: actions/download-artifact@v4
       with:
