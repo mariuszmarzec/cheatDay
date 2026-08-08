@@ -44,38 +44,17 @@ jobs:
         name: Unit test report
         path: '**/app/build/reports/tests/**'
 
-    - name: Check KVM
-      id: check-kvm
-      run: |
-        if [ -e /dev/kvm ]; then
-          echo "exists=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "exists=false" >> "$GITHUB_OUTPUT"
-        fi
+    - name: Build Android test APK
+      run: ./gradlew assembleStageDebugAndroidTest
 
-    - name: Enable KVM
-      if: steps.check-kvm.outputs.exists == 'true'
-      run: |
-        sudo mkdir -p /etc/udev/rules.d
-        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-        sudo udevadm control --reload-rules
-        sudo udevadm trigger --name-match=kvm
-
-    - name: UI tests
-      if: steps.check-kvm.outputs.exists == 'true'
-      uses: reactivecircus/android-emulator-runner@v2.33.0
-      with:
-        api-level: 31
-        arch: x86_64
-        profile: Nexus 6
-        script: ./gradlew connectedStageDebugAndroidTest
-
-    - name: Upload artifact on UI test failure
-      if: failure() && steps.check-kvm.outputs.exists == 'true'
+    - name: Upload APKs for UI tests
       uses: actions/upload-artifact@v4
       with:
-        name: UI Tests report
-        path: '**/app/build/reports/androidTests/**'
+        name: apks
+        path: |
+          app/build/outputs/apk/stage/debug/app-stage-debug.apk
+          app/build/outputs/apk/androidTest/stage/debug/app-stage-debug-androidTest.apk
+        if-no-files-found: error
 
     - name: Coverage report
       run: ./gradlew jacocoTestCoverageVerification
@@ -84,7 +63,36 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: Jacoco report
-        path: '**/app/build/reports/jacoco/**'
+        path: '**/app/build/jacocoHtml/**'
 
     - name: Log success message
       run: echo "Build finished successfully"
+
+  ui-tests:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Download APKs
+      uses: actions/download-artifact@v4
+      with:
+        name: apks
+        path: app/build/outputs/apk
+
+    - name: UI tests
+      uses: reactivecircus/android-emulator-runner@v2.33.0
+      with:
+        api-level: 31
+        arch: x86_64
+        profile: Nexus 6
+        script: |
+          adb install -r app/build/outputs/apk/stage/debug/app-stage-debug.apk || exit 1
+          adb install -r app/build/outputs/apk/androidTest/stage/debug/app-stage-debug-androidTest.apk || exit 1
+          bash -o pipefail -c 'adb shell am instrument -w -r com.marzec.cheatday.debug.test/com.marzec.cheatday.MockTestRunner 2>&1 | tee ui-test.log'
+
+    - name: Upload artifact on UI test failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: UI Tests console log
+        path: ui-test.log
