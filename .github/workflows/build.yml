@@ -107,6 +107,14 @@ jobs:
         api-level: 31
         arch: x86_64
         profile: Nexus 6
+        # google_apis image + more RAM: the default AOSP image crashed the
+        # system process (INSTRUMENTATION_ABORTED: System has crashed) when
+        # JaCoCo coverage instrumentation (-e coverage true) roughly doubles
+        # the app process memory. The google_apis image is more stable under
+        # that load.
+        target: google_apis
+        ram-size: 3072M
+        heap-size: 512M
         script: |
           adb install -r app/build/outputs/apk/stage/debug/app-stage-debug.apk || exit 1
           adb install -r app/build/outputs/apk/androidTest/stage/debug/app-stage-debug-androidTest.apk || exit 1
