@@ -285,9 +285,15 @@ dependencies {
 
     // kaspresso
     // kaspresso 1.6.0 declares a stale io.github.kakaocup:kakao-ext-clicks:1.0.0
-    // (pre group-id migration) next to kakao 3.6.2 which pulls
+    // (pre group-id migration) next to kakao 3.6.2, which pulls
     // io.github.kakaocup.kakao:kakao-ext-clicks:3.6.2 with the same classes,
     // failing checkStageDebugAndroidTestDuplicateClasses. Exclude the old one.
+    // Source: the 1.6.0 POM declares both artifacts
+    // (https://repo1.maven.org/maven2/com/kaspersky/android-components/kaspresso/1.6.0/kaspresso-1.6.0.pom);
+    // the dependency was added for the new kakao click API via Kaspresso#541
+    // (https://github.com/KasperskyLab/Kaspresso/issues/541). The 1.0.0 artifact
+    // only duplicates classes from kakao 3.6.2 (no unique ones besides a
+    // generated BuildConfig), so excluding it is safe.
     androidTestImplementation(libs.kaspresso) {
         exclude(group = "io.github.kakaocup", module = "kakao-ext-clicks")
     }
