@@ -10,9 +10,9 @@ on:
 
 jobs:
   # `build` stays on the self-hosted runner: compiling, detekt, unit tests and
-  # coverage only need the JDK + Android SDK, not KVM, so they work fine there.
-  # It also assembles the app + androidTest APKs and uploads them as an
-  # artifact so the `ui-tests` job can consume them.
+  # coverage-data collection only need the JDK + Android SDK, not KVM, so they
+  # work fine there. It also assembles the app + androidTest APKs and uploads
+  # them as an artifact so the `ui-tests` job can consume them.
   build:
     runs-on: self-hosted
 
@@ -41,6 +41,16 @@ jobs:
     - name: unit tests
       run: ./gradlew testStageDebugUnitTest
 
+    # enableUnitTestCoverage (debug build type) makes testStageDebugUnitTest
+    # write app/build/outputs/unit_test_code_coverage/**/*.exec — uploaded here
+    # and consumed by the `jacoco-report` job.
+    - name: Upload unit test coverage (.exec)
+      uses: actions/upload-artifact@v4
+      with:
+        name: jacoco-exec
+        path: app/build/outputs/unit_test_code_coverage/**/*.exec
+        if-no-files-found: error
+
     - name: Upload artifact on ui tests failure
       if: failure()
       uses: actions/upload-artifact@v4
@@ -63,15 +73,6 @@ jobs:
           app/build/outputs/apk/stage/debug/app-stage-debug.apk
           app/build/outputs/apk/androidTest/stage/debug/app-stage-debug-androidTest.apk
         if-no-files-found: error
-
-    - name: Coverage report
-      run: ./gradlew jacocoTestCoverageVerification
-
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v4
-      with:
-        name: Jacoco report
-        path: '**/app/build/jacocoHtml/**'
 
     - name: Log success message
       run: echo "Build finished successfully"
@@ -109,7 +110,13 @@ jobs:
         script: |
           adb install -r app/build/outputs/apk/stage/debug/app-stage-debug.apk || exit 1
           adb install -r app/build/outputs/apk/androidTest/stage/debug/app-stage-debug-androidTest.apk || exit 1
-          bash -o pipefail -c 'adb shell am instrument -w -r com.marzec.cheatday.debug.test/com.marzec.cheatday.MockTestRunner 2>&1 | tee ui-test.log'
+          # The debug APK is JaCoCo-instrumented (enableAndroidTestCoverage in
+          # app/build.gradle.kts); `-e coverage true` makes the instrumentation
+          # write a coverage .ec file, which is pulled and uploaded for the
+          # `jacoco-report` job.
+          bash -o pipefail -c 'adb shell am instrument -w -r -e coverage true -e coverageFile /sdcard/Android/data/com.marzec.cheatday.debug/files/coverage.ec com.marzec.cheatday.debug.test/com.marzec.cheatday.MockTestRunner 2>&1 | tee ui-test.log'
+          mkdir -p app/build/outputs/code_coverage/connected
+          adb pull /sdcard/Android/data/com.marzec.cheatday.debug/files/coverage.ec app/build/outputs/code_coverage/connected/coverage.ec || exit 1
 
     - name: Upload artifact on UI test failure
       if: failure()
@@ -117,3 +124,62 @@ jobs:
       with:
         name: UI Tests console log
         path: ui-test.log
+
+    - name: Upload UI test coverage (.ec)
+      uses: actions/upload-artifact@v4
+      with:
+        name: jacoco-ec
+        path: app/build/outputs/code_coverage/connected/coverage.ec
+        if-no-files-found: error
+
+  # `jacoco-report` runs after BOTH `build` (unit-test .exec) and `ui-tests`
+  # (instrumented .ec) have finished, merges the two coverage data files and
+  # produces the single Jacoco report + verification gate. It needs the JDK +
+  # Android SDK (compileStageDebugKotlin) but not KVM, so it stays on the
+  # self-hosted runner.
+  jacoco-report:
+    runs-on: self-hosted
+    needs: [build, ui-tests]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Create local.properties
+      run: ./script/create_local_properties.sh
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: oracle
+        java-version: 21
+
+    # Artifacts are downloaded with their original relative paths, so the
+    # coverage files land where jacoco.gradle.kts globs them (`**/*.exec`,
+    # `**/*.ec` under the app dir).
+    - name: Download unit test coverage (.exec)
+      uses: actions/download-artifact@v4
+      with:
+        name: jacoco-exec
+        path: .
+
+    - name: Download UI test coverage (.ec)
+      uses: actions/download-artifact@v4
+      with:
+        name: jacoco-ec
+        path: .
+
+    # jacocoTestReportStageDebug points its classDirectories at
+    # build/tmp/kotlin-classes/stageDebug, so the classes must exist in this
+    # job's fresh checkout before the report can be generated.
+    - name: Compile app classes
+      run: ./gradlew compileStageDebugKotlin
+
+    - name: Coverage report
+      run: ./gradlew jacocoTestCoverageVerification
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: Jacoco report
+        path: '**/app/build/jacocoHtml/**'
