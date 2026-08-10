@@ -79,6 +79,11 @@ jobs:
   # hosted runner keeps only the KVM-free build/unit-test/coverage steps.
   # `needs: build` guarantees the APK artifact exists before this job downloads
   # it, and the emulator boots the same APKs the `build` job produced.
+  # Why it can look unused: the workflow triggers only on pull_request to
+  # master (no push trigger), and `needs: build` starts this job only after
+  # `build` finishes. So push-triggered runs never contain `ui-tests` at all,
+  # and a PR run shows it only once `build` succeeds - if `build` fails, it
+  # never appears.
   ui-tests:
     runs-on: ubuntu-latest
     needs: build
